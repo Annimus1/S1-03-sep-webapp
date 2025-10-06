@@ -84,6 +84,8 @@ npm run dev
 Si la configuración es correcta, verás los siguientes mensajes en la consola, indicando el éxito del inicio:
 
 ```
+🔌 Conectado a MongoDB satisfactoriamente.
+⚡ Conectado a Redis satisfactoriamente.
 ----------------------------------------------------
 ✨ Servidor Express escuchando en el puerto 3001
 🌐 Accede a la API en: http://localhost:3001/api/v1

@@ -1,7 +1,7 @@
 import 'dotenv/config'; // 1. Cargar variables de entorno desde .env
 import app from './server.js';
-// import DatabaseSingleton from './database/DatabaseSingleton.js';
-// import CacheSingleton from './database/CacheSingleton.js';
+import DatabaseSingleton from './database/DatabaseSingleton.js';
+import CacheSingleton from './database/CacheSingleton.js';
 
 // Define el puerto, usando la variable de entorno o el 3001 por defecto
 const PORT = process.env.PORT || 5001;
@@ -14,8 +14,8 @@ async function startServer() {
         // 2. CONEXIÓN A LA BASE DE DATOS Y CACHÉ (Fail-Fast)
         // Intenta conectar a MongoDB y Redis usando los Singletons. 
         // Si fallan, el Singleton ejecutará un 'process.exit(1)'.
-        // await DatabaseSingleton.connect();
-        // await CacheSingleton.connect(); 
+        await DatabaseSingleton.connect();
+        await CacheSingleton.connect(); 
 
         // 3. INICIAR EL SERVIDOR EXPRESS
         app.listen(PORT, () => {
