@@ -2,6 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 
+// Importar swagger
+import swaggerUi from 'swagger-ui-express'; // Importar swagger-ui-express
+import swaggerSpec from '../swagger.js';
+
 // Importar los módulos locales
 // import authRoutes from './routes/auth.routes.js'; 
 // import userRoutes from './routes/auth.routes.js'; 
@@ -27,11 +31,35 @@ app.use(express.json());
 
 // --- 3. MONTAJE DE RUTAS ---
 
+// Montar la interfaz de usuario de Swagger
+app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Montar el Router principal bajo el prefijo /api/v1
 // app.use('/api/v1/auth', authRoutes);
 // app.use('/api/v1/user', userRoutes);
 
 // Ruta de prueba simple
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     summary: Texto de prueba
+ *     description: Texto de prueba2.
+ *     responses:
+ *       '200':
+ *         description: Lista de contenido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   nombre:
+ *                     type: string
+ */
 app.get('/', (req, res) => {
     res.status(200).json({
         message: 'API del Proyecto funcionando. ¡Bienvenido!',

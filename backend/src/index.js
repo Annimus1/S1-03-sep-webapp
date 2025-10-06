@@ -22,6 +22,7 @@ async function startServer() {
             console.log('----------------------------------------------------');
             console.log(`✨ Servidor Express escuchando en el puerto ${PORT}`);
             console.log(`🌐 Accede a la API en: http://localhost:${PORT}/`);
+            console.log(`🌐 Accede a la Documentacion en: http://localhost:${PORT}/api/v1/docs/`);
             console.log('----------------------------------------------------');
         });
 
