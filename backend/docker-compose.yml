@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   # Servicio Node.js
   app:
@@ -5,9 +7,10 @@ services:
     container_name: nodejs_app
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "3001:3001"
     environment:
       - NODE_ENV=development
+      - PORT=3001
       - MONGODB_URI=mongodb://mongodb:27017/myapp
       - REDIS_HOST=redis
       - REDIS_PORT=6379
