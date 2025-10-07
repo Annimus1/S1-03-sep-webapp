@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest --detectOpenHandles --verbose",
+    "test:watch": "npm run test -- --watch",
+    "test:coverage": "npm run test -- --coverage"
   },
   "keywords": [],
   "author": "",
@@ -24,6 +26,7 @@
     "swagger-ui-express": "5.0.1"
   },
   "devDependencies": {
+    "jest": "30.2.0",
     "nodemon": "3.1.10"
   }
 }
