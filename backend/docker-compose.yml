@@ -16,6 +16,7 @@ services:
       - REDIS_PORT=6379
       - MONGODB_TEST_URI=mongodb://mongodb:27017/myapp_test
       - REDIS_TEST_URI=redis://redis:6379/1 
+
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
