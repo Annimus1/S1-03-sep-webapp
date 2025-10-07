@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  # Servicio Node.js
+  app:
+    build: .
+    container_name: nodejs_app
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - MONGODB_URI=mongodb://mongodb:27017/myapp
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MONGODB_TEST_URI=mongodb://mongodb:27017/myapp_test
+      - REDIS_TEST_URI=redis://redis:6379/1 
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongodb
+      - redis
+    networks:
+      - app-network
+
+  # Servicio MongoDB
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=myapp
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app-network
+
+  # Servicio Redis
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+
+# Volúmenes para persistencia de datos
+volumes:
+  mongodb_data:
+  redis_data:
+
+# Red personalizada
+networks:
+  app-network:
+    driver: bridge
