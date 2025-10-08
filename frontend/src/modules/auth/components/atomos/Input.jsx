@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import style from './tamnioLetra.module.css';
 
 
 /**
@@ -24,7 +25,7 @@ export const Input = (
     disabled
   }) => (
     <input type={type}
-    className='form-control'
+    className={`form-control ${style.tamanioLetra}`}
     placeholder={placeholder}
     value={value}
     onChange={onChange}
@@ -36,7 +37,6 @@ export const Input = (
         borderRadius: '12px',
         color: hasError ? '#952014' : '#21255299',
         backgroundColor: hasError ? '#FFF5F5' : '#F7FAFC',
-        fontSize: '14px',
         transition: 'all 0.5s',
       }
     }

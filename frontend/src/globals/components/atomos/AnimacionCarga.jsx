@@ -1,10 +1,11 @@
-export const AnimacionCarga = ({ tamaño = 60, color = '#7B1FA2' }) => {
+import React from 'react'
 
+export const AnimacionCarga = ({ tamaño = 100, color = '#7B1FA2' }) => {
   // Genera 8 líneas en círculo (360° / 8 = 45° entre cada línea)
   const lineas = Array.from({ length: 8 }, (_, indice) => {
     const rotacion = indice * 45;
     const retrasoAnimacion = indice * 0.125;
-    
+
     return (
       <div
         key={indice}
@@ -15,16 +16,15 @@ export const AnimacionCarga = ({ tamaño = 60, color = '#7B1FA2' }) => {
           transform: `rotate(${rotacion}deg)`,
         }}
       >
-        {/* Línea individual */}
         <div
           style={{
             position: 'absolute',
             top: '5%',
             left: '50%',
-            width: 4,
-            height: '35%',
+            width: tamaño * 0.05, // ancho proporcional
+            height: tamaño * 0.35, // largo proporcional
             backgroundColor: color,
-            borderRadius: 4,
+            borderRadius: tamaño * 0.05,
             transform: 'translateX(-50%)',
             animation: `fadeInOut 1s ease-in-out infinite`,
             animationDelay: `${retrasoAnimacion}s`,
@@ -37,7 +37,6 @@ export const AnimacionCarga = ({ tamaño = 60, color = '#7B1FA2' }) => {
 
   return (
     <>
-      {/* Definición de la animación CSS */}
       <style>
         {`
           @keyframes fadeInOut {
@@ -50,17 +49,27 @@ export const AnimacionCarga = ({ tamaño = 60, color = '#7B1FA2' }) => {
           }
         `}
       </style>
-      
-      {/* Contenedor del spinner */}
+
+      {/* Contenedor que ocupa todo el espacio y centra el spinner */}
       <div
         style={{
-          position: 'relative',
-          width: tamaño,
-          height: tamaño,
-          display: 'inline-block'
+          width: '100%',
+          height: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        {lineas}
+        {/* Spinner */}
+        <div
+          style={{
+            position: 'relative',
+            width: tamaño,
+            height: tamaño,
+          }}
+        >
+          {lineas}
+        </div>
       </div>
     </>
   );

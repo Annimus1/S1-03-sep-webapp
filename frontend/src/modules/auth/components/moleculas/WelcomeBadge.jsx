@@ -1,4 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import style from './WelcomeBadge.module.css';
 
 /**
  * Componente WelcomeBadge
@@ -9,18 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
  */
 
 export const WelcomeBadge = ({ text }) => (
-  <div style={{
-    background: 'linear-gradient(135deg, #2C5F5D 0%, #1A3F3D 100%)',
-    color: 'white',
-    padding: '16px 32px',
-    borderRadius: '50px',
-    fontSize: '18px',
-    fontWeight: '600',
-    textAlign: 'center',
-    boxShadow: '0 8px 24px rgba(44, 95, 93, 0.3)',
-    marginBottom: '24px',
-    display: 'inline-block'
-  }}>
+  <div className={style.titulo}>
     {text}
   </div>
 );

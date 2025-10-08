@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-
+import style from './tamnioLetra.module.css';
 /**
  * Componente Label para formularios
  * Etiqueta estilizada para inputs
@@ -17,8 +17,8 @@ export const Label = (
 ) => (
   <label
     htmlFor={htmlFor}
+    className={style.tamanioLetra}
     style={{
-      fontSize: '14px',
       fontWeight: '600',
       color: '#2D3748',
       marginBottom: '8px',

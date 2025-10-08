@@ -1,11 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { WelcomeBadge } from '../moleculas/WelcomeBadge';
 import { FormFieldLogin } from '../moleculas/FormFieldLogin';
+import { BotonAnimado } from '../../../../globals/components/atomos/BotonAnimado';
 
 /**
  * Componente LoginCard
  * Tarjeta completa del formulario de login
- * Incluye campos de email y contraseña, manejo de errores y estados de carga
+ * Incluye campos de email y contraseña
  * 
  * @param {string} email - Valor del campo de email
  * @param {string} password - Valor del campo de contraseña
@@ -13,7 +14,6 @@ import { FormFieldLogin } from '../moleculas/FormFieldLogin';
  * @param {function} onPasswordChange - Manejador de cambios de contraseña
  * @param {function} onSubmit - Función para enviar el formulario
  * @param {function} onForgotPassword - Función para recuperar contraseña
- * @param {string} error - Mensaje de error (si existe)
  * @param {boolean} loading - Estado de carga
  * @returns {JSX.Element} Tarjeta completa del formulario de login
  */
@@ -29,64 +29,65 @@ export const LoginCard = ({
   loading   
 }) => (
   <div>
-    <div className="text-center mb-4">
+    <div className="text-center">
       <WelcomeBadge text="¡Bienvenido a tu espacio!" />
     </div>
 
-    <div style={{
-      background: 'linear-gradient(135deg, #B2F5EA 0%, #81E6D9 100%)',
-      borderRadius: '32px',
-      padding: '40px',
-      boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
-      maxWidth: '450px',
-      width: '100%',
-      margin: '0 auto'
-    }}>
+    {/* Contenedor principal */}
+    <div
+      style={{
+        background: '#5BE2C580',
+        borderRadius: '32px',
+        padding: '50px',
+        boxShadow: '0 20px 60px rgba(0,0,0,0.1)',
+        maxWidth: '600px',
+        width: '100%',
+        margin: '0 auto',
+        position: 'relative',
+        overflow: 'visible'
+      }}
+    >
+      <FormFieldLogin
+        label="Correo electrónico"
+        type="email"
+        placeholder="tuempresa@correo.com"
+        value={email}
+        onChange={onEmailChange}
+        helpText="Usa el correo con el que creaste tu cuenta."
+        disabled={loading}
+      />
 
-    <FormFieldLogin
-      label="Correo electrónico"
-      type="email"
-      placeholder="tuempresa@correo.com"
-      value={email}
-      onChange={onEmailChange}
-      helpText="Usa el correo con el que creaste tu cuenta."
-      errorText={error}
-      disabled={loading}
-    />
+      <FormFieldLogin
+        label="Contraseña"
+        type="password"
+        placeholder="••••••••••••"
+        value={password}
+        onChange={onPasswordChange}
+        helpText="Tu información está cifrada y protegida"
+        disabled={loading}
+      />
 
-    <FormFieldLogin
-      label="Contraseña"
-      type="password"
-      placeholder="••••••••••••"
-      value={password}
-      onChange={onPasswordChange}
-      helpText="Tu información está cifrada y protegida"
-      disabled={loading}
-    />
+      {error && (<div style={{ color: 'red', marginBottom: '10px' }}>{error}</div>)}
 
-    <div className="text-center mb-3">
-      <p style={{ fontSize: '12px', color: '#4A5568', marginBottom: '12px' }}>
-        *Tu información está protegida con tecnología KYC y cifrado de nivel bancario.
-      </p>
-
-      // RECORDAR CAMBIAR ESTE Campo A UN BOTÓN SIN RELLENO
-
-      <div>
-        ¿Olvidaste tu contraseña?
+      <div className="d-flex justify-content-start mb-4">
+        <BotonAnimado variante="moradoSuave" onClick={onForgotPassword}>
+          ¿Olvidaste tu contraseña?
+        </BotonAnimado>
       </div>
 
-      // RECORDAR CAMBIAR ESTE Campo A UN BOTÓN SIN RELLENO
+
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '-12px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+        }}
+      >
+        <BotonAnimado variante="naranja" tamaño="m" onClick={onSubmit} disabled={loading}>
+          Iniciar sesión
+        </BotonAnimado>
+      </div>
     </div>
-
-    </div>
-    
-    // RECORDAR CAMBIAR ESTE Campo A UN BOTÓN CON POSICION RELARTIVA
-
-    <div>
-      ¿Olvidaste tu contraseña?
-    </div>
-
-    // RECORDAR CAMBIAR ESTE Campo A UN BOTÓN CON POSICION RELARTIVA
-
   </div>
 );

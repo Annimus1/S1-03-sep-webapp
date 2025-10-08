@@ -63,7 +63,7 @@ export const BotonAnimado = ({
       activeShadow: '0 2px 8px rgba(243, 156, 18, 0.4)'
     },
     moradoSuave: {
-      backgroundColor: 'transparent',
+      backgroundColor: '#DAD6FE',
       color: '#000000',
       border: '2px solid #DAD6FE',
       borderColor: '#DAD6FE',
@@ -77,7 +77,7 @@ export const BotonAnimado = ({
     },
     morado: {
       backgroundColor: '#562CA4',
-      color: '#FFFFFF',
+      color: '#ffffffff',
       border: '2px solid #562CA4',
       borderColor: '#562CA4',
       hoverBg: '#8752EB',

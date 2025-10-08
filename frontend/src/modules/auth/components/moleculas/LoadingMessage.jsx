@@ -8,7 +8,7 @@
  */
 export const LoadingMessage = ({ text }) => (
   <div style={{
-    background: 'linear-gradient(135deg, #4FD1C5 0%, #38B2AC 100%)',
+    background: '#5BE2C580',
     color: '#fff',
     padding: '12px 24px',
     borderRadius: '50px',
