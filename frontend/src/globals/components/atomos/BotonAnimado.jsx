@@ -6,6 +6,7 @@ import React, { useState } from 'react';
  * 
  * @param {string} children - Texto del botón
  * @param {string} variante - Tipo de botón: 'naranja', 'moradoSuave', 'morado'
+ * @param {string} tamaño - Tamaño del botón: 'xs', 's', 'm', 'l'
  * @param {function} onClick - Función a ejecutar al hacer clic
  * @param {string} className - Clases CSS adicionales
  * @param {boolean} deshabilitado - Si el botón está deshabilitado
@@ -13,7 +14,8 @@ import React, { useState } from 'react';
  */
 export const BotonAnimado = ({ 
   children, 
-  variante = 'naranja', 
+  variante = 'naranja',
+  tamaño = 'm',
   onClick, 
   className = '',
   deshabilitado = false,
@@ -21,11 +23,35 @@ export const BotonAnimado = ({
 }) => {
   const [estaPresionado, setEstaPresionado] = useState(false);
 
+  // Configuración de tamaños
+  const configuracionTamaños = {
+    xs: {
+      padding: '6px 16px',
+      fontSize: '12px',
+      borderRadius: 18
+    },
+    s: {
+      padding: '8px 20px',
+      fontSize: '13px',
+      borderRadius: 20
+    },
+    m: {
+      padding: '12px 30px',
+      fontSize: '14px',
+      borderRadius: 25
+    },
+    l: {
+      padding: '14px 40px',
+      fontSize: '16px',
+      borderRadius: 30
+    }
+  };
+
   // Configuración de estilos para cada variante
   const configuracionEstilos = {
     naranja: {
       backgroundColor: '#F39C12',
-      color: '#000000',
+      color: '#FFFFFF',
       border: '2px solid #F39C12',
       borderColor: '#F39C12', 
       hoverBg: '#FFBE58',
@@ -65,15 +91,16 @@ export const BotonAnimado = ({
   };
 
   const estilos = configuracionEstilos[variante];
+  const estilosTamaño = configuracionTamaños[tamaño];
 
   // Estilos base del botón
   const estiloBoton = {
     backgroundColor: estilos.backgroundColor,
     color: estilos.color,
     border: estilos.border,
-    borderRadius: 25,
-    padding: '12px 30px',
-    fontSize: '14px',
+    borderRadius: estilosTamaño.borderRadius,
+    padding: estilosTamaño.padding,
+    fontSize: estilosTamaño.fontSize,
     fontWeight: 600,
     cursor: deshabilitado ? 'not-allowed' : 'pointer',
     outline: 'none',
@@ -109,12 +136,12 @@ export const BotonAnimado = ({
       {/* Estilos CSS para las animaciones hover */}
       <style>
         {`
-          .boton-animado-${variante} {
+          .boton-animado-${variante}-${tamaño} {
             position: relative;
             overflow: hidden;
           }
 
-          .boton-animado-${variante}::before {
+          .boton-animado-${variante}-${tamaño}::before {
             content: '';
             position: absolute;
             top: 50%;
@@ -127,12 +154,12 @@ export const BotonAnimado = ({
             transition: width 0.6s, height 0.6s;
           }
 
-          .boton-animado-${variante}:hover::before {
-            width: 300px;
-            height: 300px;
+          .boton-animado-${variante}-${tamaño}:hover::before {
+            width: 200%;
+            height: 200%;
           }
 
-          .boton-animado-${variante}:hover {
+          .boton-animado-${variante}-${tamaño}:hover {
             background-color: ${estilos.hoverBg} !important;
             color: ${estilos.hoverColor} !important;
             border-color: ${estilos.hoverBorder} !important;
@@ -140,14 +167,14 @@ export const BotonAnimado = ({
             transform: translateY(-2px) scale(1.02);
           }
 
-          .boton-animado-${variante}:active {
+          .boton-animado-${variante}-${tamaño}:active {
             background-color: ${estilos.activeBg} !important;
             border-color: ${estilos.hoverBorder} !important;
             box-shadow: ${estilos.activeShadow} !important;
             transform: translateY(0) scale(0.98);
           }
 
-          .boton-animado-${variante}:disabled:hover {
+          .boton-animado-${variante}-${tamaño}:disabled:hover {
             transform: none;
             background-color: ${estilos.backgroundColor} !important;
             box-shadow: ${estilos.shadow} !important;
@@ -165,7 +192,7 @@ export const BotonAnimado = ({
             }
           }
 
-          .boton-animado-${variante} .ripple {
+          .boton-animado-${variante}-${tamaño} .ripple {
             position: absolute;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.6);
@@ -178,7 +205,7 @@ export const BotonAnimado = ({
       </style>
 
       <button
-        className={`boton-animado-${variante} ${className}`}
+        className={`boton-animado-${variante}-${tamaño} ${className}`}
         style={estiloBoton}
         onClick={manejarClick}
         onMouseDown={manejarMouseDown}
