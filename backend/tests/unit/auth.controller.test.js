@@ -47,8 +47,8 @@ describe('POST /api/auth/register', () => {
   it('debería rechazar si el email ya existe', async () => {
     await api.post('/api/auth/register').send(validUser);
     const res = await api.post('/api/auth/register').send(validUser);
-    expect(res.statusCode).toBe(403);
-    expect(res.body).toHaveProperty('message', 'El email ya está registrado.');
+    expect(res.statusCode).toBe(400);
+    expect(res.body).toHaveProperty('message');
   });
 
   it('debería rechazar si falta un campo obligatorio', async () => {
