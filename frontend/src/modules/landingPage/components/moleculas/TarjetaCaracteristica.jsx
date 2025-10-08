@@ -1,4 +1,4 @@
-import { Button } from "../atomos/Button";
+import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 import { MarcadorPosicionIcono } from "../atomos/MarcadorPosicionIcono";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -50,7 +50,7 @@ export const TarjetaCaracteristica = ({
           bottom: botonFlotante ? "-15px" : "0",
         }}
       >
-        <Button variant="primary">{textoBoton}</Button>
+        <BotonAnimado variante="naranja">{textoBoton}</BotonAnimado>
       </div>
     )}
   </div>

@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { MarcadorPosicionIcono } from '../atomos/MarcadorPosicionIcono';
 import { ItemPaso } from '../moleculas/ItemPaso';
-import { Button } from '../atomos/Button';
+import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 
 /**
  * Sección que explica los 3 pasos simples para obtener el crédito
@@ -38,7 +38,7 @@ export const SeccionPasos = () => (
           
           {/* Botón para comenzar */}
           <div className="mt-4">
-            <Button variant="primary">Comienza tu solicitud</Button>
+            <BotonAnimado variante="naranja">Comienza tu solicitud</BotonAnimado>
           </div>
         </div>
         

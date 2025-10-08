@@ -1,5 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Logo } from '../atomos/Logo';
+import { Logo } from '../../../../globals/components/atomos/Logo';
 
 /**
  * Barra de navegación superior con logo y botón de ingreso
