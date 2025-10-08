@@ -1,0 +1,26 @@
+.faqRespuesta {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.faqRespuesta.abierto {
+  max-height: 300px; 
+  opacity: 1;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faqRespuesta.abierto div {
+  animation: fadeIn 0.3s ease;
+}

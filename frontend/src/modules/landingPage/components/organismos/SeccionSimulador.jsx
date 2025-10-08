@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button } from '../atomos/Button';
+import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 
 /**
  * Calculadora interactiva de crédito
@@ -199,8 +199,10 @@ export const SeccionSimulador = () => {
                 </p>
                 
                 {/* Botones de acción */}
-                <Button variant="secondary" className="mb-2">Descargar detalle</Button>
-                <Button variant="primary">Activa tu crédito en minutos</Button>
+                <div className="mb-3">
+                <BotonAnimado variante="naranja" ancho="completo">Descargar detalle</BotonAnimado>
+                </div>
+                <BotonAnimado variante="morado" ancho="completo">Activa tu crédito en minutos</BotonAnimado>
               </div>
             </div>
           </div>

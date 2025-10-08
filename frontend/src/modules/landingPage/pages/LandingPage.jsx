@@ -1,4 +1,6 @@
 
+import { AnimacionCarga } from "../../../globals/components/atomos/AnimaciónCarga";
+import { EjemplosBotonesAnimados } from "../components/organismos/EjemploBotonesAnimados";
 import { Header } from "../components/organismos/Header";
 import { SeccionFAQ } from "../components/organismos/SeccionFAQ";
 import { SeccionHero } from "../components/organismos/SeccionHero";
@@ -38,6 +40,15 @@ export const LandingPage = () => (
   <div style={{ borderRadius: '20px', overflow: 'hidden' }}>
     <SeccionFAQ />
   </div>
+
+  <div style={{ textAlign: 'center' }}>
+      <h2 style={{ marginBottom: 20, color: '#333' }}>Animación de Carga</h2>
+      <AnimacionCarga tamaño={60} color="#7B1FA2" />
+  </div>
+
+  <EjemplosBotonesAnimados />
+
+
 </div>
 
   </div>
