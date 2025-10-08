@@ -24,7 +24,8 @@ export const authController = async (req, res) => {
     // Verificar si el email ya existe
     const existingUser = await UserRepository.findByEmail(email);
     if (existingUser) {
-      return res.status(403).json({ message: 'El email ya está registrado.' });
+      console.warn(`Intento de registro con email existente: ${email}`);
+      return res.status(400).json({ message: 'No se pudo completar el registro. Verifique los datos ingresados.' });
     }
 
     // Crear usuario (PyME)
