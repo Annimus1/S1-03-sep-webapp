@@ -1,9 +1,9 @@
-const express = require('express');
-const router = express.Router();
-const { registerUser } = require('../controllers/auth.controller');
-const { validateRegister } = require('../middlewares/validation.middleware');
+import { Router } from 'express';
+import { authController } from '../controllers/auth.controller.js';
+import { validateRegister } from '../middlewares/validation.middleware.js';
 
-// Aplica el middleware antes del controlador
-router.post('/register', validateRegister, registerUser);
+const router = Router();
 
-module.exports = router;
+router.post('/', validateRegister, authController);
+
+export default router;

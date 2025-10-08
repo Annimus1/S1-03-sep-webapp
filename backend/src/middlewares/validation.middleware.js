@@ -8,34 +8,62 @@ const registerSchema = Joi.object({
     .email({ tlds: { allow: false } })
     .trim()
     .lowercase()
-    .required()
-    .messages({
-      'string.base': 'El email debe ser un texto.',
-      'string.empty': 'El email es obligatorio.',
-      'string.email': 'El email debe tener un formato válido.',
-      'any.required': 'El email es obligatorio.'
-    }),
+    .required(),
+  
   password: Joi.string()
     .min(8)
     .trim()
-    .required()
-    .messages({
-      'string.base': 'La contraseña debe ser un texto.',
-      'string.empty': 'La contraseña es obligatoria.',
-      'string.min': 'La contraseña debe tener al menos 8 caracteres.',
-      'any.required': 'La contraseña es obligatoria.'
-    }),
-  empresa: Joi.string()
-    .min(3)
+    .required(),
+  
+  nombre: Joi.string()
     .trim()
-    .required()
-    .messages({
-      'string.base': 'El nombre de la empresa debe ser un texto.',
-      'string.empty': 'El nombre de la empresa es obligatorio.',
-      'string.min': 'El nombre de la empresa debe tener al menos 3 caracteres.',
-      'any.required': 'El nombre de la empresa debe tener al menos 3 caracteres.',
-      'any.required': 'El nombre de la empresa es obligatorio.'
-    })
+    .required(),
+  
+  personalDNI: Joi.string()
+    .trim()
+    .required(),
+
+  CUIT: Joi.string()
+    .trim()
+    .required(),
+
+  Cargo: Joi.string()
+    .trim()
+    .required(),
+
+  nombreComercial: Joi.string()
+    .trim()
+    .required(),
+
+  empresarialCUIT: Joi.string()
+    .trim()
+    .required(),
+
+  tipoSocietario: Joi.string()
+    .trim()
+    .required(),
+
+  domicilioFiscal: Joi.string()
+    .trim()
+    .required(),
+
+  domicilioComercial: Joi.string()
+    .trim()
+    .required(),
+
+  actividadEconomicaPrincipal: Joi.string()
+    .trim()
+    .required(),
+
+  fechaConstitucion: Joi.date()
+    .required(),
+
+  numeroRegistro: Joi.string()
+    .trim()
+    .required(),
+
+  certificadoPyME: Joi.boolean()
+    .optional()
 });
 
 export const validateRegister = (req, res, next) => {

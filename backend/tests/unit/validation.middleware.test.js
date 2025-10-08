@@ -11,10 +11,29 @@ app.post('/api/register', validateRegister, (req, res) => {
 });
 
 describe('Middleware validateRegister', () => {
+  const validRequest = {
+    email: 'test@mail.com',
+    password: '12345678',
+    nombre: 'Juan Perez',
+    personalDNI: '12345678',
+    CUIT: '20304050607',
+    Cargo: 'CEO',
+    nombreComercial: 'Mi PyME',
+    empresarialCUIT: '30708090123',
+    tipoSocietario: 'SRL',
+    domicilioFiscal: 'Calle Falsa 123',
+    domicilioComercial: 'Calle Real 456',
+    actividadEconomicaPrincipal: 'Servicios',
+    fechaConstitucion: '2020-01-01',
+    numeroRegistro: 'REG12345',
+    certificadoPyME: true
+  };
+
   test('Debe rechazar si falta el email', async () => {
+    const { email, ...partialRequest } = validRequest;
     const res = await request(app)
       .post('/api/register')
-      .send({ password: '12345678', empresa: 'MiEmpresa' });
+      .send(partialRequest);
 
     expect(res.statusCode).toBe(422);
     expect(res.body.errors).toEqual(
@@ -27,7 +46,7 @@ describe('Middleware validateRegister', () => {
   test('Debe rechazar si la contraseña es demasiado corta', async () => {
     const res = await request(app)
       .post('/api/register')
-      .send({ email: 'user@mail.com', password: '123', empresa: 'MiEmpresa' });
+      .send({ ...validRequest, password: '123' });
 
     expect(res.statusCode).toBe(422);
     expect(res.body.errors).toEqual(
@@ -37,15 +56,16 @@ describe('Middleware validateRegister', () => {
     );
   });
 
-  test('Debe rechazar si falta el nombre de la empresa', async () => {
+  test('Debe rechazar si falta un campo obligatorio', async () => {
+    const { nombreComercial, ...partialRequest } = validRequest;
     const res = await request(app)
       .post('/api/register')
-      .send({ email: 'user@mail.com', password: '12345678' });
+      .send(partialRequest);
 
     expect(res.statusCode).toBe(422);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ field: 'empresa' })
+        expect.objectContaining({ field: 'nombreComercial' })
       ])
     );
   });
@@ -53,7 +73,7 @@ describe('Middleware validateRegister', () => {
   test('Debe aceptar un request válido', async () => {
     const res = await request(app)
       .post('/api/register')
-      .send({ email: 'test@mail.com', password: '12345678', empresa: 'MiEmpresa' });
+      .send(validRequest);
 
     expect(res.statusCode).toBe(200);
     expect(res.body).toEqual({ message: 'OK' });

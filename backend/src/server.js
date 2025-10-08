@@ -1,5 +1,5 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 import helmet from 'helmet';
 
 // Importar swagger
@@ -7,7 +7,7 @@ import swaggerUi from 'swagger-ui-express'; // Importar swagger-ui-express
 import swaggerSpec from '../swagger.js';
 
 // Importar los módulos locales
-// import authRoutes from './routes/auth.routes.js'; 
+import authRoutes from './routes/auth.routes.js';
 // import userRoutes from './routes/auth.routes.js'; 
 
 // --- 1. CONFIGURACIÓN INICIAL ---
@@ -36,6 +36,8 @@ app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Montar el Router principal bajo el prefijo /api/v1
 // app.use('/api/v1/auth', authRoutes);
+// Montar router
+app.use('/api/auth/register', authRoutes); 
 // app.use('/api/v1/user', userRoutes);
 
 // Ruta de prueba simple
