@@ -1,21 +1,22 @@
 import { createClient } from 'redis';
+import * as dotenv from 'dotenv';
 
 /**
  * Clase que implementa el patrón Singleton para la conexión a Redis.
  * Centraliza el cliente de Redis y asegura una única instancia.
  */
 class CacheSingleton {
-    
     // Almacena la única instancia de esta clase.
     static instance = null;
     
     // Almacena el objeto del cliente Redis.
     client = null;
-
+    
     /**
      * El constructor es privado para forzar el uso de la instancia única.
-     */
-    constructor() {
+    */
+   constructor() {
+        dotenv.config();
         if (CacheSingleton.instance) {
             return CacheSingleton.instance;
         }
@@ -93,6 +94,18 @@ class CacheSingleton {
     async del(key) {
         if (!this.client.isReady) return 0;
         return this.client.del(key);
+    }
+
+    /**
+     * Cierra la conexión al servidor Redis. 🔑 CLAVE para las pruebas.
+     * @returns {Promise<void>}
+     */
+    async quit() {
+        if (this.client.isReady) {
+            await this.client.quit();
+            CacheSingleton.instance = null; 
+            console.log('⚡ Conexión a Redis Singleton cerrada.');
+        }
     }
 }
 

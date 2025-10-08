@@ -148,6 +148,11 @@ docker compose ps
 docker ps -a
 ```
 
+### Correr los test
+```bash
+docker compose run --rm app npm test
+```
+
 ## 🍃 Comandos MongoDB
 
 ### Acceder al shell de MongoDB
