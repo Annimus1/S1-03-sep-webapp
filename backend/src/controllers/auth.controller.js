@@ -1,24 +1,61 @@
-const registerUser = async (req, res) => {
+import UserRepository from '../repositories/user.repository.js';
+
+export const authController = async (req, res) => {
   try {
-    const { email, password, empresa } = req.body;
+    const {
+      email,
+      password,
+      nombreComercial,
+      role,
+      nombre,
+      personalDNI,
+      CUIT,
+      Cargo,
+      empresarialCUIT,
+      tipoSocietario,
+      domicilioFiscal,
+      domicilioComercial,
+      actividadEconomicaPrincipal,
+      fechaConstitucion,
+      numeroRegistro,
+      certificadoPyME
+    } = req.body;
 
-    // Aquí iría la lógica real de creación de usuario:
-    // - Hash del password
-    // - Validación de existencia previa
-    // - Inserción en la BD
+    // Verificar si el email ya existe
+    const existingUser = await UserRepository.findByEmail(email);
+    if (existingUser) {
+      return res.status(403).json({ message: 'El email ya está registrado.' });
+    }
 
+    // Crear usuario (PyME)
+    const newUser = await UserRepository.createUser({
+      email,
+      password,
+      nombreComercial,
+      role: role || 'user',
+      nombre,
+      personalDNI,
+      CUIT,
+      Cargo,
+      empresarialCUIT,
+      tipoSocietario,
+      domicilioFiscal,
+      domicilioComercial,
+      actividadEconomicaPrincipal,
+      fechaConstitucion,
+      numeroRegistro,
+      certificadoPyME
+    });
+
+    //Respuesta sin password
+    const { password: _, ...userSafe } = newUser.toObject();
     return res.status(201).json({
-      status: 'success',
-      message: 'Usuario registrado correctamente.',
-      data: { email, empresa }
+      message: 'Usuario registrado exitosamente.',
+      user: userSafe
     });
+
   } catch (error) {
-    console.error('Error en registerUser:', error);
-    return res.status(500).json({
-      status: 'error',
-      message: 'Error interno del servidor.'
-    });
+    console.error('Error registrando usuario:', error);
+    return res.status(500).json({ message: 'Error interno del servidor.' });
   }
 };
-
-module.exports = { registerUser };
