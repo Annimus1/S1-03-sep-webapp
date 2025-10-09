@@ -31,13 +31,13 @@ app.use(express.json());
 
 // --- 3. MONTAJE DE RUTAS ---
 
-// Montar la interfaz de usuario de Swagger
+// Montar la interfaz de usuario de Swaggerq
 app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Montar el Router principal bajo el prefijo /api/v1
 // app.use('/api/v1/auth', authRoutes);
 // Montar router
-app.use('/api/auth/register', authRoutes); 
+app.use('/api/v1/auth/register', authRoutes); 
 // app.use('/api/v1/user', userRoutes);
 
 // Ruta de prueba simple

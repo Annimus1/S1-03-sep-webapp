@@ -1,4 +1,4 @@
-import JWT from '../src/services/jwt.service.js';
+import JWT from '../../src/services/jwt.service.js';
 
 describe('JWT Service', () => {
     let jwtService;

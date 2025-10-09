@@ -19,7 +19,7 @@ afterEach(async () => {
   await User.deleteMany({});
 });
 
-describe('POST /api/auth/register', () => {
+describe('POST /api/v1/auth/register', () => {
   const validUser = {
     email: 'test@example.com',
     password: '12345678',
@@ -38,22 +38,22 @@ describe('POST /api/auth/register', () => {
   };
 
   it('debería crear un usuario correctamente', async () => {
-    const res = await api.post('/api/auth/register').send(validUser);
+    const res = await api.post('/api/v1/auth/register').send(validUser);
     expect(res.statusCode).toBe(201);
     expect(res.body.user).toHaveProperty('email', validUser.email);
     expect(res.body.user).not.toHaveProperty('password');
   });
 
   it('debería rechazar si el email ya existe', async () => {
-    await api.post('/api/auth/register').send(validUser);
-    const res = await api.post('/api/auth/register').send(validUser);
+    await api.post('/api/v1/auth/register').send(validUser);
+    const res = await api.post('/api/v1/auth/register').send(validUser);
     expect(res.statusCode).toBe(400);
     expect(res.body).toHaveProperty('message');
   });
 
   it('debería rechazar si falta un campo obligatorio', async () => {
     const { email, ...partialUser } = validUser;
-    const res = await api.post('/api/auth/register').send(partialUser);
+    const res = await api.post('/api/v1/auth/register').send(partialUser);
     expect(res.statusCode).toBe(422);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
@@ -63,7 +63,7 @@ describe('POST /api/auth/register', () => {
   });
 
   it('debería rechazar contraseña < 8 caracteres', async () => {
-    const res = await api.post('/api/auth/register').send({ ...validUser, password: '123' });
+    const res = await api.post('/api/v1/auth/register').send({ ...validUser, password: '123' });
     expect(res.statusCode).toBe(422);
     expect(res.body.errors).toEqual(
       expect.arrayContaining([
