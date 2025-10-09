@@ -1,0 +1,9 @@
+.anchoLogin {
+  max-width: 700px;
+}
+
+@media (max-width: 576px) {
+  .anchoLogin {
+    max-width: 330px;
+  }
+}
