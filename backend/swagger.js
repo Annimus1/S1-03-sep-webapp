@@ -21,7 +21,8 @@ const swaggerOptions = {
     // Rutas que contienen la documentación JSDoc (Controladores, Rutas o Servidor)
     apis: [
         './src/routes/*.js',
-        './src/server.js', 
+        './src/server.js',
+        './src/middlewares/*.js' 
     ],
 };
 
