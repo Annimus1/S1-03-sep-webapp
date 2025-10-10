@@ -9,16 +9,16 @@ const registerSchema = Joi.object({
     .trim()
     .lowercase()
     .required(),
-  
+
   password: Joi.string()
     .min(8)
     .trim()
     .required(),
-  
+
   nombre: Joi.string()
     .trim()
     .required(),
-  
+
   personalDNI: Joi.string()
     .trim()
     .required(),
@@ -88,3 +88,39 @@ export const validateRegister = (req, res, next) => {
   req.body = value;
   next();
 };
+
+
+const loginSchema = Joi.object({
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .trim()
+    .lowercase()
+    .required(),
+
+  password: Joi.string()
+    .min(8)
+    .trim()
+    .required()
+});
+export const validationLogin = (req, res, next) => {
+    const { error, value } = loginSchema.validate(req.body, {
+      abortEarly: false,
+      stripUnknown: true
+    });
+
+    if (error) {
+      const errors = error.details.map(detail => ({
+        field: detail.path[0],
+        message: detail.message
+      }));
+
+      return res.status(422).json({
+        status: 'error',
+        message: 'Datos de registro inválidos.',
+        errors
+      });
+    }
+
+    req.body = value;
+    next();
+}

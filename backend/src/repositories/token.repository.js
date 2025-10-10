@@ -22,7 +22,7 @@ class TokenRepository {
      * @param {number} expirationTimeSeconds - El tiempo de vida restante del token (en segundos).
      * @returns {Promise<boolean>} True si la operación fue exitosa, false en caso contrario.
      */
-    async whitelistToken(userId, jwt, expirationTimeSeconds) {
+    async whitelistToken(userId, jwt, expirationTimeSeconds=3600) {
         if (expirationTimeSeconds <= 0) {
             return true; 
         }
