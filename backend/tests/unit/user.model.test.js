@@ -1,12 +1,10 @@
 // tests/unit/user.model.test.js
 
 import mongoose from 'mongoose';
-import * as dotenv from 'dotenv';
 import UserModel from '../../src/models/user.model.js';
 import bcrypt from 'bcrypt'; 
 
 // Cargar variables de entorno (para MONGO_TEST_URI)
-dotenv.config();
 
 // --------------------------------------------------------------------------
 // 🔑 CONFIGURACIÓN DE CONEXIÓN A LA BASE DE DATOS DE PRUEBA

@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import * as dotenv from 'dotenv';
 
 /**
  * Servicio para la gestión de tokens JWT.
@@ -12,7 +11,6 @@ class JWT {
      * @constructor
      */
     constructor() {
-        dotenv.config();
 
         /**
          * Clave secreta utilizada para firmar y verificar los tokens.

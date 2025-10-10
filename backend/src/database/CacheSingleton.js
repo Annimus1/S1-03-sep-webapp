@@ -1,5 +1,4 @@
 import { createClient } from 'redis';
-import * as dotenv from 'dotenv';
 
 /**
  * Clase que implementa el patrón Singleton para la conexión a Redis.
@@ -16,7 +15,6 @@ class CacheSingleton {
      * El constructor es privado para forzar el uso de la instancia única.
     */
    constructor() {
-        dotenv.config();
         if (CacheSingleton.instance) {
             return CacheSingleton.instance;
         }
