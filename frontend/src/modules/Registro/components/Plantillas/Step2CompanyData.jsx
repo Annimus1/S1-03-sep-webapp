@@ -1,11 +1,12 @@
 import { InputField } from "../atomos/InputField";
 import { FormCard } from "../organismos/FormCard";
 import { BotonAnimado } from '../../../../globals/components/atomos/BotonAnimado';
+import styled from "./Step.module.css"
 
 export const Step2CompanyData = ({ formData, onChange, onNext, onBack }) => {
   return (
     <FormCard title="Datos de la Empresa" showBackButton onBack={onBack}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className={styled.gridContainerTwo }>
         <InputField
           label="Razón Social/Nombre comercial"
           placeholder="Empresa S.A."
@@ -20,7 +21,7 @@ export const Step2CompanyData = ({ formData, onChange, onNext, onBack }) => {
         />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className={styled.gridContainerTwo }>
         <InputField
           label="Tipo societario:"
           placeholder="SRL, SA, SAS, EIRL, SPA, etc."
@@ -49,7 +50,7 @@ export const Step2CompanyData = ({ formData, onChange, onNext, onBack }) => {
         onChange={(e) => onChange('domicilioComercial', e.target.value)}
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className={styled.gridContainerTwo }>
         <InputField
           label="Actividad económica principal"
           placeholder="(CNAE / Código de actividad)"

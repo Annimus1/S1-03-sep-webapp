@@ -3,7 +3,7 @@ import { FormCard } from "../organismos/FormCard";
 import { InputField } from "../atomos/InputField";
 import { BotonAnimado } from '../../../../globals/components/atomos/BotonAnimado';
 import { PasswordStrengthIndicator } from "../moleculas/PasswordStrengthIndicator";
-
+import styled from "./Step.module.css"
 
 export const Step1PersonalData = ({ formData, onChange, onNext, userType }) => {
   const [errors, setErrors] = useState({});
@@ -34,7 +34,7 @@ export const Step1PersonalData = ({ formData, onChange, onNext, userType }) => {
 
   return (
     <FormCard errorMessage={Object.keys(errors).length > 2 && "No es posible continuar"}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '4px' }}>
+      <div className={styled.gridContainerTwo }>
         <InputField
           label="Correo electrónico"
           type="email"
@@ -53,7 +53,7 @@ export const Step1PersonalData = ({ formData, onChange, onNext, userType }) => {
         />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '4px' }}>
+      <div className={styled.gridContainerTwo }>
         <InputField
           label="Nombres"
           placeholder="María Lucía"
@@ -70,7 +70,7 @@ export const Step1PersonalData = ({ formData, onChange, onNext, userType }) => {
         />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className={styled.gridContainerTwo }>
         <div>
           <InputField
             label="Contraseña"

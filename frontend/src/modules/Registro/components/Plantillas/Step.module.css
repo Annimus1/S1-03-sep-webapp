@@ -1,0 +1,12 @@
+.gridContainerTwo  {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 4px;
+}
+
+@media (max-width: 600px) {
+  .gridContainerTwo  {
+    grid-template-columns: 1fr; /* Solo una columna en celular */
+  }
+}

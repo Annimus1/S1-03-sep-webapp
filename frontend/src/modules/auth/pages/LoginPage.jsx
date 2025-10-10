@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BotonAnimado } from '../../../globals/components/atomos/BotonAnimado';
 import { PantallaExito } from '../components/organismos/PantallaExito';
@@ -7,8 +7,14 @@ import { Logo } from '../../../globals/components/atomos/Logo';
 import style from './LoginPage.module.css';
 import { Footer } from '../components/organismos/Footer';
 import { AnimacionCarga } from '../../../globals/components/atomos/AnimacionCarga';
+import { useNavigate } from 'react-router-dom'; 
+import axios from 'axios';
+import { UserContext } from "../../../stores/UserContext";
 
 const LoginPage = () => {
+  const { setUser } = useContext(UserContext);
+  const navigate = useNavigate();
+  const API_URL = import.meta.env.VITE_API_URL;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -22,26 +28,51 @@ const LoginPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setError('');
+    setSuccess(false);
+
     if (!email || !password) {
       setError('Verifica tu correo o contraseña e inténtalo nuevamente.');
       return;
     }
 
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess(true);
-      setTimeout(() => {
-        alert('Redirigiendo al dashboard...');
-      }, 2000);
-    }, 2000);
-  };
 
+    try {
+      const response = await axios.post(`${API_URL}/auth/login`, {
+        email,
+        password,
+      });
+
+      if (response.status === 200) {
+        setSuccess(true);
+        alert('¡Bienvenido!');
+        setUser(response.data);
+        console.log('✅ Usuario autenticado:', response.data);
+        localStorage.setItem('data', JSON.stringify(response.data));
+        window.location.href = '/dashboard';
+      }
+    } catch (err) {
+      console.error('❌ Error en login:', err.response?.data || err.message);
+      setError('Correo o contraseña incorrectos.');
+    } finally {
+      setLoading(false);
+    }
+  };
   const handleForgotPassword = () => {
     alert('Funcionalidad de recuperación de contraseña');
   };
+
+  useEffect( () => {
+    const data = JSON.parse(localStorage.getItem('data'));
+    console.log(data);
+    if (data) {
+      navigate('/dashboard');
+    }
+  })
+
 
   return (
     <div
@@ -59,7 +90,7 @@ const LoginPage = () => {
           <BotonAnimado
             variante="moradoSuave"
             tamaño="xs"
-            onClick={() => alert('Ir a registro')}
+            onClick={() => window.location.href = '/registro'}
             className="text-center text-wrap"
             style={{ whiteSpace: 'normal', maxWidth: '180px' }}
           >

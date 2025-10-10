@@ -8,8 +8,10 @@ import { Step3LegalRepresentative } from "../components/Plantillas/Step3LegalRep
 import { BotonAnimado } from '../../../globals/components/atomos/BotonAnimado';
 import { Logo } from "../../../globals/components/atomos/Logo";
 import { Footer } from "../../auth/components/organismos/Footer";
+import axios from "axios";
 
 export default function Registro() {
+  const API_URL = import.meta.env.VITE_API_URL;
   const [userType, setUserType] = useState('pyme');
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -48,15 +50,45 @@ export default function Registro() {
 
   const handleFinalSubmit = () => {
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      alert('¡Cuenta creada exitosamente!');
-    }, 3000);
+
   };
 
   useEffect(() => {
     const handleResize = () => setEsCelular(window.innerWidth < 576);
     window.addEventListener('resize', handleResize);
+
+      const testData = {
+        email: "emal@gmail.com",
+        password: "12345678",
+        role: "user",
+        nombre: "Pablo",
+        personalDNI: "123456789159",
+        CUIT: "123456789159",
+        Cargo: "Supervisor",
+        nombreComercial: "Empresa Test",
+        empresarialCUIT: "123456789159",
+        tipoSocietario: "SA",
+        domicilioFiscal: "Address Fiscal 123",
+        domicilioComercial: "Address Comercial 456",
+        actividadEconomicaPrincipal: "Compra/Venta",
+        fechaConstitucion: "2025-10-09T13:01:18.000Z",
+        numeroRegistro: "123456789159"
+      };
+
+      axios.post('http://localhost:3001/api/v1/auth/register', testData)
+      .then(response => {
+        if(response.status === 201) {
+          alert('¡Cuenta creada exitosamente!')
+          console.log(response.data);
+        } else {
+          alert('Error al crear la cuenta')
+          console.log(response.data);
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -76,25 +108,25 @@ return (
         <BotonAnimado
           variante="moradoSuave"
           tamaño="xs"
-          onClick={() => alert('Ir a registro')}
+          onClick={() => window.location.href = '/login'}
           className="text-center text-wrap"
           style={{ whiteSpace: 'normal', maxWidth: '180px' }}
         >
           {esCelular ? (
             <>
-              ¿Aún no tienes
+              ¿Ya estás registrado
               <br />
-              tu cuenta? Regístrate
+              ? Inicia Sesión
             </>
           ) : (
-            '¿Aún no tienes una cuenta? Regístrate'
+            '¿Ya estás registrado? Inicia Sesión'
           )}
         </BotonAnimado>
       </div>
     </div>
 
     {/* CONTENIDO CENTRAL */}
-    <div className="container d-flex justify-content-center align-items-center flex-grow-1">
+    <div className="container d-flex justify-content-center align-items-center flex-grow-1 py-4">
       <div>
         <TabSelector activeTab={userType} onTabChange={handleTabChange} />
 

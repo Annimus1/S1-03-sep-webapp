@@ -13,16 +13,18 @@ export const Logo = ({ isWhite = false, maxWidth = 160 }) => {
 
   return (
     <div className="d-flex align-items-center">
-      <img
-        src={logo}
-        alt="Logo Kredia"
-        style={{
-          width: '100%',
-          maxWidth: maxWidth,
-          height: 'auto',
-          marginRight: '5px',
-        }}
-      />
+      <a href="/">
+        <img
+          src={logo}
+          alt="Logo Kredia"
+          style={{
+            width: '100%',
+            maxWidth: maxWidth,
+            height: 'auto',
+            marginRight: '5px',
+          }}
+        />
+      </a>
     </div>
   );
 };
