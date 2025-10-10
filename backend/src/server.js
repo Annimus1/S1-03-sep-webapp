@@ -34,34 +34,11 @@ app.use(express.json());
 // Montar la interfaz de usuario de Swaggerq
 app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Montar el Router principal bajo el prefijo /api/v1
-// app.use('/api/v1/auth', authRoutes);
 // Montar router
 app.use('/api/v1/auth', authRoutes); 
 // app.use('/api/v1/user', userRoutes);
 
 // Ruta de prueba simple
-/**
- * @openapi
- * /:
- *   get:
- *     summary: Texto de prueba
- *     description: Texto de prueba2.
- *     responses:
- *       '200':
- *         description: Lista de contenido
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                   nombre:
- *                     type: string
- */
 app.get('/', (req, res) => {
     res.status(200).json({
         message: 'API del Proyecto funcionando. ¡Bienvenido!',
@@ -70,7 +47,6 @@ app.get('/', (req, res) => {
 });
 
 // --- 4. MANEJO DE ERRORES Y RUTAS NO ENCONTRADAS ---
-
 // Middleware para manejar rutas 404 (Debe ir antes del error handler)
 app.use((req, res) => {
     res.status(404).json({error: `Ruta No Encontrada: ${req.originalUrl}`})

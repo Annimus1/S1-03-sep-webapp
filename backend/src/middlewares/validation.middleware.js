@@ -90,6 +90,22 @@ export const validateRegister = (req, res, next) => {
 };
 
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Login:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: Email del usuario.
+ *           example: "jhondoe.01@gmail.com"
+ *         password:
+ *           type: string
+ *           description: Password del usuario mayor o igual a 8 caracteres.
+ *           example: "-JhonDoe#1234"
+ */
 const loginSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
