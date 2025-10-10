@@ -9,6 +9,16 @@ const AsesorSchema = new mongoose.Schema({
         trim: true,
         lowercase: true
     },
+    nombres: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    apellidos: {
+        type: String,
+        required: true,
+        trim: true,
+    },
     password: {
         type: String,
         required: true, // Este campo almacenará el HASH, NO el texto plano.

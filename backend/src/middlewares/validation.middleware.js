@@ -140,3 +140,71 @@ export const validationLogin = (req, res, next) => {
     req.body = value;
     next();
 }
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Registro-asesor:
+ *       type: object
+ *       properties:
+ *         email:
+ *           type: string
+ *           description: Email del usuario.
+ *           example: "janedoe.08@kredia.com"
+ *         nombres:
+ *           type: string
+ *           description: Nombres del asesor.
+ *           example: "Jane Sophia"
+ *         apellidos:
+ *           type: string
+ *           description: Apellidos del asesor.
+ *           example: "Doe Smith"
+ *         password:
+ *           type: string
+ *           description: Password del usuario mayor o igual a 8 caracteres.
+ *           example: "-JaneDoe#1234"
+ */
+const RegisterAdviserSchema = Joi.object({
+  email: Joi.string()
+    .pattern(/^[^@\s]+@kredia\.com$/i)
+    .message('"email" debe ser una dirección válida de kredia.com.')
+    .trim()
+    .lowercase()
+    .required(),
+  
+  nombres: Joi.string()
+    .trim()
+    .required(),
+  
+  apellidos: Joi.string()
+    .trim()
+    .required(),
+
+  password: Joi.string()
+    .min(8)
+    .trim()
+    .required()
+});
+export const validateRegisterAdviser = (req, res, next) => {
+    const { error, value } = RegisterAdviserSchema.validate(req.body, {
+      abortEarly: false,
+      stripUnknown: true
+    });
+
+    if (error) {
+      const errors = error.details.map(detail => ({
+        field: detail.path[0],
+        message: detail.message
+      }));
+
+      return res.status(422).json({
+        status: 'error',
+        message: 'Datos de registro inválidos.',
+        errors
+      });
+    }
+
+    req.body = value;
+    next();
+}

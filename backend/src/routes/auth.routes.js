@@ -1,11 +1,16 @@
 import { Router } from 'express';
-import { authController, authLoginController } from '../controllers/auth.controller.js';
-import { validateRegister, validationLogin } from '../middlewares/validation.middleware.js';
+import { authController, authLoginController, authRegisterAdviserController } from '../controllers/auth.controller.js';
+import { validateRegister, validationLogin, validateRegisterAdviser } from '../middlewares/validation.middleware.js';
 
 const router = Router();
 
 router.post('/register', validateRegister, authController);
 
+// 201 -> creasion de cta exitosa
+// 400 -> no viene ningun dato
+// 422 -> falta algun dato
+// 500 -> error interno
+router.post('/register-adviser', validateRegisterAdviser, authRegisterAdviserController);
 
 /**
  * @swagger
