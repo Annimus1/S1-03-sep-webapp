@@ -1,11 +1,12 @@
 import { InputField } from "../atomos/InputField";
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 import { FormCard } from "../organismos/FormCard";
+import styled from "./Step.module.css"
 
 export const Step3LegalRepresentative = ({ formData, onChange, onNext, onBack }) => {
   return (
     <FormCard title="Datos del Representante Legal" showBackButton onBack={onBack}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className={styled.gridContainerTwo }>
         <InputField
           label="Nombres"
           placeholder="Nombre completo"
@@ -20,7 +21,7 @@ export const Step3LegalRepresentative = ({ formData, onChange, onNext, onBack })
         />
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className={styled.gridContainerTwo }>
         <InputField
           label="Número de Identificación personal"
           placeholder="CUIT/RUC/RF/NIT/RUT/DNI"

@@ -5,9 +5,7 @@ import { UserProvider } from './stores/UserContext'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
     <UserProvider>
       <App />
     </UserProvider>
-  </React.StrictMode>
 )

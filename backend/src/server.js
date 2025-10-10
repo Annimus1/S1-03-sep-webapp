@@ -37,7 +37,7 @@ app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Montar el Router principal bajo el prefijo /api/v1
 // app.use('/api/v1/auth', authRoutes);
 // Montar router
-app.use('/api/v1/auth/register', authRoutes); 
+app.use('/api/v1/auth', authRoutes); 
 // app.use('/api/v1/user', userRoutes);
 
 // Ruta de prueba simple

@@ -12,7 +12,7 @@ export const LoadingMessage = ({ text }) => (
     color: '#fff',
     padding: '12px 24px',
     borderRadius: '50px',
-    fontSize: '15px',
+    fontSize: '30px',
     fontWeight: '600',
     textAlign: 'center',
     marginTop: '20px',

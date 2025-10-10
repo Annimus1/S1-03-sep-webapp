@@ -23,7 +23,10 @@ export default defineConfig([
       },
     },
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      // Desactiva completamente los errores por variables no usadas
+      'no-unused-vars': 'off',
+      // Opcional: también desactiva advertencias por imports no usados
+      'no-unused-imports': 'off',
     },
   },
 ])

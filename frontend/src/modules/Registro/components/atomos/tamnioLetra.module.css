@@ -1,0 +1,19 @@
+.tamanioLetra {
+  font-size: 18px;
+}
+
+@media (max-width: 576px) {
+  .tamanioLetra {
+    font-size: 15px;
+  }
+}
+
+.tamanioLetraLabel {
+  font-size: 15 px;
+}
+
+@media (max-width: 576px) {
+  .tamanioLetraLabel {
+    font-size: 12px;
+  }
+}

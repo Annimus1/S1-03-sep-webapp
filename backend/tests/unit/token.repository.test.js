@@ -1,10 +1,8 @@
 import TokenRepository from '../../src/repositories/token.repository';
 import { createClient } from 'redis';
-import * as dotenv from 'dotenv'
 import CacheSingleton from '../../src/database/CacheSingleton.js'; // 🔑 Importa el Singleton
 
 // VARIABLES GLOBALES
-dotenv.config();
 
 beforeAll(async () => {
     const REDIS_TEST_URI = process.env.REDIS_TEST_URI;

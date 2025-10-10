@@ -9,7 +9,6 @@ export default {
     moduleNameMapper: {
         '^(\\.{1,2}/.*)\\.js$': '$1',
     },
-    
-    // Si usas el mock de bcrypt, debes indicarle a Jest que use un transformador
-    // Si sigue fallando, puedes intentar usar 'babel-jest' o simplemente NO mockear por ahora.
+
+    setupFiles: ['<rootDir>/jest.setup.js']
 };

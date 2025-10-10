@@ -1,10 +1,8 @@
 import mongoose from 'mongoose';
-import * as dotenv from 'dotenv';
 import AsesorModel from '../../src/models/asesor.model';
 import bcrypt from 'bcrypt'; 
 
 // Cargar variables de entorno (para MONGO_TEST_URI)
-dotenv.config();
 
 // --------------------------------------------------------------------------
 // 🔑 CONFIGURACIÓN DE CONEXIÓN A LA BASE DE DATOS DE PRUEBA
