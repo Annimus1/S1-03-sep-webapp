@@ -10,9 +10,9 @@ export const PasswordStrengthIndicator = ({ password }) => {
   const strength = getStrength();
   const getMessage = () => {
     if (strength === 0) return { text: '', color: '' };
-    if (strength < 50) return { text: 'Contraseña débil', color: '#dc3545' };
-    if (strength < 100) return { text: 'Tu contraseña aún es débil', color: '#ffc107' };
-    return { text: 'Contraseña fuerte: Excelente. Tu contraseña es segura.', color: '#0d5047' };
+    if (strength < 50) return { text: 'Contraseña débil', color: '#952014' };
+    if (strength < 100) return { text: 'Tu contraseña aún es débil', color: '#F39C12' };
+    return { text: 'Contraseña fuerte: Excelente', color: '#0D6546' };
   };
 
   const message = getMessage();

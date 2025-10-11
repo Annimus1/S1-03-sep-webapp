@@ -35,7 +35,8 @@ export const Input = (
       {
         padding: '12px 16px',
         borderRadius: '12px',
-        color: hasError ? '#952014' : '#21255299',
+        color: hasError ? '#952014' : 'black',
+        opacity: 1,
         backgroundColor: hasError ? '#FFF5F5' : '#F7FAFC',
         transition: 'all 0.5s',
       }

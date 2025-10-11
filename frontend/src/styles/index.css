@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'Nunito';
+  src: url('../assets/fonts/Nunito-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Quicksand';
+  src: url('../assets/fonts/Quicksand-VariableFont_wght.ttf') format('truetype');
+  font-weight: 300 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'VarelaRound';
+  src: url('../assets/fonts/VarelaRound-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+body {
+  font-family: 'Nunito', sans-serif;
+}

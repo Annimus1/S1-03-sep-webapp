@@ -10,6 +10,7 @@ import { AnimacionCarga } from '../../../globals/components/atomos/AnimacionCarg
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 import { UserContext } from "../../../stores/UserContext";
+import { Header } from '../../landingPage/components/organismos/Header';
 
 const LoginPage = () => {
   const { setUser } = useContext(UserContext);
@@ -48,7 +49,6 @@ const LoginPage = () => {
 
       if (response.status === 200) {
         setSuccess(true);
-        alert('¡Bienvenido!');
         setUser(response.data);
         console.log('✅ Usuario autenticado:', response.data);
         localStorage.setItem('data', JSON.stringify(response.data));
@@ -75,37 +75,20 @@ const LoginPage = () => {
 
 
   return (
-    <div
-      style={{
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%)',
-        display: 'flex',
-        flexDirection: 'column',
-      }}
-    >
+      <div
+        style={{
+          minHeight: '100vh',
+          backgroundImage: 'url("/src/assets/Trama.svg")',
+          backgroundSize: 'auto',
+          backgroundPosition: 'top left',
+          backgroundColor: '#F5F6F8',
+
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
       {/* HEADER */}
-      <div className="navbar navbar-light bg-white shadow-sm">
-        <div className="container-fluid d-flex justify-content-between align-items-center px-3 px-md-5 flex-wrap">
-          <Logo />
-          <BotonAnimado
-            variante="moradoSuave"
-            tamaño="xs"
-            onClick={() => window.location.href = '/registro'}
-            className="text-center text-wrap"
-            style={{ whiteSpace: 'normal', maxWidth: '180px' }}
-          >
-            {esCelular ? (
-              <>
-                ¿Aún no tienes
-                <br />
-                tu cuenta? Regístrate
-              </>
-            ) : (
-              '¿Aún no tienes una cuenta? Regístrate'
-            )}
-          </BotonAnimado>
-        </div>
-      </div>
+      <Header texto="¿Aún no tienes tu cuenta? Regístrate" textoMovil='Regístrate' direccionar='/registro'/>
 
       {/* CONTENIDO CENTRAL CENTRADO */}
       <div

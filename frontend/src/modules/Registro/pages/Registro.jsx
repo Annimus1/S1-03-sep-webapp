@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { TabSelector } from "../components/moleculas/TabSelector";
 import { LoadingScreen } from "../components/organismos/LoadingScreen";
 import { Step1PersonalData } from "../components/Plantillas/Step1PersonalData";
@@ -9,34 +9,48 @@ import { BotonAnimado } from '../../../globals/components/atomos/BotonAnimado';
 import { Logo } from "../../../globals/components/atomos/Logo";
 import { Footer } from "../../auth/components/organismos/Footer";
 import axios from "axios";
+import { UserContext } from "../../../stores/UserContext";
+import { Header } from "../../landingPage/components/organismos/Header";
+
+
 
 export default function Registro() {
+  const { setUser } = useContext(UserContext);
   const API_URL = import.meta.env.VITE_API_URL;
   const [userType, setUserType] = useState('pyme');
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [esCelular, setEsCelular] = useState(window.innerWidth < 576);
   const [formData, setFormData] = useState({
+    // 🔹 Datos de acceso
     email: '',
     emailConfirm: '',
-    nombres: '',
-    apellidos: '',
     password: '',
     passwordConfirm: '',
-    razonSocial: '',
-    nif: '',
-    tipoSocietario: '',
-    registroCamara: '',
+
+    // 🔹 Datos personales del usuario que registra
+    nombre: '',
+    apellido: '',
+
+    // 🔹 Datos de la empresa
+    nombreComercial: '',                  
+    cuitEmpresa: '',             
+    tipoSocietario: '',      
+    numeroRegistro: '',         
     domicilioFiscal: '',
     domicilioComercial: '',
     actividadEconomica: '',
     fechaConstitucion: '',
+
+    // 🔹 Representante legal
     repNombres: '',
     repApellidos: '',
     repDni: '',
     repCargo: '',
     repDomicilio: '',
-    pep: false
+
+    // 🔹 Otros
+    pep: false                   
   });
 
   const handleChange = (field, value) => {
@@ -48,15 +62,30 @@ export default function Registro() {
     setStep(1);
   };
 
-  const handleFinalSubmit = () => {
+  const handleFinalSubmit =  async () => {
     setLoading(true);
+    console.log(formData)
 
+    try {
+      const response = await axios.post(`${API_URL}/auth/login`, formData);
+
+      if (response.status === 201) {
+        setUser(response.data);
+        console.log('✅ Usuario registrado:', response.data);
+        localStorage.setItem('data', JSON.stringify(response.data));
+        window.location.href = '/dashboard';
+      }
+    } catch (err) {
+      console.error('❌ Error en Registro:', err.response?.data || err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     const handleResize = () => setEsCelular(window.innerWidth < 576);
     window.addEventListener('resize', handleResize);
-
+      /*
       const testData = {
         email: "emal@gmail.com",
         password: "12345678",
@@ -89,41 +118,25 @@ export default function Registro() {
         console.error(error);
       });
 
+      */
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
 return (
-  <div
-    style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #F7FAFC 0%, #EDF2F7 100%)',
-      display: 'flex',
-      flexDirection: 'column',
-    }}
-  >
-    {/* HEADER */}
-    <div className="navbar navbar-light bg-white shadow-sm">
-      <div className="container-fluid d-flex justify-content-between align-items-center px-3 px-md-5 flex-wrap">
-        <Logo />
-        <BotonAnimado
-          variante="moradoSuave"
-          tamaño="xs"
-          onClick={() => window.location.href = '/login'}
-          className="text-center text-wrap"
-          style={{ whiteSpace: 'normal', maxWidth: '180px' }}
-        >
-          {esCelular ? (
-            <>
-              ¿Ya estás registrado
-              <br />
-              ? Inicia Sesión
-            </>
-          ) : (
-            '¿Ya estás registrado? Inicia Sesión'
-          )}
-        </BotonAnimado>
-      </div>
-    </div>
+    <div
+      style={{
+        minHeight: '100vh',
+        backgroundImage: 'url("/src/assets/Trama.svg")',
+        backgroundSize: 'auto',
+        backgroundPosition: 'top left',
+        backgroundColor: '#F5F6F8',
+
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+    
+    <Header texto="¿Ya estás registrado? Inicia Sesión" textoMovil='Inicia Sesión'  />
 
     {/* CONTENIDO CENTRAL */}
     <div className="container d-flex justify-content-center align-items-center flex-grow-1 py-4">

@@ -8,4 +8,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     <UserProvider>
       <App />
     </UserProvider>
-)
+  )
