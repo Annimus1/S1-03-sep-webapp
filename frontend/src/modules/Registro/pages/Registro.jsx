@@ -62,12 +62,29 @@ export default function Registro() {
     setStep(1);
   };
 
-  const handleFinalSubmit =  async () => {
+  const handleFinalSubmit = async () => {
     setLoading(true);
-    console.log(formData)
+    console.log(formData);
+
+    const registroData = {
+      email: formData.email,
+      password: formData.password,
+      nombre: formData.nombre,
+      personalDNI: formData.repDni || "00000000",
+      CUIT: formData.cuitEmpresa,
+      Cargo: formData.repCargo,
+      nombreComercial: formData.nombreComercial,
+      empresarialCUIT: formData.cuitEmpresa,
+      tipoSocietario: formData.tipoSocietario,
+      domicilioFiscal: formData.domicilioFiscal,
+      domicilioComercial: formData.domicilioComercial,
+      actividadEconomicaPrincipal: formData.actividadEconomica,
+      fechaConstitucion: formData.fechaConstitucion,
+      numeroRegistro: formData.numeroRegistro
+    };
 
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, formData);
+      const response = await axios.post(`${API_URL}/auth/register`, registroData);
 
       if (response.status === 201) {
         setUser(response.data);
@@ -82,43 +99,10 @@ export default function Registro() {
     }
   };
 
+
   useEffect(() => {
     const handleResize = () => setEsCelular(window.innerWidth < 576);
     window.addEventListener('resize', handleResize);
-      /*
-      const testData = {
-        email: "emal@gmail.com",
-        password: "12345678",
-        role: "user",
-        nombre: "Pablo",
-        personalDNI: "123456789159",
-        CUIT: "123456789159",
-        Cargo: "Supervisor",
-        nombreComercial: "Empresa Test",
-        empresarialCUIT: "123456789159",
-        tipoSocietario: "SA",
-        domicilioFiscal: "Address Fiscal 123",
-        domicilioComercial: "Address Comercial 456",
-        actividadEconomicaPrincipal: "Compra/Venta",
-        fechaConstitucion: "2025-10-09T13:01:18.000Z",
-        numeroRegistro: "123456789159"
-      };
-
-      axios.post('http://localhost:3001/api/v1/auth/register', testData)
-      .then(response => {
-        if(response.status === 201) {
-          alert('¡Cuenta creada exitosamente!')
-          console.log(response.data);
-        } else {
-          alert('Error al crear la cuenta')
-          console.log(response.data);
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
-
-      */
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 

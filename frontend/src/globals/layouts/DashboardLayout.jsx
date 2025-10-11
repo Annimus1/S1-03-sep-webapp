@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import { Footer } from '../components/Organismo/Footer';
 import { Header } from '../../modules/dashboard/components/organismos/Header';
 import { UserContext } from '../../stores/UserContext';
 import { WelcomeLoadingScreen } from '../components/moleculas/WelcomeLoadingScreen';
 import { GoodbyeLoadingScreen } from '../components/moleculas/GoodbyeLoadingScreen';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardLayout = () => {
+  const Navigate = useNavigate();
   const { user, logout } = useContext(UserContext);
   const [isLoading, setIsLoading] = useState(true); 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -19,13 +22,11 @@ const DashboardLayout = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = async  () => {
     setIsLoggingOut(true);
-    
-    setTimeout(() => {
-      logout();
-      window.location.href = '/';
-    }, 2000);
+    await delay(2000);
+    Navigate('/');
+    logout();
   };
 
   return (

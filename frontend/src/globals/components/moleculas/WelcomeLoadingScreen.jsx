@@ -14,7 +14,7 @@ export const WelcomeLoadingScreen = ({ userName }) => (
       animation: 'slideDown 0.5s ease-out'
     }}>
       <h2 className="mb-0" style={{ fontSize: '24px', fontWeight: '600' }}>
-        ¡Bienvenido de vuelta, {userName}!
+        ¡Bienvenido, {userName}!
       </h2>
     </div>
     <p className="text-muted" style={{ fontSize: '14px' }}>
