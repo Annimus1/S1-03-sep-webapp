@@ -17,7 +17,7 @@ const app = express();
 // CORS
 const corsOptions = {
     // Usar variable de entorno para el origen del frontend
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000', 
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173', 
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
 };

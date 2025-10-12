@@ -1,7 +1,6 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import { Footer } from '../components/Organismo/Footer';
-import { Header } from '../../modules/landingPage/components/organismos/Header';
+import { Footer } from '../components/organismo/Footer';
 
 const MainLayout = () => {
   return (

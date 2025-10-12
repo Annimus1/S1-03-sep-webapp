@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
-import { Footer } from '../components/Organismo/Footer';
+import { Footer } from '../components/organismo/Footer';
 import { Header } from '../../modules/dashboard/components/organismos/Header';
 import { UserContext } from '../../stores/UserContext';
 import { WelcomeLoadingScreen } from '../components/moleculas/WelcomeLoadingScreen';

@@ -4,7 +4,7 @@ import MainLayout from './globals/layouts/MainLayout';
 import LoginPage from './modules/auth/pages/LoginPage';
 import LayaoutAuth from './modules/auth/layouts/LayaoutAuth';
 import KrediaRegistro from './modules/Registro/pages/Registro';
-import Dashboard from './modules/dashboard/pages/DashBoard';
+import Dashboard from './modules/dashboard/pages/Dashboard';
 import PrivateRoute from './routes/PrivateRoute';
 import { UserProvider } from './stores/UserContext';
 import { Navigate } from 'react-router-dom';
