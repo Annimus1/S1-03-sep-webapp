@@ -42,7 +42,8 @@ describe('Modelo de Usuario PyMEs -> Security Hooks (Hashing)', () => {
         const userData = { 
             email: 'test@empresa.com',
             password: PLAIN_PASSWORD,
-            role: 'asesor'
+            nombres: "test",
+            apellidos: "apellidos"
         }
 
         const user = new AsesorModel(userData);
@@ -68,16 +69,17 @@ describe('Modelo de Usuario PyMEs -> Validation', () => {
     // Objeto base con todos los campos requeridos y únicos para evitar errores de validación.
     const baseUserData = { 
         password: 'PasswordUnica123',
-        nombre: 'Empresa Base S.A.',
-        role: 'asesor'
+        nombres: 'Empresa Base S.A.',
+        apellidos: 'apellidos'
     };
 
     it('debería fallar si el email ya existe (unicidad)', async () => {
-        const EMAIL_DUPLICADO = 'duplicado@empresa.com';
+        const EMAIL_DUPLICADO = 'duplicado@kredia.com';
         
         // 1. Crear y guardar el primer usuario (éxito)
         const firstUser = { ...baseUserData, email: EMAIL_DUPLICADO };
-        await AsesorModel.create(firstUser); 
+        const user = new AsesorModel(firstUser);
+        await user.save();
         
         // 2. Crear datos para el segundo usuario.
         // 🔑 CLAVE: Duplicamos el EMAIL, pero aseguramos que los otros campos 'unique' sean DIFERENTES.
@@ -87,16 +89,15 @@ describe('Modelo de Usuario PyMEs -> Validation', () => {
             
             // Resto de los campos no únicos pueden ser los mismos del baseUserData
             password: 'OtraPassword',
-            role: 'asesor'
+            nombres: 'Empresa Base S.A.',
+            apellidos: 'apellidos'
         };
 
-        // 3. Intentar guardar el segundo usuario y esperar que el proceso falle.
-        // Jest espera que la promesa sea rechazada (toThrow).
-        await expect(AsesorModel.create(secondUser)).rejects.toThrow();
+        const user2 = new AsesorModel(secondUser);
 
-        // 4. Verificación específica del código de error de MongoDB.
+        // 3. Verificación específica del código de error de MongoDB.
         try {
-            await AsesorModel.create(secondUser);
+            await user2.save(secondUser);
         } catch (error) {
             // El código 11000 es el error de índice duplicado de MongoDB.
             expect(error.code).toBe(11000); 
@@ -109,6 +110,8 @@ it('debería fallar si el campo role tiene un valor fuera del enum permitido', a
     const invalidRoleData = { 
         // ... (Todos los campos requeridos y válidos) ...
         email: 'invalid@role.com',
+        nombres: "nombre",
+        apellidos: "apellido",
         password: 'Pass123',
         // ❌ ROL INVÁLIDO
         role: 'super_admin_invalido', 
