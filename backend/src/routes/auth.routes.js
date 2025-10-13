@@ -1,9 +1,118 @@
 import { Router } from 'express';
 import { authController, authLoginController, authRegisterAdviserController } from '../controllers/auth.controller.js';
-import { validateRegister, validationLogin, validateRegisterAdviser } from '../middlewares/validation.middleware.js';
+import { validateRegister, validateRegisterAdviser, validationLogin } from '../middlewares/validation.middleware.js';
 
 const router = Router();
 
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     tags:
+ *      - "Autenticación" 
+ *     summary: Crea una cuenta de usuario PYMES.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Register'
+ *     responses:
+ *       201:
+ *         description: Creacion una cuenta de usuario PYMES.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     nombres:
+ *                       type: string
+ *                       description: Nombres del usuario.
+ *                       example: "Jhon Richard"
+ *                     appellidos:
+ *                       type: string
+ *                       description: Apellidos del usuario.
+ *                       example: "Doe Smith"
+ *                     email:
+ *                       type: string
+ *                       description: El email del usuario.
+ *                       example: "jhondoe05@gmail.com"
+ *                     token:
+ *                       type: string
+ *                       description: JSON web Token.
+ *                       example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.KMUFsIDTnFmyG3nMiGM6H9FNFUROf3wh7SmqJp-QV30"
+ *       400:
+ *         description: Ningun dato fue recibido.Email ya registrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Verifique que los datos ingresados sean correctos.Email, nombres, apellidos y password son obligatorios."
+ *       422:
+ *         description: Password invalido.Algun dato requerido no fue enviado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Datos de registro inválidos."
+ *                     errors:
+ *                       type: array 
+ *                       items:
+ *                         type: object
+ *                         properties:
+ *                           field:
+ *                             type: string
+ *                             description: Campo donde se genero el error.
+ *                             example: "password"
+ *                           message:
+ *                             type: string
+ *                             description: Mensaje específico para ese error.
+ *                             example: '\"password\" needs 8 or more characters'
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
+*/
 router.post('/register', validateRegister, authController);
 
 /**
