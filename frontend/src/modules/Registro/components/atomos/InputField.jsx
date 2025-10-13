@@ -18,6 +18,7 @@ export const InputField = ({ label, type = "text", placeholder, value, onChange,
       onChange={onChange}
       style={{
         width: '100%',
+        color: 'black',
         borderRadius: '8px',
         border: error ? '1px solid #dc3545' : '1px solid #e0e0e0',
         padding: '12px 16px',

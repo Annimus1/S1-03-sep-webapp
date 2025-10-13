@@ -8,15 +8,13 @@ export const Step4TermsAndConditions = ({ onAccept, onBack }) => {
   return (
     <FormCard title="Aceptación de Términos y Condiciones" showBackButton onBack={onBack}>
       <div style={{
-        backgroundColor: 'white',
+        backgroundColor: '#EDEEEF',
         borderRadius: '12px',
         padding: '24px',
         marginBottom: '24px',
-        maxHeight: '320px',
-        overflowY: 'auto',
         fontSize: '14px',
         lineHeight: '1.6',
-        color: '#4a5568'
+        color: '#000000ff'
       }}>
         <p style={{ marginBottom: '16px' }}>
           Al crear una cuenta en KREDIA, usted declara haber leído, comprendido y aceptado los siguientes 
@@ -31,7 +29,7 @@ export const Step4TermsAndConditions = ({ onAccept, onBack }) => {
           marginBottom: '8px', 
           fontSize: '15px' 
         }}>
-          1. Objeto del servicio
+          <span style={{ fontWeight: 'bold' }}>1. Objeto del servicio</span> 
         </h6>
         <p style={{ marginBottom: '16px' }}>
           KREDIA es una plataforma tecnológica que facilita la gestión digital de solicitudes de crédito 
@@ -46,7 +44,7 @@ export const Step4TermsAndConditions = ({ onAccept, onBack }) => {
           marginBottom: '8px', 
           fontSize: '15px' 
         }}>
-          2. Registro y veracidad de la información
+          <span style={{ fontWeight: 'bold' }}>2. Responsabilidad del usuario</span>
         </h6>
         <p>
           Al registrarse, el usuario se compromete a proporcionar información veraz, completa y actualizada 
@@ -70,7 +68,7 @@ export const Step4TermsAndConditions = ({ onAccept, onBack }) => {
       </div>
 
       <div style={{ textAlign: 'center' }}>
-        <BotonAnimado onClick={onAccept} disabled={!accepted}>
+        <BotonAnimado onClick={onAccept} deshabilitado={!accepted}>
           Crear Cuenta
         </BotonAnimado>
       </div>

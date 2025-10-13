@@ -1,15 +1,20 @@
 .tamanioLetra {
-  font-size: 18px;
+  font-size: 15px;
+}
+
+.tamanioLetra::placeholder {
+  color: #21255299;
+  opacity: 0.5;
 }
 
 @media (max-width: 576px) {
   .tamanioLetra {
-    font-size: 15px;
+    font-size: 13px;
   }
 }
 
 .tamanioLetraLabel {
-  font-size: 15 px;
+  font-size: 14 px;
 }
 
 @media (max-width: 576px) {

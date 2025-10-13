@@ -1,6 +1,6 @@
 export const FormCard = ({ children, title, showBackButton, onBack, errorMessage }) => (
   <div style={{
-    backgroundColor: '#a8e6d8',
+    backgroundColor: '#5BE2C580',
     borderRadius: '24px',
     padding: '40px',
     maxWidth: '800px',

@@ -15,8 +15,8 @@ export const Step1PersonalData = ({ formData, onChange, onNext, userType }) => {
     if (formData.email !== formData.emailConfirm) {
       newErrors.emailConfirm = 'Los correos no coinciden';
     }
-    if (!formData.nombres) newErrors.nombres = 'Campo requerido';
-    if (!formData.apellidos) newErrors.apellidos = 'Campo requerido';
+    if (!formData.nombre) newErrors.nombre = 'Campo requerido';
+    if (!formData.apellido) newErrors.apellido = 'Campo requerido';
     if (!formData.password) newErrors.password = 'Campo requerido';
     if (formData.password.length < 8) newErrors.password = 'Mínimo 8 caracteres';
     if (!formData.passwordConfirm) newErrors.passwordConfirm = 'Campo requerido';
@@ -55,18 +55,18 @@ export const Step1PersonalData = ({ formData, onChange, onNext, userType }) => {
 
       <div className={styled.gridContainerTwo }>
         <InputField
-          label="Nombres"
-          placeholder="María Lucía"
-          value={formData.nombres}
-          onChange={(e) => onChange('nombres', e.target.value)}
-          error={errors.nombres}
+          label="Nombre"
+          placeholder="María"
+          value={formData.nombre}
+          onChange={(e) => onChange('nombre', e.target.value)}
+          error={errors.nombre}
         />
         <InputField
-          label="Apellidos"
-          placeholder="Sánchez Pérez"
-          value={formData.apellidos}
-          onChange={(e) => onChange('apellidos', e.target.value)}
-          error={errors.apellidos}
+          label="Apellido"
+          placeholder="Sánchez"
+          value={formData.apellido}
+          onChange={(e) => onChange('apellido', e.target.value)}
+          error={errors.apellido}
         />
       </div>
 

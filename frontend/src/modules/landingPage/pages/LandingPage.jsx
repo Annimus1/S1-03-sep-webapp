@@ -9,19 +9,19 @@ import { SeccionSimulador } from "../components/organismos/SeccionSimulador";
  * Esta es la página completa de aterrizaje de Kredia
  */
 export const LandingPage = () => (
-  <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
+  <div>
     <Header/>
-<div
-  className="container"
-  style={{
-    maxWidth: 1400,
-    margin: '0 auto',
-    padding: '20px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '30px'            
-  }}
->
+  <div
+    className="container"
+    style={{
+      maxWidth: 1400,
+      margin: '0 auto',
+      padding: '20px',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '30px'            
+    }}
+  >
   <div style={{ borderRadius: '20px', overflow: 'hidden' }}>
     <SeccionHero />
   </div>

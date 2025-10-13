@@ -17,7 +17,7 @@ export const Label = (
 ) => (
   <label
     htmlFor={htmlFor}
-    className={style.tamanioLetra}
+    className={style.tamanioLetraLabel}
     style={{
       fontWeight: '600',
       color: '#2D3748',
