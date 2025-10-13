@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
     // ----------------------------------------------------------------------
@@ -26,7 +26,8 @@ const UserSchema = new mongoose.Schema({
     // ----------------------------------------------------------------------
     // II. CAMPOS OBLIGATORIOS EN EL REGISTRO (KYC Básico)
     // ----------------------------------------------------------------------
-    nombre: { type: String, required: true },
+    nombres: { type: String, required: true },
+    apellidos: { type: String, required: true },
     personalDNI: { type: String, required: true, unique: true }, // DNI / Cédula / Pasaporte.
     CUIT: { type: String, required: true }, // CUIT / RFC / RUT personal.
     Cargo: { type: String, required: true },
@@ -40,7 +41,7 @@ const UserSchema = new mongoose.Schema({
     fechaConstitucion: { type: Date, required: true },
     numeroRegistro: { type: String, required: true, unique: true }, // IGJ / SUNARP / Registro Mercantil.
     certificadoPyME: { type: String, required: false }, // Opcional si aplica.
-
+    pep: { type: Boolean, required: true }, // Persona Expuesta Políticamente (Sí/No).
     // ----------------------------------------------------------------------
     // III. CAMPOS POST-REGISTRO (Referencias de Documentación)
     // Se almacenan las URLs o IDs de los archivos subidos al servicio de almacenamiento (S3, etc.).

@@ -10,7 +10,8 @@ export const authController = async (req, res) => {
       password,
       nombreComercial,
       role,
-      nombre,
+      nombres,
+      apellidos,
       personalDNI,
       CUIT,
       Cargo,
@@ -21,6 +22,7 @@ export const authController = async (req, res) => {
       actividadEconomicaPrincipal,
       fechaConstitucion,
       numeroRegistro,
+      pep,
       certificadoPyME
     } = req.body;
 
@@ -37,7 +39,8 @@ export const authController = async (req, res) => {
       password,
       nombreComercial,
       role: role || 'user',
-      nombre,
+      nombres,
+      apellidos,
       personalDNI,
       CUIT,
       Cargo,
@@ -48,7 +51,8 @@ export const authController = async (req, res) => {
       actividadEconomicaPrincipal,
       fechaConstitucion,
       numeroRegistro,
-      certificadoPyME
+      certificadoPyME,
+      pep
     });
 
     //Respuesta sin password

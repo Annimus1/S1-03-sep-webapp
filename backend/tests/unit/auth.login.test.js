@@ -1,13 +1,14 @@
+import mongoose from 'mongoose';
 import request from 'supertest';
 import app from '../../src/server';
-import mongoose from 'mongoose';
 
 const LOGIN_URL = '/api/v1/auth/login';
 const validUser = {
     email: 'test@example.com',
     password: '12345678',
     nombreComercial: 'Mi PyME',
-    nombre: 'Juan Perez',
+    nombres: 'Juan',
+    apellidos: 'Pérez',
     personalDNI: '12345678',
     CUIT: '20304050607',
     Cargo: 'CEO',
@@ -17,7 +18,8 @@ const validUser = {
     domicilioComercial: 'Calle Real 456',
     actividadEconomicaPrincipal: 'Servicios',
     fechaConstitucion: '2020-01-01',
-    numeroRegistro: 'REG12345'
+    numeroRegistro: 'REG12345',
+    pep:true
 };
 
 

@@ -15,10 +15,12 @@ const registerSchema = Joi.object({
     .trim()
     .required(),
 
-  nombre: Joi.string()
+  nombres: Joi.string()
     .trim()
     .required(),
-
+  apellidos: Joi.string()
+    .trim()
+    .required(),
   personalDNI: Joi.string()
     .trim()
     .required(),
@@ -63,7 +65,9 @@ const registerSchema = Joi.object({
     .required(),
 
   certificadoPyME: Joi.boolean()
-    .optional()
+    .optional(),
+  pep: Joi.boolean()
+    .required()
 });
 
 export const validateRegister = (req, res, next) => {

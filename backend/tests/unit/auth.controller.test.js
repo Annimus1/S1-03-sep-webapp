@@ -24,7 +24,8 @@ describe('POST /api/v1/auth/register', () => {
     email: 'test@example.com',
     password: '12345678',
     nombreComercial: 'Mi PyME',
-    nombre: 'Juan Perez',
+    nombres: 'Juan',
+    apellidos: 'Pérez',
     personalDNI: '12345678',
     CUIT: '20304050607',
     Cargo: 'CEO',
@@ -34,7 +35,8 @@ describe('POST /api/v1/auth/register', () => {
     domicilioComercial: 'Calle Real 456',
     actividadEconomicaPrincipal: 'Servicios',
     fechaConstitucion: '2020-01-01',
-    numeroRegistro: 'REG12345'
+    numeroRegistro: 'REG12345',
+    pep: false
   };
 
   it('debería crear un usuario correctamente', async () => {
