@@ -76,7 +76,12 @@ export const authLoginController = async (req, res) => {
     } = req.body;
 
     // Verificar si el email ya existe y si la password coincide
-    const existingUser = await UserRepository.verifyCredentials(email, password);
+    let existingUser = await UserRepository.verifyCredentials(email, password);
+
+    if(!existingUser){
+      existingUser = await AsesorRepository.verifyCredentials(email, password);
+    }
+
     if (!existingUser) {
       console.warn(`Intento de inicio de sesion con email inexistente: ${email}`);
       return res.status(401).json({ status: "error", message: 'Credenciales invalidas.' });
@@ -104,6 +109,9 @@ export const authLoginController = async (req, res) => {
     });
 
   } catch (error) {
+    
+    console.error('Error en el inicio de sesion usuario:', error);
+    
     if (error instanceof TypeError) {
       return res.status(400).json({
         status: 'error',
@@ -111,7 +119,6 @@ export const authLoginController = async (req, res) => {
       });
     }
 
-    console.error('Error en el inicio de sesion usuario:', error);
     return res.status(500).json({ status: 'error', message: 'Error interno del servidor.' });
   }
 };
