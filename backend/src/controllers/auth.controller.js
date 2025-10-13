@@ -1,7 +1,7 @@
+import AsesorRepository from '../repositories/asesor.repository.js';
 import tokenRepository from '../repositories/token.repository.js';
 import UserRepository from '../repositories/user.repository.js';
-import AsesorRepository from '../repositories/asesor.repository.js';
-import JWT from '../services/jwt.service.js'
+import JWT from '../services/jwt.service.js';
 
 export const authController = async (req, res) => {
   try {
@@ -25,12 +25,12 @@ export const authController = async (req, res) => {
       pep,
       certificadoPyME
     } = req.body;
-
+    
     // Verificar si el email ya existe
     const existingUser = await UserRepository.findByEmail(email);
     if (existingUser) {
       console.warn(`Intento de registro con email existente: ${email}`);
-      return res.status(400).json({ message: 'No se pudo completar el registro. Verifique los datos ingresados.' });
+      return res.status(400).json({ status: 'error',message: 'No se pudo completar el registro. Verifique los datos ingresados.' });
     }
 
     // Crear usuario (PyME)
@@ -38,7 +38,6 @@ export const authController = async (req, res) => {
       email,
       password,
       nombreComercial,
-      role: role || 'user',
       nombres,
       apellidos,
       personalDNI,
@@ -54,17 +53,35 @@ export const authController = async (req, res) => {
       certificadoPyME,
       pep
     });
+    // Crear token JWT
+    const jwt = new JWT();
+    const { role: userRole, nombres: userName, _id } = newUser;
+    const token = jwt.sign({ nombres: userName, role: userRole, email });
 
-    //Respuesta sin password
-    const { password: _, ...userSafe } = newUser.toObject();
+    // Guardar en Redis (whitelist)
+    await tokenRepository.whitelistToken(_id.toString(), token);
+
+    // Respuesta
     return res.status(201).json({
-      message: 'Usuario registrado exitosamente.',
-      user: userSafe
+      message: 'Registro de usuario exitoso.',
+      user: {
+        id: _id,
+        role,
+        nombres,
+        email,
+        token
+      }
     });
 
   } catch (error) {
+    if (error instanceof TypeError) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'email y password obligatorios.'
+      });
+    }
     console.error('Error registrando usuario:', error);
-    return res.status(500).json({ message: 'Error interno del servidor.' });
+    return res.status(500).json({ status: 'error',message: 'Error interno del servidor.' });
   }
 };
 
@@ -84,8 +101,8 @@ export const authLoginController = async (req, res) => {
 
     // Crear jwt
     const jwt = new JWT();
-    const { role, nombre } = existingUser;
-    const token = jwt.sign({ nombre, role, email });
+    const { role, nombres } = existingUser;
+    const token = jwt.sign({ nombres, role, email });
 
     console.log(token);
     // Guardar jwt en cache
@@ -97,7 +114,7 @@ export const authLoginController = async (req, res) => {
       message: 'Inicio de sesion exitoso.',
       user: {
         role,
-        nombre,
+        nombres,
         email,
         token
       }
