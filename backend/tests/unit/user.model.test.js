@@ -1,8 +1,8 @@
 // tests/unit/user.model.test.js
 
+import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import UserModel from '../../src/models/user.model.js';
-import bcrypt from 'bcrypt'; 
 
 // Cargar variables de entorno (para MONGO_TEST_URI)
 
@@ -44,7 +44,8 @@ describe('Modelo de Usuario PyMEs -> Security Hooks (Hashing)', () => {
         const userData = { 
             email: 'test@empresa.com',
             password: PLAIN_PASSWORD,
-            nombre: 'Juan Perez',
+            nombres: 'Juan',
+            apellidos: 'Pérez',
             personalDNI: '12345678',
             empresarialCUIT: '30712345678',
             Cargo: 'CEO',
@@ -57,6 +58,7 @@ describe('Modelo de Usuario PyMEs -> Security Hooks (Hashing)', () => {
             fechaConstitucion: new Date(),
             numeroRegistro: 'ABC123456',
             role: 'user',        
+            pep: false,
             certificadoPyME: '2500034A',
             Documentacion: ['test'],
         }
@@ -84,7 +86,8 @@ describe('Modelo de Usuario PyMEs -> Validation', () => {
     // Objeto base con todos los campos requeridos y únicos para evitar errores de validación.
     const baseUserData = { 
         password: 'PasswordUnica123',
-        nombre: 'Empresa Base S.A.',
+        nombres: 'Empresa Base S.A.',
+        apellidos: 'Empresa',
         personalDNI: '99999999',
         empresarialCUIT: '20999999990',
         Cargo: 'Gerente',
@@ -99,6 +102,7 @@ describe('Modelo de Usuario PyMEs -> Validation', () => {
         role: 'user',        
         certificadoPyME: '2500034A',
         Documentacion: ['doc1'],
+        pep: false
     };
 
     it('debería fallar si el email ya existe (unicidad)', async () => {
@@ -121,7 +125,8 @@ describe('Modelo de Usuario PyMEs -> Validation', () => {
             
             // Resto de los campos no únicos pueden ser los mismos del baseUserData
             password: 'OtraPassword',
-            nombre: 'Segunda S.A.',
+            nombres: 'Segunda S.A.',
+            apellidos: 'Empresa',
             Cargo: 'SubGerente',
             CUIT: '20888888880',
             nombreComercial: 'Test Falla Unicidad',
@@ -132,6 +137,7 @@ describe('Modelo de Usuario PyMEs -> Validation', () => {
             fechaConstitucion: new Date(),
             role: 'user',        
             certificadoPyME: '2500034B',
+            pep: false,
             Documentacion: ['doc2'],
         };
 
@@ -163,7 +169,8 @@ it('debería fallar si el campo role tiene un valor fuera del enum permitido', a
     const data = { 
         ...invalidRoleData, 
         // Asegúrate de que los otros campos requeridos estén aquí si no usas un baseUserData
-        nombre: 'Role Fail S.A.',
+        nombres: 'Role Fail S.A.',
+        apellidos: 'Role',
         personalDNI: '11111111',
         empresarialCUIT: '20111111110',
         Cargo: 'Gerente',
@@ -177,6 +184,7 @@ it('debería fallar si el campo role tiene un valor fuera del enum permitido', a
         numeroRegistro: 'ABC111111',
         certificadoPyME: '2500034C',
         Documentacion: ['doc1'],
+        pep: false
     };
 
     const user = new UserModel(data);

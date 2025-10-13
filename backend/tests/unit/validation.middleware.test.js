@@ -14,7 +14,8 @@ describe('Middleware validateRegister', () => {
   const validRequest = {
     email: 'test@mail.com',
     password: '12345678',
-    nombre: 'Juan Perez',
+    nombres: 'Juan',
+    apellidos: 'Pérez',
     personalDNI: '12345678',
     CUIT: '20304050607',
     Cargo: 'CEO',
@@ -26,7 +27,8 @@ describe('Middleware validateRegister', () => {
     actividadEconomicaPrincipal: 'Servicios',
     fechaConstitucion: '2020-01-01',
     numeroRegistro: 'REG12345',
-    certificadoPyME: true
+    certificadoPyME: true,
+    pep: false
   };
 
   test('Debe rechazar si falta el email', async () => {
