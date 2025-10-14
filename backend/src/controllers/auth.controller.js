@@ -65,7 +65,7 @@ export const authController = async (req, res) => {
     return res.status(201).json({
       message: 'Registro de usuario exitoso.',
       user: {
-        id: _id,
+        id: newUser._id,
         role,
         nombres,
         email,
@@ -113,6 +113,7 @@ export const authLoginController = async (req, res) => {
     return res.status(200).json({
       message: 'Inicio de sesion exitoso.',
       user: {
+        id: existingUser._id,
         role,
         nombres,
         email,
@@ -170,6 +171,7 @@ export const authRegisterAdviserController = async (req, res) => {
     return res.status(201).json({
       message: 'Asesor registrado exitosamente.',
       user: {
+        id : asesor._id, 
         email,
         nombres,
         apellidos,

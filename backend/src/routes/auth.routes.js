@@ -28,6 +28,10 @@ const router = Router();
  *                 data:
  *                   type: object
  *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: ID unico del usuario.
+ *                       example: "1"
  *                     nombres:
  *                       type: string
  *                       description: Nombres del usuario.
@@ -139,6 +143,10 @@ router.post('/register', validateRegister, authController);
  *                 data:
  *                   type: object
  *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: ID unico del usuario.
+ *                       example: "1"
  *                     nombres:
  *                       type: string
  *                       description: Nombres del usuario.
@@ -254,6 +262,10 @@ router.post('/register-adviser', validateRegisterAdviser, authRegisterAdviserCon
  *                 data:
  *                   type: object
  *                   properties:
+ *                     id:
+ *                       type: string
+ *                       description: ID unico del usuario.
+ *                       example: "1"
  *                     nombres:
  *                       type: string
  *                       description: Nombres del usuario.
