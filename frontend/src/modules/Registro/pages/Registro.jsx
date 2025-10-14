@@ -120,7 +120,7 @@ return (
       }}
     >
     
-    <Header texto="¿Ya estás registrado? Inicia Sesión" textoMovil='Inicia Sesión'  />
+    <Header />
 
     {/* CONTENIDO CENTRAL */}
     <div className="container d-flex justify-content-center align-items-center flex-grow-1 py-4">
