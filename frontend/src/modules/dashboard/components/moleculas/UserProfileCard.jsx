@@ -48,7 +48,7 @@ export const UserProfileCard = ({ user }) => (
             <div className="col-12 col-md-6">
               <label className="text-muted small mb-1" style={{ fontSize: '13px' }}>Nombre</label>
               <p className="fw-semibold mb-0" style={{ color: '#1a1a2e', fontSize: '15px' }}>
-                {user?.nombre || 'Usuario'}
+                {user?.nombres || 'Usuario'}
               </p>
             </div>
           </div>

@@ -5,8 +5,6 @@ import { Step1PersonalData } from "../components/Plantillas/Step1PersonalData";
 import { Step2CompanyData } from "../components/Plantillas//Step2CompanyData";
 import { Step4TermsAndConditions } from "../components/Plantillas/Step4TermsAndConditions";
 import { Step3LegalRepresentative } from "../components/Plantillas/Step3LegalRepresentative";
-import { BotonAnimado } from '../../../globals/components/atomos/BotonAnimado';
-import { Logo } from "../../../globals/components/atomos/Logo";
 import { Footer } from "../../auth/components/organismos/Footer";
 import axios from "axios";
 import { UserContext } from "../../../stores/UserContext";
@@ -69,7 +67,8 @@ export default function Registro() {
     const registroData = {
       email: formData.email,
       password: formData.password,
-      nombre: formData.nombre,
+      nombres: formData.nombre,
+      apellidos: formData.apellido,
       personalDNI: formData.repDni || "00000000",
       CUIT: formData.cuitEmpresa,
       Cargo: formData.repCargo,
@@ -80,7 +79,8 @@ export default function Registro() {
       domicilioComercial: formData.domicilioComercial,
       actividadEconomicaPrincipal: formData.actividadEconomica,
       fechaConstitucion: formData.fechaConstitucion,
-      numeroRegistro: formData.numeroRegistro
+      numeroRegistro: formData.numeroRegistro,
+      pep: formData.pep
     };
 
     try {
