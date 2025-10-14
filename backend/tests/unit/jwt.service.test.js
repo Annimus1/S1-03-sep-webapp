@@ -5,7 +5,7 @@ describe('JWT Service', () => {
     const payload = { userId: 'test123' };
 
     beforeAll(() => {
-        process.env.SECRET_KEY = 'test_secret';
+        process.env.JWT_SECRET = 'test_secret';
         jwtService = new JWT();
     });
 
