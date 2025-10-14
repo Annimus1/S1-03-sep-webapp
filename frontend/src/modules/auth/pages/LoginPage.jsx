@@ -26,6 +26,7 @@ const LoginPage = () => {
   useEffect(() => {
     const handleResize = () => setEsCelular(window.innerWidth < 576);
     window.addEventListener('resize', handleResize);
+    document.title = 'Kredia - Login'
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
