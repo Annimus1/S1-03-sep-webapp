@@ -56,7 +56,7 @@ export const authController = async (req, res) => {
     // Crear token JWT
     const jwt = new JWT();
     const { role: userRole, nombres: userName, _id } = newUser;
-    const token = jwt.sign({ nombres: userName, role: userRole, email });
+    const token = jwt.sign({ id: _id.toString(),nombres: userName, role: userRole, email });
 
     // Guardar en Redis (whitelist)
     await tokenRepository.whitelistToken(_id.toString(), token);
@@ -69,7 +69,7 @@ export const authController = async (req, res) => {
         role,
         nombres,
         email,
-        token
+        //token
       }
     });
 
@@ -107,7 +107,7 @@ export const authLoginController = async (req, res) => {
     // Crear jwt
     const jwt = new JWT();
     const { role, nombres } = existingUser;
-    const token = jwt.sign({ nombres, role, email });
+    const token = jwt.sign({ id: existingUser._id.toString(),nombres, role, email });
 
     console.log(token);
     // Guardar jwt en cache
@@ -154,7 +154,9 @@ export const authRegisterAdviserController = async (req, res) => {
     const existingUser = await AsesorRepository.findByEmail(email);
     if (existingUser) {
       console.warn(`Intento de registro (asesor) con email existente: ${email}`);
-      return res.status(422).json({ status: "error", message: 'No se pudo completar el registro. Verifique los datos ingresados.' });
+      return res.status(422).json({ 
+        status: "error", 
+        message: 'No se pudo completar el registro. Verifique los datos ingresados.' });
     }
 
     // Crear usuario Asesor
@@ -168,7 +170,7 @@ export const authRegisterAdviserController = async (req, res) => {
     // Crear jwt
     const jwt = new JWT();
     const { role } = asesor;
-    const token = jwt.sign({ nombres, role, email });
+    const token = jwt.sign({ id: asesor._id.toString(),nombres, role, email });
 
     // Guardar jwt en cache
     tokenRepository.whitelistToken(asesor._id, token);
@@ -194,5 +196,35 @@ export const authRegisterAdviserController = async (req, res) => {
     }
     console.error('Error registrando usuario:', error);
     return res.status(500).json({ status: "error", message: 'Error interno del servidor.' });
+  }
+};
+
+
+export const authLogoutController = async (req, res) => {
+  try {
+    const userId = req.user.id; // viene de authenticateToken
+    const token = req.token;
+    const revoked = await tokenRepository.revokeToken(userId,token);
+
+    if (!revoked) {
+      return res.status(500).json({
+        status: 'error',
+        message: 'No se pudo revocar el token.'
+      });
+    }
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'Sesión cerrada correctamente.',
+      user: {
+        id: userId,
+        email: req.user.email,
+        role: req.user.role
+      }
+    });
+
+  } catch (error) {
+    console.error('Error cerrando sesión:', error);
+    return res.status(500).json({ status: 'error', message: 'Error interno al cerrar sesión.' });
   }
 };
