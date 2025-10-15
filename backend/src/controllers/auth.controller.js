@@ -69,7 +69,7 @@ export const authController = async (req, res) => {
         role,
         nombres,
         email,
-        token
+        //token
       }
     });
 
