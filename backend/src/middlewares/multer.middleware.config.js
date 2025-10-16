@@ -3,8 +3,8 @@ import path from 'path';
 
 const UPLOAD_DIR = 'uploads'; // <- ruta donde se van a guardar los datos
 
-// const storage = multer.memoryStorage();
-const storage = multer.diskStorage({ // <- podemos usar memoryStorage para guardar archivos en memoria.
+// const storage = multer.memoryStorage(); / multer.diskStorage()
+const storage = multer.memoryStorage({
     // Define el directorio donde se guardarán los archivos
     destination: (req, file, cb) => {
         cb(null, UPLOAD_DIR); 

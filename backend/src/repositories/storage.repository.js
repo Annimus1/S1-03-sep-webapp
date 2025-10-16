@@ -27,13 +27,13 @@ class StorageRepository {
         console.log(`StorageRepository: Adaptador cambiado a ${adapter.constructor.name}`);
     }
 
-    async upload(file, path) {
+    async upload(userId, file) {
         // Llama al método del adaptador actual (Supabase, Firebase, etc.)
-        return this.adapter.upload(file, path);
+        return await this.adapter.upload(userId, file);
     }
 
-    async getUrl(path) {
-        return this.adapter.getUrl(path);
+    async getFile(filename){
+        return await this.adapter.getFile(filename);
     }
 }
 

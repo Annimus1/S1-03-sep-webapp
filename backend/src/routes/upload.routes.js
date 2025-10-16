@@ -1,8 +1,9 @@
 import { Router } from 'express';
 import filesUploadMiddleware from '../middlewares/upload.middleware.js';
+import { authenticateToken } from '../middlewares/auth.middleware.js';
+import { singleResourceController, validateAccountFiles } from '../controllers/storage.controller.js';
 
 const router = Router();
-
 
 /**
  * @swagger
@@ -10,7 +11,9 @@ const router = Router();
  *   post:
  *     tags:
  *      - "Subida de documentos" 
- *     summary: Crea una cuenta de usuario PYMES.
+ *     summary: Anexa Documentos al usuario PyMEs.
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -28,14 +31,16 @@ const router = Router();
  *                 data:
  *                   type: object
  *                   properties:
- *                     status:
- *                       type: string
- *                       description: Estado de la respuesta.
- *                       example: "success"
+ *                     files:
+ *                       type: array
+ *                       description: Lista de los nombres de los archivos recibidos.
+ *                       items:
+ *                         type: string
+ *                         example: "estatutoSocial"
  *                     message:
  *                       type: string
  *                       description: Mensaje de la respuesta.
- *                       example: "Documentos guardados exitosamente."
+ *                       example: "Archivos procesados correctamente."
  *       400:
  *         description: Tipo de archivo no valido | Archivo excede el peso limite.
  *         content:
@@ -73,6 +78,24 @@ const router = Router();
  *                       type: string
  *                       description: Mensaje de la respuesta.
  *                       example: "No autorizado."
+ *       422:
+ *         description: Documentos guardados exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               description: HLAAA
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   status:
+ *                     type: string
+ *                     description: Estado de la respuesta.
+ *                     example: "error"
+ *                   message:
+ *                     type: string
+ *                     description: Mensaje de la respuesta.
+ *                     example: "Error mientras procesaba estatutoSocial."
  *       500:
  *         description: Error interno del servidor.
  *         content:
@@ -93,17 +116,89 @@ const router = Router();
  *                       example: "Error interno del servidor."
  * 
 */
-router.post('/validate-accounts', filesUploadMiddleware, (req, res) => {
+router.post('/validate-accounts', authenticateToken, filesUploadMiddleware, validateAccountFiles);
 
-    console.log('----------------------------------------------------');
-    console.log('✅ Documentos recibidos con éxito');
-    Object.keys(req.files).map(e=> console.log(e))
-    console.log('----------------------------------------------------');
-
-    res.status(200).json({ 
-        message: 'Archivos procesados y mostrados en consola.',
-        files: Object.keys(req.files) // Indica qué archivos se recibieron
-    });
-});
+/**
+ * @swagger
+ * /uploads/{resource}:
+ *   get:
+ *     tags:
+ *      - "Subida de documentos" 
+ *     summary: Retorna un recurso especifico.
+ *     parameters:
+ *       - in: path
+ *         name: resource
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: El recurso especifico que se quiere recuperar.
+ *           example: "123_estatutoSocial_1678886400000.pdf"
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Devuelve el recurso solicitado.
+ *         content:
+ *           application/octet-stream:
+ *             schema:
+ *               type: string
+ *               format: binary 
+ *       401:
+ *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No autorizado."
+ *       404:
+ *         description: Archivo no encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Archivo no encontrado."
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error al acceder al archivo."
+ * 
+*/
+router.get('/uploads/:resource',authenticateToken, singleResourceController)
 
 export default router;
