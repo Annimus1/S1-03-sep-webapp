@@ -207,7 +207,7 @@ export const authLogoutController = async (req, res) => {
     const revoked = await tokenRepository.revokeToken(userId,token);
 
     if (!revoked) {
-      return res.status(404).json({
+      return res.status(401).json({
         status: 'error',
         message: 'No se pudo revocar el token.'
       });

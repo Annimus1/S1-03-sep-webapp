@@ -386,13 +386,6 @@ router.post('/login', validationLogin, authLoginController)
  *     description: Revoca el token JWT activo y elimina el acceso en la whitelist.
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             example: {}
  *     responses:
  *       200:
  *         description: Sesión cerrada correctamente.
@@ -407,18 +400,6 @@ router.post('/login', validationLogin, authLoginController)
  *                 message:
  *                   type: string
  *                   example: "Sesión cerrada correctamente."
- *                 user:
- *                   type: object
- *                   properties:
- *                     id:
- *                       type: string
- *                       example: "68ef9bd3f54685c0238a4ef6"
- *                     email:
- *                       type: string
- *                       example: "nuevo_usuario@example.com"
- *                     role:
- *                       type: string
- *                       example: "user"
  *       401:
  *         description: Token inválido o no proporcionado.
  *         content:
