@@ -27,7 +27,7 @@ app.use(cors(corsOptions));
 app.use(helmet());
 
 // Middleware para parsear el body de peticiones JSON
-app.use(express.json()); 
+//app.use(express.json()); 
 
 // --- 3. MONTAJE DE RUTAS ---
 
@@ -35,7 +35,7 @@ app.use(express.json());
 app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Montar router
-app.use('/api/v1/auth', authRoutes); 
+app.use('/api/v1/auth', express.json(), authRoutes);
 // app.use('/api/v1/user', userRoutes);
 
 // Ruta de prueba simple

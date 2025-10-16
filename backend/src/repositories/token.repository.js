@@ -42,16 +42,17 @@ class TokenRepository {
      * @param {string} userId - Identificador único del usuario (por ejemplo, JTI del JWT).
      * @returns {Promise<boolean>} True si el token está en la whitelist, false en caso contrario.
      */
-    async isTokenWhitelisted(userId) {
-        const key = this.prefix + userId;
-        try {
-            const result = await this.cache.get(key); 
-            return result !== null;
-        } catch (error) {
-            console.error(`Error al verificar token en la whitelist: ${error.message}`);
-            return false;
-        }
+    async isTokenWhitelisted(userId, token) {
+    const key = this.prefix + userId;
+    try {
+        const result = await this.cache.get(key);
+        return result === token; // verificar que sea exactamente el token
+    } catch (error) {
+        console.error(`Error al verificar token en la whitelist: ${error.message}`);
+        return false;
     }
+}
+
 
     /**
      * Elimina una clave de token de la whitelist manualmente.
@@ -59,7 +60,33 @@ class TokenRepository {
      * @param {string} userId - Identificador único del usuario (por ejemplo, JTI del JWT).
      * @returns {Promise<boolean>} True si se eliminó al menos una clave, false en caso contrario.
      */
-    async revokeToken(userId) {
+    async revokeToken(userId, token) {
+        const key = this.prefix + userId;
+        try {
+            const currentToken = await this.cache.get(key);
+
+            if (!currentToken) {
+                console.log('No hay token en Redis para este usuario.');
+                return false;
+            }
+
+            if (currentToken !== token) {
+                console.log('El token proporcionado no coincide con el token en Redis.');
+                return false; // el token no coincide
+            }
+
+            const deletedCount = await this.cache.del(key);
+            console.log('DeletedCount:', deletedCount);
+
+            return deletedCount > 0;
+        } catch (error) {
+            console.error(`Error al eliminar token de la whitelist: ${error.message}`);
+            return false;
+        }
+    }
+
+
+    /*async revokeToken(userId) {
         const key = this.prefix + userId;
         try {
             const deletedCount = await this.cache.del(key);
@@ -68,7 +95,7 @@ class TokenRepository {
             console.error(`Error al eliminar token de la whitelist: ${error.message}`);
             return false;
         }
-    }
+    }*/
 }
 
 export default new TokenRepository();

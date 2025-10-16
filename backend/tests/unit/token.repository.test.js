@@ -1,6 +1,6 @@
-import TokenRepository from '../../src/repositories/token.repository';
 import { createClient } from 'redis';
 import CacheSingleton from '../../src/database/CacheSingleton.js'; // 🔑 Importa el Singleton
+import TokenRepository from '../../src/repositories/token.repository';
 
 // VARIABLES GLOBALES
 
@@ -66,7 +66,7 @@ describe('TokenRepository Integración (Redis Real)', () => {
             expect(success).toBe(true);
 
             // 2. Verificar
-            const isWhitelisted = await TokenRepository.isTokenWhitelisted(MOCK_USER_ID);
+            const isWhitelisted = await TokenRepository.isTokenWhitelisted(MOCK_USER_ID, MOCK_TOKEN);
             expect(isWhitelisted).toBe(true);
         });
 
@@ -76,11 +76,11 @@ describe('TokenRepository Integración (Redis Real)', () => {
             await TokenRepository.whitelistToken(MOCK_USER_ID, MOCK_TOKEN, MOCK_EXPIRATION);
 
             // 1. Eliminar
-            const revokeSuccess = await TokenRepository.revokeToken(MOCK_USER_ID);
+            const revokeSuccess = await TokenRepository.revokeToken(MOCK_USER_ID,MOCK_TOKEN);
             expect(revokeSuccess).toBe(true);
 
             // 2. Verificar que ya no existe
-            const isWhitelisted = await TokenRepository.isTokenWhitelisted(MOCK_USER_ID);
+            const isWhitelisted = await TokenRepository.isTokenWhitelisted(MOCK_USER_ID, MOCK_TOKEN);
             expect(isWhitelisted).toBe(false);
         });
 
@@ -89,7 +89,7 @@ describe('TokenRepository Integración (Redis Real)', () => {
             const NON_EXISTENT_ID = 'id_que_no_existe_456';
 
             // 1. Intentar verificar (sabemos que debe ser falso)
-            const isWhitelisted = await TokenRepository.isTokenWhitelisted(NON_EXISTENT_ID);
+            const isWhitelisted = await TokenRepository.isTokenWhitelisted(NON_EXISTENT_ID, MOCK_TOKEN);
 
             // 2. Afirmación
             expect(isWhitelisted).toBe(false);

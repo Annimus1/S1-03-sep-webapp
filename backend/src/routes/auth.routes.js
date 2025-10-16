@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { authController, authLoginController, authRegisterAdviserController } from '../controllers/auth.controller.js';
+import { authController, authLoginController, authLogoutController, authRegisterAdviserController } from '../controllers/auth.controller.js';
+import { authenticateToken } from '../middlewares/auth.middleware.js';
 import { validateRegister, validateRegisterAdviser, validationLogin } from '../middlewares/validation.middleware.js';
 
 const router = Router();
@@ -374,5 +375,60 @@ router.post('/register-adviser', validateRegisterAdviser, authRegisterAdviserCon
  * 
 */
 router.post('/login', validationLogin, authLoginController)
+
+/**
+ * @swagger
+ * /auth/logout:
+ *   post:
+ *     tags:
+ *      - "Autenticación"
+ *     summary: Cierra sesión del usuario actual.
+ *     description: Revoca el token JWT activo y elimina el acceso en la whitelist.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Sesión cerrada correctamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "success"
+ *                 message:
+ *                   type: string
+ *                   example: "Sesión cerrada correctamente."
+ *       401:
+ *         description: Token inválido o no proporcionado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "Token inválido o expirado."
+ *       500:
+ *         description: Error interno al cerrar sesión.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: "error"
+ *                 message:
+ *                   type: string
+ *                   example: "No se pudo revocar el token."
+ */
+
+
+router.post('/logout', authenticateToken,authLogoutController);
 
 export default router;
