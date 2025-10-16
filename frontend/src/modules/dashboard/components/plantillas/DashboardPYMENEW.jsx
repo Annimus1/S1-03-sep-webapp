@@ -9,6 +9,7 @@ import { UserInfoCard } from "../organismos/UserInfoCard";
 import { CreditStatusCard } from "../organismos/CreditStatusCard";
 import { NewFeatureCard } from "../organismos/NewFeatureCard";
 import { SupportCard } from "../organismos/SupportCard";
+import { StartApplicationCardActivo } from "../organismos/StartApplicationCardActivo";
 export const DashboardPYMENEW = () => {
   // Detectar tamaños de pantalla
   const isDesktop = useMediaQuery('(min-width: 992px)');   // >= 992px
@@ -37,12 +38,35 @@ export const DashboardPYMENEW = () => {
           
           {/* Grid interno: Notificaciones + Documentos */}
           <GridContainer columns={innerColumns} gap="20px">
-            <NotificationCard />
+          <NotificationCard 
+            notifications={[
+              {
+                message: 'Tu solicitud ha sido aprobada',
+                backgroundColor: '#A0E7D4',
+                type: 'success'
+              },
+              {
+                message: 'Falta documentación',
+                backgroundColor: '#FFB8B8',
+                type: 'error'
+              }
+            ]}
+          />
             <QuickAccessButtons />
           </GridContainer>
           
           {/* Avance de la solicitud */}
-          <StartApplicationCard height="150px" />
+          <StartApplicationCardActivo 
+            title="Avance de la solicitud"
+            showProgress={true}
+            currentStep={3}
+            totalSteps={5}
+            showViewButton={true}
+            viewButtonText="Ver mi solicitud"
+            statusMessage="El asesor necesito un nuevo documento"
+            statusMessageColor="#FFD88C"
+            height="auto"
+          />
           
           {/* Proceso de la solicitud */}
           <ProcessCard />
