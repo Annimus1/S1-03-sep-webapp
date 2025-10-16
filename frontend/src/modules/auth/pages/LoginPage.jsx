@@ -79,10 +79,7 @@ const LoginPage = () => {
       <div
         style={{
           minHeight: '100vh',
-          backgroundImage: 'url("/src/assets/Trama.svg")',
-          backgroundSize: 'auto',
-          backgroundPosition: 'top left',
-          backgroundColor: '#F5F6F8',
+          backgroundColor: '#f5f5f5',
 
           display: 'flex',
           flexDirection: 'column',
