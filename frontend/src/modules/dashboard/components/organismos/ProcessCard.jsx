@@ -1,5 +1,5 @@
 import { ProcessStepItem } from "../moleculas/ProcessStepItem";
-import styles from './ProcessCard.module.css';
+import styles from './processCard.module.css';
 
 export const ProcessCard = () => (
   <div
