@@ -69,7 +69,7 @@ export const authController = async (req, res) => {
         role,
         nombres,
         email,
-        //token
+        token
       }
     });
 
@@ -207,7 +207,7 @@ export const authLogoutController = async (req, res) => {
     const revoked = await tokenRepository.revokeToken(userId,token);
 
     if (!revoked) {
-      return res.status(500).json({
+      return res.status(404).json({
         status: 'error',
         message: 'No se pudo revocar el token.'
       });
@@ -216,11 +216,6 @@ export const authLogoutController = async (req, res) => {
     return res.status(200).json({
       status: 'success',
       message: 'Sesión cerrada correctamente.',
-      user: {
-        id: userId,
-        email: req.user.email,
-        role: req.user.role
-      }
     });
 
   } catch (error) {

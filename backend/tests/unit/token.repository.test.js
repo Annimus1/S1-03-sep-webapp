@@ -76,7 +76,7 @@ describe('TokenRepository Integración (Redis Real)', () => {
             await TokenRepository.whitelistToken(MOCK_USER_ID, MOCK_TOKEN, MOCK_EXPIRATION);
 
             // 1. Eliminar
-            const revokeSuccess = await TokenRepository.revokeToken(MOCK_USER_ID);
+            const revokeSuccess = await TokenRepository.revokeToken(MOCK_USER_ID,MOCK_TOKEN);
             expect(revokeSuccess).toBe(true);
 
             // 2. Verificar que ya no existe

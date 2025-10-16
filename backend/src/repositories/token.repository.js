@@ -63,11 +63,7 @@ class TokenRepository {
     async revokeToken(userId, token) {
         const key = this.prefix + userId;
         try {
-            console.log('Intentando revocar token...');
-            console.log('Key en Redis:', key);
             const currentToken = await this.cache.get(key);
-            console.log('Token actual en Redis:', currentToken);
-            console.log('Token recibido para revocar:', token);
 
             if (!currentToken) {
                 console.log('No hay token en Redis para este usuario.');
