@@ -1,0 +1,36 @@
+.tamanioLetra {
+  font-size: 15px;
+}
+
+.tamanioLetra::placeholder {
+  color: #21255299;
+  opacity: 0.5;
+}
+
+@media (max-width: 576px) {
+  .tamanioLetra {
+    font-size: 13px;
+  }
+}
+
+.tamanioLetraLabel {
+  font-size: 14 px;
+}
+
+@media (max-width: 576px) {
+  .tamanioLetraLabel {
+    font-size: 12px;
+  }
+}
+
+
+tamanioLetra:-webkit-autofill,
+tamanioLetra:-webkit-autofill:hover, 
+tamanioLetra:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0px 1000px #F7FAFC inset !important; /* mismo fondo que tu input */
+  box-shadow: 0 0 0px 1000px #F7FAFC inset !important;
+  -webkit-text-fill-color: #00000099 !important; /* mismo color del texto */
+  caret-color: #00000099 !important; /* color del cursor */
+  font-size: 16px !important; /* evita el cambio de tamaño del texto */
+  transition: background-color 99999s ease-in-out 0s, color 99999s ease-in-out 0s;
+}

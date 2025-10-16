@@ -1,0 +1,21 @@
+.titulo {
+  background: #0A443C;
+  color: white;
+  padding: 16px 32px;
+  border-radius: 20px;
+  font-size: 36px;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(44, 95, 93, 0.3);
+  margin-bottom: 24px;
+  display: inline-block;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+@media (max-width: 576px) {
+  .titulo {
+    font-size: 16px;
+    min-width: 250px;
+  }
+}
