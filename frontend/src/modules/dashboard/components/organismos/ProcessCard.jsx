@@ -5,8 +5,8 @@ export const ProcessCard = () => (
   <div
     style={{
       backgroundColor: '#DAD6FE',
-      borderRadius: '20px',
-      padding: '24px 30px',
+      borderRadius: '60px',
+      padding: '24px 40px',
       height: '100%',
       display: 'flex',
       flexDirection: 'column'
