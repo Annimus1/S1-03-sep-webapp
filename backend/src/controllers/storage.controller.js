@@ -3,51 +3,73 @@ import StorageRepository from '../repositories/storage.repository.js';
 
 export const validateAccountFiles = async (req, res) => {
     const ID = req.user.id;
-    const fileKeys = Object.keys(req.files);
-    const files = [];
+    const files = Object.keys(req.files).map(key => req.files[key][0]);
     const errors = [];
+    const updatedInfo = {};
 
-
-    fileKeys.forEach(key => {
-        files.push(req.files[key][0]);
-    })
-
-    files.map(async file => {
+    // Crear un array de Promesas para subir todos los archivos concurrentemente
+    const uploadPromises = files.map(async file => {
         try {
-            const keyName = file.fieldname // <-obtiene la key actual
-            const url = await StorageRepository.upload(req.user.id, file); // genera el Path del archivo
-            const updatedField = {
-                [keyName] : url 
-            };
+            const keyName = file.fieldname;
+            
+            const url = await StorageRepository.upload(ID, file); 
 
-            await UserRepository.updateUser(ID, updatedField);
-
+            updatedInfo[keyName] = url; 
         }
         catch (error) {
-            console.log(error)
-            errors.push({ status: "error", message: `Error mientras procesaba ${file.fieldname}` })
+            console.error(`Error procesando archivo ${file.fieldname}:`, error);
+            errors.push({ status: "error", message: `Error mientras procesaba ${file.fieldname}` });
+            return null; 
         }
-        finally{
-            console.log(await UserRepository.findByEmail(req.user.email))
-        }
-    })
-
-    if (errors.length > 0) {
-        res.status(422).json({ errors });
-        return;
-    }
-
-    res.status(200).json({
-        message: 'Archivos procesados correctamente.',
-        files: Object.keys(req.files) // Indica qué archivos se recibieron
     });
+
+    try {
+        await Promise.all(uploadPromises);
+
+        // Verificar si hubo errores de subida
+        if (errors.length > 0) {
+            return res.status(422).json({ 
+                errors
+            });
+        }
+        
+        if (Object.keys(updatedInfo).length > 0) {
+            await UserRepository.updateUser(ID, updatedInfo);
+        }
+
+        // 7. Respuesta exitosa
+        // Aquí deberías añadir tu lógica de verificación de usuario completa si aplica:
+        // const user = await UserRepository.findByEmail(req.user.email);
+        // ... verificar el boolean ...
+        
+        res.status(200).json({
+            message: 'Archivos subidos correctamente.',
+            filesUpdated: Object.keys(updatedInfo)
+        });
+
+    } catch (dbError) {
+        // Captura errores si falló la única llamada a UserRepository.updateUser
+        console.error('Error al actualizar el usuario en la DB:', dbError);
+        res.status(500).json({ 
+            status: 'error', 
+            message: 'Error interno del servidor al actualizar la información del usuario.' 
+        });
+    }
 }
 
 export const singleResourceController = async (req,res)=>{
     try{
         const filename = req.params.resource;
-        const absolutePath = await StorageRepository.getFile(filename);   
-        res.sendFile(absolutePath);
+        const { type, value } = await StorageRepository.getFile(filename); 
+        
+        if (type === 'URL') {
+            // Si viene de Supabase
+            res.redirect(302, value);
+        } else if (type === 'LOCAL_PATH') {
+            // Si viene de LocalStorage
+            res.sendFile(value);
+        } 
+
         return;
     }
     catch(error){

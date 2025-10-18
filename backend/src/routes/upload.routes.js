@@ -7,7 +7,7 @@ const router = Router();
 
 /**
  * @swagger
- * /validate-accounts:
+ * /validate-account:
  *   post:
  *     tags:
  *      - "Subida de documentos" 
@@ -116,7 +116,7 @@ const router = Router();
  *                       example: "Error interno del servidor."
  * 
 */
-router.post('/validate-accounts', authenticateToken, filesUploadMiddleware, validateAccountFiles);
+router.post('/validate-account', authenticateToken, filesUploadMiddleware, validateAccountFiles);
 
 /**
  * @swagger
