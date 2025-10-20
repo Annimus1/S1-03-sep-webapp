@@ -6,33 +6,40 @@ export const SolicitudesTable = ({ solicitudes, selectedId, onSelect }) => {
     container: {
       background: 'white',
       borderRadius: '12px',
-      boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
       overflow: 'hidden',
-      maxHeight: '230px',
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
     },
     scrollContainer: {
       overflowY: 'auto',
-      overflowX: 'hidden',
-      flexGrow: 1,
-      maxHeight: '400px'
+      overflowX: 'auto',
+      maxHeight: '220px',
+      maxWidth: '100%',
+    },
+    content: {
+      width: '100%',        // que use solo el ancho del padre
+      maxWidth: '100%',     // evita que crezca más que el padre
+      overflowX: 'auto',    // si el contenido interno se pasa, muestra scroll
+      boxSizing: 'border-box', // asegura que padding/border no lo agrande
     }
   };
 
   return (
     <div style={styles.container}>
-      <TableHeaderComponent />
       <div style={styles.scrollContainer}>
-        {solicitudes.map((solicitud) => (
-          <SolicitudRow
-            key={solicitud.id}
-            solicitud={solicitud}
-            selected={selectedId === solicitud.id}
-            onSelect={() => onSelect(solicitud.id)}
-          />
-        ))}
+        <div style={styles.content}>
+          <TableHeaderComponent />
+          {solicitudes.map((solicitud) => (
+            <SolicitudRow
+              key={solicitud.id}
+              solicitud={solicitud}
+              selected={selectedId === solicitud.id}
+              onSelect={() => onSelect(solicitud.id)}
+            />
+          ))}
+        </div>
       </div>
     </div>
   );
 };
+

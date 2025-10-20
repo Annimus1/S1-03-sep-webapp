@@ -9,6 +9,7 @@ import { StartApplicationCardActivo } from "../organismos/StartApplicationCardAc
 import { NewFeatureCard } from "../organismos/NewFeatureCard";
 import { DetalleSolicitud } from "../organismos/DetalleSolicitud";
 import { BandejaSolicitudesPage } from "./BandejaSolicitudesPage";
+import { SolicitudesTemplate } from "../plantilla/SolicitudesTemplate";
 
 export const DashboardASESOR = () => {
   // Detectar tamaños de pantalla
@@ -20,6 +21,26 @@ export const DashboardASESOR = () => {
   const mainColumns = isDesktop ? '60% 40%' : '1fr';  // Desktop: 2 cols, Mobile: 1 col
   const innerColumns = isTablet ? '1fr 1fr' : '1fr';  // Tablet+: 2 cols, Mobile: 1 col
   const detailColumns = isTablet ? '57.5% 40%' : '1fr';  // Tablet+: 2 cols, Mobile: 1 col
+
+
+  // Calculando porcentajes basados en 32 solicitudes totales
+  const statusData = [
+    {
+      label: 'Aprobados',
+      percentage: 62.5, // ~20 de 32
+      color: '#2d5f4f'
+    },
+    {
+      label: 'Rechazados',
+      percentage: 15.6, // ~5 de 32
+      color: '#8b3a3a'
+    },
+    {
+      label: 'En revisión',
+      percentage: 21.9, // ~7 de 32
+      color: '#1e5a7d'
+    }
+  ];
 
   return (
     <main style={{ 
@@ -69,17 +90,18 @@ export const DashboardASESOR = () => {
         {/* ========== COLUMNA DERECHA ========== */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
-          {/* INFO DEL ASESOR */}
-          <Placeholder>
-            <h3 style={{ textAlign: 'center', paddingTop: '80px', color: '#888' }}>
-              Avance de la solicitud (Próximamente)
-            </h3>
-          </Placeholder>
+          {/* STATS? */}
+          
+
+          <SolicitudesTemplate   pendientes="8"
+            tiempoPromedio="2 días"
+            enEvaluacion="4"
+            totales="32" statusData={statusData} />
           
           {/* Grid interno: Pronto + Soporte */}
           <GridContainer columns={innerColumns} gap="20px">
             <NewFeatureCard />
-            <SupportCard text1="Chat con otros asesores" text2="Contacto administración"/>
+            <SupportCard text1="Chat con otros asesores" text2="Contacto administración" heightBotom="38px"/>
           </GridContainer>
           
         </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BandejaTemplate } from '../../components/plantillas/BandejaTemplate';
+import { BandejaTemplate } from '../plantilla/BandejaTemplate';
 import { FilterButton } from '../moleculas/FilterButton';
 import { FilterPanel } from '../moleculas/FilterPanel';
 import { SolicitudesTable } from '../organismos/SolicitudesTable';
