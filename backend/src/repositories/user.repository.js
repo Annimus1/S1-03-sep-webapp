@@ -6,6 +6,10 @@ class UserRepository {
     return User.findOne({ email });
   }
 
+  static async findById(id) {
+    return User.findOne({ _id: id });
+  }
+
   // Crear usuario
   static async createUser(data) {
     const user = new User(data);
