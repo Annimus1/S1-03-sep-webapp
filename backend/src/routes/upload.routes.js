@@ -31,6 +31,10 @@ const router = Router();
  *                 data:
  *                   type: object
  *                   properties:
+ *                     datosVerificados:
+ *                       type: boolean
+ *                       description: Muestra si ya todos los campos han sido enviados
+ *                       example: false
  *                     files:
  *                       type: array
  *                       description: Lista de los nombres de los archivos recibidos.
