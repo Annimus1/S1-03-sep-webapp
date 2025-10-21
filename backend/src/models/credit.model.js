@@ -2,32 +2,6 @@ import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
 /* ------------------------------------------------------------------
-        SUBESQUEMA: Crédito de Inversión / Expansión
------------------------------------------------------------------- */
-const InvestmentCreditSchema = new Schema({
-
-    presupuestoInversion: { type: String },
-    cotizacionProveedores: { type: String },
-    estudioFactibilidad: { type: String },
-    planMantenimiento: { type: String },
-    informeTecnico: { type: String },
-    planImplementacion: { type: String, required: true },
-    permisosObra: { type: String, required: true },
-    facturaProforma: { type: String, required: true },
-}, { _id: false });
-
-/* ------------------------------------------------------------------
-    SUBESQUEMA: Crédito de Capital de Trabajo
------------------------------------------------------------------- */
-const WorkingCapitalCreditSchema = new Schema({
-    detalleFondos: { type: String, required: true },
-    proyeccionFlujoOperativo: { type: String, required: true },
-    gastosOperativos: { type: String, required: true },
-    facturasProforma: { type: String, required: true },
-    evidenciaExpancion: { type: String, required: true },
-}, { _id: false });
-
-/* ------------------------------------------------------------------
     ESQUEMA PRINCIPAL: CreditSchema
 ------------------------------------------------------------------ */
 const CreditSchema = new Schema({
@@ -42,66 +16,66 @@ const CreditSchema = new Schema({
     },
 
   /* ------------------- DOCUMENTACIÓN GENERAL ------------------- */
-    estatutoSocial: { type: String, required: true },
-    poderRepLegal: { type: String },
-    comprobanteDomFiscal: { type: String, required: true },
-    actaAutoridades: { type: String, required: true },
-    inscripcionFiscal: { type: String, required: true },
-    certificadoPyme: { type: String, required: true },
-    dniRepLegal: { type: String, required: true },
-    ddjjBeneficiario: { type: String, required: true },
-    ddjjPEP: { type: String },
     estadosContablesAuditados: { type: String },
     estadosContableIntermedios: { type: String },
-    ddjjImpositivas: { type: String, required: true },
+    ddjjImpositivas: { type: String },
     resumenBancario: { type: String },
-    detalleCuentas: { type: String, required: true },
-    comprobanteImpuestos: { type: String, required: true },
-    ingresosEgresosMensuales: { type: String, required: true },
+    detalleCuentas: { type: String},
+    comprobanteImpuestos: { type: String },
+    ingresosEgresosMensuales: { type: String},
     inventariosActuales: { type: String },
     activosFijos: { type: String },
-    proyeccionFlujoFondos: { type: String, required: true },
+    proyeccionFlujoFondos: { type: String },
     ratiosFinancieros: { type: String },
-    registroVentasCompras: { type: String, required: true },
-    planFinancieroCredito: { type: String, required: true },
+    registroVentasCompras: { type: String },
+    planFinancieroCredito: { type: String},
     certificacionContable: { type: String },
-    descripcionNegocio: { type: String, required: true },
+    descripcionNegocio: { type: String },
     organigramaPersonal: { type: String },
-    principalesClientes: { type: String, required: true },
-    principalesProveedores: { type: String, required: true },
+    principalesClientes: { type: String },
+    principalesProveedores: { type: String },
     contratosComerciales: { type: String },
-    comprobanteFacturacion: { type: String, required: true },
+    comprobanteFacturacion: { type: String},
     permisosHabilitantes: { type: String },
     comprobantePropiedad: { type: String },
     evidenciaActividadOnline: { type: String },
     fotosEstablecimiento: { type: String },
     descripcionMercado: { type: String },
-    constanciaCBU: { type: String, required: true },
-    certificadoLibreDeuda: { type: String, required: true },
-    historialPrestamos: { type: String, required: true },
-    referenciasComerciales: { type: String, required: true },
-    informeCrediticio: { type: String, required: true },
-    detalleCreditos: { type: String, required: true },
-    referenciasBancarias: { type: String, required: true },
-    ddjjQuiebra: { type: String, required: true },
-    titutoPropiedad: { type: String, required: true },
-    tasaOficial: { type: String, required: true },
-    avalSolidario: { type: String, required: true },
-    comprobanteGarantes: { type: String, required: true },
-    cesionSGR: { type: String, required: true },
-    informeRegistral: { type: String, required: true },
-    seguro: { type: String, required: true },
-    declaracionPatrimonialGarante: { type: String, required: true },
-    documentoDeuda: { type: String, required: true },
-    ddjjOrigenLicito: { type: String, required: true },
-    ddjjBeneficiarioFinal: { type: String, required: true },
-    consentimientoAnalisis: { type: String, required: true },
-    constanciaPoliticasInternas: { type: String, required: true },
-    firmaDigital: { type: String, required: true },
-
-    /* ------------------- SUBESQUEMAS ------------------- */
-    investmentCredit: { type: InvestmentCreditSchema, default: null },
-    workingCapitalCredit: { type: WorkingCapitalCreditSchema, default: null },
+    constanciaCBU: { type: String },
+    detalleFondos: { type: String},
+    proyeccionFlujoOperativo: { type: String },
+    gastosOperativos: { type: String },
+    facturasProforma: { type: String},
+    evidenciaExpancion: { type: String},
+    certificadoLibreDeuda: { type: String},
+    presupuestoInversion: { type: String },
+    cotizacionProveedores: { type: String },
+    estudioFactibilidad: { type: String },
+    planMantenimiento: { type: String },
+    informeTecnico: { type: String },
+    planImplementacion: { type: String},
+    permisosObra: { type: String },
+    facturaProforma: { type: String },
+    historialPrestamos: { type: String},
+    referenciasComerciales: { type: String },
+    informeCrediticio: { type: String },
+    detalleCreditos: { type: String},
+    referenciasBancarias: { type: String},
+    ddjjQuiebra: { type: String},
+    tituloPropiedad: { type: String},
+    tasaOficial: { type: String},
+    avalSolidario: { type: String},
+    comprobanteGarantes: { type: String},
+    cesionSGR: { type: String},
+    informeRegistral: { type: String},
+    seguro: { type: String},
+    declaracionPatrimonialGarante: { type: String },
+    documentoDeuda: { type: String},
+    ddjjOrigenLicito: { type: String },
+    ddjjBeneficiarioFinal: { type: String},
+    consentimientoAnalisis: { type: String },
+    constanciaPoliticasInternas: { type: String },
+    firmaDigital: { type: String,default: 'false' },
 
     /* ------------------- DATOS DE ESTADO ------------------- */
     estatus: {
@@ -109,9 +83,14 @@ const CreditSchema = new Schema({
         enum: ['recaudacion de documentos', 'aprobado', 'rechazado', 'revision'],
         default: 'recaudacion de documentos'
     },
-    totalDocumentos: { type: Number, default: 0 },
-    actualDocumentos: { type: Number, default: 0 },
-    }, { timestamps: true });
+    datosVerificados: {
+        type: String,
+        enum: ['true', 'false'],
+        default: 'false', // Debe ser true para avanzar a la siguiente seccion.
+    },
+
+}, { timestamps: true });
+
 
 /* ------------------- EXPORT ------------------- */
 const Credit = mongoose.model('Credit', CreditSchema);
