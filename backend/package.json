@@ -15,6 +15,7 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "@supabase/supabase-js": "2.75.1",
     "bcrypt": "6.0.0",
     "cors": "2.8.5",
     "dotenv": "17.2.3",
@@ -24,13 +25,14 @@
     "mongoose": "8.19.1",
     "multer": "2.0.2",
     "redis": "5.8.3",
+    "supabase": "2.51.0",
     "swagger-jsdoc": "6.2.8",
     "swagger-ui-express": "5.0.1"
   },
   "devDependencies": {
-    "jest": "^30.2.0",
-    "joi": "^17.13.3",
+    "jest": "30.2.0",
+    "joi": "17.13.3",
     "nodemon": "3.1.10",
-    "supertest": "^7.1.4"
+    "supertest": "7.1.4"
   }
 }

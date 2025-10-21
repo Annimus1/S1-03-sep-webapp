@@ -8,8 +8,10 @@ import swaggerSpec from '../swagger.js';
 
 // Importar los módulos locales
 import authRoutes from './routes/auth.routes.js';
-import creditRoutes from './routes/credit.routes.js';
+import creditRoutes from './routes/credit.routes';
 import uploadRoutes from './routes/upload.routes.js';
+import userRoutes from './routes/user.routes.js'; 
+
 // --- 1. CONFIGURACIÓN INICIAL ---
 const app = express();
 
@@ -37,6 +39,7 @@ app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1', uploadRoutes);
 app.use('/api/v1/credit', creditRoutes);
 app.use('/api/v1/auth',express.json(), authRoutes); 
+app.use('/api/v1/profile', express.json(), userRoutes);
 
 // Ruta de prueba simple
 app.get('/', (req, res) => {

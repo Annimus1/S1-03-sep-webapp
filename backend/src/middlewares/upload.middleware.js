@@ -31,13 +31,33 @@ import upload from './multer.middleware.config.js';
  *           type: string
  *           format: binary
  *           description: Documento PDF del Comprobante de Domicilio Fiscal.
+ *         certificadoPyes:
+ *           type: string
+ *           format: binary
+ *           description: Documento PDF del Certificado PyMEs.
+ *         DeclaracionJurada:
+ *           type: string
+ *           format: binary
+ *           description: Documento PDF de la DeclaracionJurada.
+ *         DNI:
+ *           type: string
+ *           format: binary
+ *           description: Documento PDF del Documento de Identidad Nacional por ambos lados.
+ *         comprobanteDomicilioPersonal:
+ *           type: string
+ *           format: binary
+ *           description: Documento PDF del Comprobante de Domicilio Personal.
  */
 export const filesUploadMiddleware = upload.fields([
     { name: 'estatutoSocial', maxCount: 1 },
     { name: 'actaDesignacionAutoridades', maxCount: 1 }, 
     { name: 'poderRepresentante', maxCount: 1 },
     { name: 'inscripcionFiscal', maxCount: 1 }, 
-    { name: 'comprobanteDomicilioFiscal', maxCount: 1 } 
+    { name: 'comprobanteDomicilioFiscal', maxCount: 1 },
+    { name: 'certificadoPyes', maxCount:1},
+    { name: 'DeclaracionJurada', maxCount:1},
+    { name: 'DNI', maxCount:1},
+    { name: 'comprobanteDomicilioPersonal', maxCount:1},  
 ]);
 
 /**

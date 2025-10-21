@@ -1,18 +1,19 @@
 import { DocumentIcon } from "../atomos/DocumentIcon";
 import { SignatureIcon } from "../atomos/SignatureIcon";
 
-export const QuickAccessButtons = ({height = '100%'}) => {
+export const QuickAccessButtons = ({height = '100%', width = '100%'}) => {
   return (
     <div
       style={{
         backgroundColor: '#562CA4',
-        borderRadius: '20px',
+        borderRadius: '40px',
         padding: '20px 24px',
         display: 'flex',
         gap: '40px',
         justifyContent: 'center',
         alignItems: 'center',
         height: height,
+        width: width,
       }}
     >
       {/* ==== BOTÓN DOCUMENTOS ==== */}

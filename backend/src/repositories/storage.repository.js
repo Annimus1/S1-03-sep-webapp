@@ -1,4 +1,4 @@
-import LocalStorage from '../services/localStorage.service.js'; // Adaptador por defecto
+import SupabaseStorage from '../services/supabase.service.js'; // Adaptador por defecto
 
 class StorageRepository {
     static instance = null;
@@ -9,7 +9,7 @@ class StorageRepository {
             // Este caso NUNCA debería ejecutarse si se usa getInstance() correctamente
             throw new Error("Usa StorageRepository.getInstance() para obtener la instancia única.");
         }
-        this.adapter = LocalStorage;
+        this.adapter = SupabaseStorage;
     }
 
     static getInstance() {
@@ -20,7 +20,7 @@ class StorageRepository {
     }
 
     setAdapter(adapter) {
-        if (!adapter || typeof adapter.upload !== 'function') {
+        if (!adapter || typeof adapter.upload !== 'function' || typeof adapter.getFile !== 'function') {
             throw new Error("El adaptador debe ser un objeto con un método 'upload'.");
         }
         this.adapter = adapter;

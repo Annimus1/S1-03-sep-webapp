@@ -44,3 +44,21 @@ export const authenticateToken = async (req, res, next) => {
     return res.status(500).json({ status: 'error', message: 'Error interno en autenticación.' });
   }
 };
+
+export const authenticateRole = async (req, res, next) => {
+  const id = req.user.id;
+  const role = req.user.role;
+  const paramId = req.params.id
+
+  if(id == paramId){
+    next();
+    return;
+  }
+
+  if(role == 'asesor'){
+    next();
+    return;
+  }
+
+  res.status(403).send({error:"", message:""});
+}
