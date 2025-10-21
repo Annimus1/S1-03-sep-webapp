@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import filesUploadMiddleware from '../middlewares/upload.middleware.js';
-import { authenticateToken } from '../middlewares/auth.middleware.js';
 import { singleResourceController, validateAccountFiles } from '../controllers/storage.controller.js';
+import { authenticateToken } from '../middlewares/auth.middleware.js';
+import filesUploadMiddleware from '../middlewares/upload.middleware.js';
 
 const router = Router();
 
