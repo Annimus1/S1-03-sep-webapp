@@ -99,9 +99,7 @@ export const uploadCreditFiles = async (req, res) => {
     if (todosCargados) {
       await CreditRepository.updateCredit(credit._id,{datosVerificados: 'true'});
     }
-    if (req.body.firmaDigital === 'true' && credit.datosVerificados === 'true' ) {
-      await CreditRepository.updateCredit(credit._id, { estatus: 'revision' });
-    }
+
     const updatedCredit = await CreditRepository.findById(credit._id);
     return res.status(200).json({
       data: {
