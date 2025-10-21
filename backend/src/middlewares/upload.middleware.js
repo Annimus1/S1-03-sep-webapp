@@ -40,7 +40,267 @@ export const filesUploadMiddleware = upload.fields([
     { name: 'comprobanteDomicilioFiscal', maxCount: 1 } 
 ]);
 
-
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     Credit:
+ *       type: object
+ *       properties:
+ *         userId:
+ *           type: string
+ *           description: ID del usuario propietario del crédito
+ *         creditType:
+ *           type: string
+ *           enum: ['inversion', 'capital_trabajo']
+ *           default: 'inversion'
+ *           description: Tipo de crédito solicitado
+ *         firmaDigital:
+ *           type: string
+ *           default: 'false'
+ *           description: Indica si el usuario ha firmado digitalmente el crédito 
+ *         estatus:
+ *           type: string
+ *           enum: ['recaudacion de documentos', 'aprobado', 'rechazado', 'revision']
+ *           default: 'recaudacion de documentos'
+ *           description: Estado actual del crédito
+ *         datosVerificados:
+ *           type: string
+ *           enum: ['true', 'false']
+ *           default: 'false'
+ *           description: Indica si todos los archivos obligatorios fueron cargados
+ *         estadosContablesAuditados:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         estadosContableIntermedios:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         ddjjImpositivas:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         resumenBancario:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         detalleCuentas:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         comprobanteImpuestos:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         ingresosEgresosMensuales:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         inventariosActuales:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         activosFijos:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         proyeccionFlujoFondos:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         ratiosFinancieros:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         registroVentasCompras:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         planFinancieroCredito:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         certificacionContable:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         descripcionNegocio:
+ *           type: string
+ *           description: Texto descriptivo del negocio
+ *         organigramaPersonal:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         principalesClientes:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         principalesProveedores:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         contratosComerciales:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         comprobanteFacturacion:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         permisosHabilitantes:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         comprobantePropiedad:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         evidenciaActividadOnline:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         fotosEstablecimiento:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         descripcionMercado:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         presupuestoInversion:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         cotizacionProveedores:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         estudionFactibilidad:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         planMantenimiento:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         informeTecnico:
+ *           type: string
+ *           format: binary
+ *           description: Archivo opcional
+ *         planImplementacion:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         permisosObra:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         facturaProforma:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         detalleFondos:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         proyeccionFlujoOperativo:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         gastosOperativos:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         evidenciaExpancion:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         constanciaCBU:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         certificadoLibreDeuda:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         historialPrestamos:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         referenciasComerciales:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         informeCrediticio:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         detalleCreditos:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         referenciasBancarias:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         ddjjQuiebra:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         titutoPropiedad:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         tasaOficial:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         avalSolidario:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         comprobanteGarantes:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         cesionSGR:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         informeRegistral:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         seguro:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         declaracionPatrimonialGarante:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         documentoDeuda:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         ddjjOrigenLicito:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         ddjjBeneficiarioFinal:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         consentimientoAnalisis:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ *         constanciaPoliticasInternas:
+ *           type: string
+ *           format: binary
+ *           description: Archivo obligatorio
+ * */
 export const filesCreditMiddleware = upload.fields([
     { name: 'estadosContablesAuditados', maxCount: 1 }, 
     { name: 'estadosContableIntermedios', maxCount: 1 },
