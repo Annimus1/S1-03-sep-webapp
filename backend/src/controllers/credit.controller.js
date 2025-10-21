@@ -117,3 +117,65 @@ export const uploadCreditFiles = async (req, res) => {
     });
   }
 };
+
+export const getCreditById = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const paramId = req.params.id;
+    const credit = await CreditRepository.findById(paramId);
+    if (!credit) {
+      return res.status(404).json({
+        data: {
+          status: 'error',
+          message: 'No se encontró ningún crédito para este usuario.' }
+      });
+    } else {
+      return res.status(200).json({
+        data: {
+          status: 'success',
+          message: 'Crédito encontrado.',
+          credit : credit
+        }
+      });
+    }
+  } catch (error) {
+    console.error('Error en getCreditByUser:', error);
+    return res.status(500).json({
+      data: { status: 'error', message: 'Error interno del servidor.' }
+    });
+  }
+};
+
+export const getCredits = async (req, res) => {
+  try {
+    const credits = await CreditRepository.findAll();
+
+    // Si no hay créditos
+    if (!credits || credits.length === 0) {
+      return res.status(404).json({
+        data: {
+          status: 'not_found',
+          message: 'No se encontraron créditos registrados.'
+        }
+      });
+    }
+
+    // Si encuentra créditos
+    return res.status(200).json({
+      data: {
+        status: 'success',
+        message: 'Créditos obtenidos correctamente.',
+        credits: credits
+      }
+    });
+  } catch (error) {
+    console.error('Error en getCredits:', error);
+    return res.status(500).json({
+      data: {
+        status: 'error',
+        message: 'Error interno del servidor.',
+        details: error.message
+      }
+    });
+  }
+};

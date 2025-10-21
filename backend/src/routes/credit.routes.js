@@ -1,6 +1,7 @@
 import { Router } from 'express';
-import { uploadCreditFiles } from '../controllers/credit.controller.js';
+import { getCreditById, getCredits, uploadCreditFiles } from '../controllers/credit.controller.js';
 import { authenticateToken } from '../middlewares/auth.middleware.js';
+import { authenticateCreditandRole, authenticateRoleAsesor } from '../middlewares/role.middleware.js';
 import { filesCreditMiddleware } from '../middlewares/upload.middleware.js';
 
 const router = Router();
@@ -121,5 +122,196 @@ const router = Router();
 */
 
 router.post('/upload', authenticateToken, filesCreditMiddleware, uploadCreditFiles)
+
+/**
+ * @swagger
+ * /credit/{id}:
+ *   get:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Obtiene un Credito.
+ *     description: Permite al usuario obtener un crédito por su ID y a un usuario asesor.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: El Identificador del credito que se quiere recuperar.
+ *           example: "68f6bd80e3303d7586016068"
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Credito encontrado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "success"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Credito encontrado."
+ *                     credit:
+ *                       type: object
+ *                       description: Objeto crédito.
+ *       403:
+ *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No esta autorizado a ver este crédito"
+ *       404:
+ *         description: Credito no encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Credito no encontrado."
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
+*/
+
+router.get('/:id',authenticateToken,authenticateCreditandRole, getCreditById);
+/**
+ * @swagger
+ * /credit:
+ *   get:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Lista de todos los Creditos.
+ *     description: Permite al usuario asesor obtener la lista de los creditos.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Creditos encontrados exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "success"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Credito encontrado."
+ *                     credits:
+ *                       type: array
+ *                       description: Lista de Créditos.
+ *                       items:
+ *                         type: object
+ *                         example: {}
+ *       403:
+ *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No esta autorizado a ver los créditos"
+ *       404:
+ *         description: Creditos no encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Creditos no encontrado."
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ */
+
+router.get('/',authenticateToken,authenticateRoleAsesor, getCredits); 
 
 export default router;
