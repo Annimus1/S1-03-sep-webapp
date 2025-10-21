@@ -8,7 +8,7 @@ import swaggerSpec from '../swagger.js';
 
 // Importar los módulos locales
 import authRoutes from './routes/auth.routes.js';
-import creditRoutes from './routes/credit.routes';
+import creditRoutes from './routes/credit.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import userRoutes from './routes/user.routes.js'; 
 
