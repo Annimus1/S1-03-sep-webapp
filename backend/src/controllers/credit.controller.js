@@ -101,7 +101,7 @@ export const uploadCreditFiles = async (req, res) => {
     }
 
     const updatedCredit = await CreditRepository.findById(credit._id);
-    return res.status(200).json({
+    return res.status(201).json({
       data: {
         files: Object.keys(req.files),
         message: 'Archivos procesados correctamente.',
