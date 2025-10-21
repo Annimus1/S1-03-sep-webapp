@@ -21,7 +21,7 @@ export const StartApplicationCardActivo = ({
 }) => (
   <div style={{
     backgroundColor: backgroundColor,
-    borderRadius: '20px',
+    borderRadius: '40px',
     padding: '8px 30px',
     height: height
   }}>

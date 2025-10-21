@@ -4,6 +4,7 @@ import { UserContext } from '../../../stores/UserContext';
 import { UserProfileCard } from '../components/moleculas/UserProfileCard';
 import { WelcomeLoadingScreen } from '../../../globals/components/moleculas/WelcomeLoadingScreen';
 import { DashboardPYMENEW } from '../components/plantillas/DashboardPYMENEW';
+import { DashboardASESOR } from '../components/plantillas/DashboardASESOR';
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);
@@ -28,7 +29,7 @@ const Dashboard = () => {
       {isLoading ? (
         <WelcomeLoadingScreen userName={user?.user?.nombre || 'Usuario'} />
       ) : (
-        <DashboardPYMENEW/>
+        <DashboardASESOR/>
       )}
     </main>
   );

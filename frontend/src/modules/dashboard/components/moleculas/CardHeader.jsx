@@ -11,7 +11,7 @@ export const CardHeader = ({
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '24px',
+    marginBottom: '10px',
     flexWrap: 'wrap',
     gap: '12px'
   }}>

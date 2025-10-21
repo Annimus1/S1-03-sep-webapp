@@ -1,7 +1,7 @@
 export const NewFeatureCard = ({height = '100%'}) => (
   <div style={{
     background: 'linear-gradient(135deg, #7FE8D8 0%, #5EDCC6 100%)',
-    borderRadius: '20px',
+    borderRadius: '40px',
     padding: '24px',
     height: height
   }}>

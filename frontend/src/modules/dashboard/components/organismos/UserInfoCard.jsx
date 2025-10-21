@@ -10,7 +10,7 @@ export const UserInfoCard = ({
 }) => (
   <div style={{
     background: 'white',
-    borderRadius: '24px',
+    borderRadius: '40px',
     padding: '28px',
     margin: '0 auto',
     width: '100%',

@@ -19,7 +19,8 @@ export const BotonAnimado = ({
   onClick, 
   className = '',
   deshabilitado = false,
-  ancho = 'auto'
+  ancho = 'auto',
+  height = 'auto'
 }) => {
   const [estaPresionado, setEstaPresionado] = useState(false);
 
@@ -60,7 +61,8 @@ export const BotonAnimado = ({
       activeBg: '#FFBE58',
       shadow: '0 4px 15px rgba(243, 156, 18, 0.3)',
       hoverShadow: '0 6px 20px rgba(243, 156, 18, 0.5)',
-      activeShadow: '0 2px 8px rgba(243, 156, 18, 0.4)'
+      activeShadow: '0 2px 8px rgba(243, 156, 18, 0.4)',
+      height: height
     },
     moradoSuave: {
       backgroundColor: '#DAD6FE',
@@ -73,7 +75,8 @@ export const BotonAnimado = ({
       activeBg: '#E8E6FF',
       shadow: '0 2px 8px rgba(218, 214, 254, 0.3)',
       hoverShadow: '0 4px 12px rgba(218, 214, 254, 0.5)',
-      activeShadow: '0 1px 4px rgba(218, 214, 254, 0.4)'
+      activeShadow: '0 1px 4px rgba(218, 214, 254, 0.4)',
+      height: height
     },
     morado: {
       backgroundColor: '#562CA4',
@@ -86,7 +89,8 @@ export const BotonAnimado = ({
       activeBg: '#8752EB',
       shadow: '0 4px 15px rgba(86, 44, 164, 0.3)',
       hoverShadow: '0 6px 20px rgba(86, 44, 164, 0.5)',
-      activeShadow: '0 2px 8px rgba(86, 44, 164, 0.4)'
+      activeShadow: '0 2px 8px rgba(86, 44, 164, 0.4)',
+      height: height
     }
   };
 
@@ -109,10 +113,16 @@ export const BotonAnimado = ({
     opacity: deshabilitado ? 0.5 : 1,
     transform: estaPresionado ? 'scale(0.95)' : 'scale(1)',
     whiteSpace: 'nowrap',
-    display: ancho === 'completo' ? 'block' : 'inline-block',
+    textAlign: 'center',
+
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+
     width: ancho === 'completo' ? '100%' : 'auto',
-    textAlign: 'center'
+    height: estilos.height || 'auto',
   };
+
 
   // Manejadores de eventos
   const manejarMouseDown = () => {
