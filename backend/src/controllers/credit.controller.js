@@ -179,3 +179,82 @@ export const getCredits = async (req, res) => {
     });
   }
 };
+export const updateCreditStatus = async (req, res) => {
+  try {
+    const creditId = req.params.id;
+    const  {firmaDigital}  = req.body;
+    const credit = await CreditRepository.findById(creditId);
+    if (!credit) {
+      return res.status(404).json({
+        data: {
+          status: 'error',
+          message: 'No se encontró el crédito para actualizar.'
+        }
+      });
+    }
+    if (firmaDigital === 'true' && credit.datosVerificados === 'true' ) {
+      console.log('Actualizando estatus a revision para el crédito:', creditId);
+      await CreditRepository.updateCredit(credit._id, { estatus: 'revision',firmaDigital: 'true'  });
+    }
+    const updatedCredit = await CreditRepository.findById(creditId);
+
+    return res.status(200).json({
+      data: {
+        status: 'success',
+        message: 'Crédito actualizado correctamente.',
+        credit: updatedCredit
+      }
+    });
+  } catch (error) {
+    console.error('Error en updateCreditStatus:', error);
+    return res.status(500).json({ 
+      data: {
+        status: 'error',
+        message: 'Error interno del servidor.',
+        details: error.message
+      }
+    });
+  }
+};
+
+export const desicionCredit = async (req, res) => {
+  try {
+    const creditId = req.params.id;
+    const  {estatus}  = req.body;
+    const credit = await CreditRepository.findById(creditId);
+    if (!credit) {
+      return res.status(404).json({
+        data: {
+          status: 'error',
+          message: 'No se encontró el crédito para actualizar.'
+        }
+      });
+    }
+    if (estatus === 'aprobado') {
+      console.log('Actualizando estatus a aprobado para el crédito:', creditId);
+      await CreditRepository.updateCredit(credit._id, { estatus: 'aprobado' });
+    }
+
+    if (estatus === 'rechazado') {
+      console.log('Actualizando estatus a rechazado para el crédito:', creditId);
+      await CreditRepository.updateCredit(credit._id, { estatus: 'rechazado' });
+    }
+    const updatedCredit = await CreditRepository.findById(creditId);
+
+    return res.status(200).json({
+      data: {
+        status: 'success',
+        message: 'Crédito actualizado correctamente.',
+      }
+    });
+  } catch (error) {
+    console.error('Error en updateCreditStatus:', error);
+    return res.status(500).json({ 
+      data: {
+        status: 'error',
+        message: 'Error interno del servidor.',
+        details: error.message
+      }
+    });
+  }
+};
