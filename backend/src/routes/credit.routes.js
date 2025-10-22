@@ -425,7 +425,7 @@ router.post('/update-estatus/:id',authenticateToken,authenticateCreditandRole, u
 
 /**
  * @swagger
- * /credit/update-estatus/{id}:
+ * /credit/desicion/{id}:
  *   post:
  *     tags:
  *      - "Crédito"
