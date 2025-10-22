@@ -17,6 +17,10 @@ class CreditRepository {
   static async findByUserId(userId) {
     return Credit.find({ userId }).sort({ createdAt: -1 });
   }
+  // Buscar todos los créditos
+  static async findAll() {
+    return Credit.find().populate('userId', 'email nombres apellidos').sort({ createdAt: -1 });
+  }
 
   // Actualizar crédito por ID
   static async updateCredit(id, updateData) {
