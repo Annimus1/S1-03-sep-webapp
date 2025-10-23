@@ -80,7 +80,7 @@ export const uploadCreditFiles = async (req, res) => {
       'detalleCreditos',
       'referenciasBancarias',
       'ddjjQuiebra',
-      'titutoPropiedad',
+      'tituloPropiedad',
       'tasaOficial',
       'avalSolidario',
       'comprobanteGarantes',

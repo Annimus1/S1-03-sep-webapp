@@ -268,7 +268,7 @@ export const filesUploadMiddleware = upload.fields([
  *           type: string
  *           format: binary
  *           description: Archivo obligatorio
- *         titutoPropiedad:
+ *         tituloPropiedad:
  *           type: string
  *           format: binary
  *           description: Archivo obligatorio

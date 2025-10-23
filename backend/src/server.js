@@ -29,8 +29,7 @@ app.use(cors(corsOptions));
 // Helmet: Mejora la seguridad con varios headers HTTP
 app.use(helmet());
 
-// Middleware para parsear el body de peticiones JSON
-//app.use(express.json()); 
+// Middleware para parsear el body de peticiones JSON 
 
 // --- 3. MONTAJE DE RUTAS ---
 // Montar la interfaz de usuario de Swaggerq

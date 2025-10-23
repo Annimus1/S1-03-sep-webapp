@@ -90,7 +90,7 @@ export const contractController = async (req, res) => {
   // Objeto de datos que será usado por generatePdfContract
   const DATOS_DEL_CONTRATO = {
     razon_social: user.nombreComercial,
-    cuit: user.CUIT,
+    cuit: user.empresarialCUIT,
     domicilio: user.domicilioFiscal,
     monto_credito: credit?.monto_credito || 'ARS 1,500,000.00', // Valor por defecto si falta
     tipo_credito: credit.creditType == 'inversion' ? 'Inversión' : 'Capital de Trabajo',
