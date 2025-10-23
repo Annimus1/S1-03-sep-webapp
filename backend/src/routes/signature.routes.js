@@ -36,8 +36,26 @@ const router = Router();
  *                 schema:
  *                   type: string
  *                   example: attachment; filename=Contrato_Firmado_30-71234567-8.pdf
- *       403:
+ *       401:
  *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No autorizado."
+ *       403:
+ *         description: Fobidden.
  *         content:
  *           application/json:
  *             schema:
@@ -93,6 +111,134 @@ const router = Router();
  */
 router.get('/contract/:id', authenticateToken, authenticateCreditandRole, contractController);
 
-router.post('/sign/:id', signatureUploadMiddleware, signContractController);
+/**
+ * @swagger
+ * /signature/sign/{id}:
+ *   post:
+ *     tags:
+ *      - "Firma Digital"
+ *     summary: Firma el Contrato PyMEs.
+ *     description: Permite al usuario asesor obtener la lista de los creditos.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: El Identificador del credito que se quiere actualizar.
+ *           example: "68f6bd80e3303d7586016068"
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/UploadMetadata'
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Contrato PDF generado con éxito.
+ *         content:
+ *           application/pdf:
+ *             schema:
+ *               type: string # Indica que la respuesta es un flujo de bytes
+ *               format: binary # Específica que es un archivo binario (el PDF)
+ *             headers:
+ *               Content-Disposition:
+ *                 schema:
+ *                   type: string
+ *                   example: attachment; filename=Contrato_Firmado_30-71234567-8.pdf
+ *       400:
+ *         description: Tipo de archivo no valido | Archivo excede el peso limite.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Tipo de archivo no valido."
+ *       401:
+ *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No autorizado."
+ *       403:
+ *         description: Fobidden.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No esta autorizado a ver los créditos"
+ *       404:
+ *         description: Creditos no encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Creditos no encontrado."
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ */
+router.post('/sign/:id', authenticateToken, authenticateCreditandRole, signatureUploadMiddleware, signContractController);
 
 export default router;

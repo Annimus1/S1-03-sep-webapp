@@ -1,53 +1,64 @@
 import CreditRepository from '../repositories/credit.repository.js';
 import UserRepository from '../repositories/user.repository.js';
+import StorageRepository from '../repositories/storage.repository.js';
 import { generatePdfContract, signContract } from '../services/signature.service.js';
 
+
+/**
+ * Controlador de Express para cargar un contrato y una firma, firmar el PDF
+ * y almacenar el documento final.
+ * * * @async
+ * @exports signContractController
+ * @param {object} req - Objeto de solicitud (Request) de Express.
+ * @param {object} req.params - Parámetros de la URL.
+ * @param {string} req.params.id - ID del crédito a actualizar.
+ * @param {object} req.files - Archivos cargados por Multer (Buffer de la firma y el contrato).
+ * @param {Array<object>} req.files.signature - Array con el objeto del archivo PNG de la firma.
+ * @param {Array<object>} req.files.contract - Array con el objeto del archivo PDF del contrato.
+ * @param {object} req.user - Objeto de usuario autenticado (se asume que contiene `id`).
+ * @param {object} res - Objeto de respuesta (Response) de Express.
+ * @returns {Promise<void>} No devuelve un valor, sino que responde con un JSON de éxito o un error 500.
+ */
 export const signContractController = async (req, res) => {
   const signatureFile = req.files.signature?.[0];
-
-  const DATOS_DEL_CONTRATO = {
-    razon_social: 'TECNO SOLUTIONS S.R.L.',
-    cuit: '30-71234567-8',
-    domicilio: 'Av. Corrientes 1500, Piso 5',
-    monto_credito: 'ARS 1,500,000.00',
-    tipo_credito: 'Capital de Trabajo',
-    plazo_total: '24 meses',
-    fecha_desembolso: '20 de Noviembre de 2025',
-    fecha_primer_vencimiento: '20 de Diciembre de 2025',
-  };
-
+  const contract = req.files.contract?.[0];
+  const paramId = req.params.id
+  
   // Verificación de archivo
   if (!signatureFile) {
     return res.status(400).send('Falta el archivo de firma (signature).');
   }
 
+  if (!contract) {
+    return res.status(400).send('Falta el archivo de contrato (contract).');
+  }
+
   try {
-    // 1. Generar el PDF rellenado
-    const pdfBuffer = await generatePdfContract(DATOS_DEL_CONTRATO);
+    // Proceso de firma: toma el Buffer del contrato y el Buffer de la firma PNG.
+    const contractBufferSigned = await signContract(contract.buffer, signatureFile.buffer);
+    
+    // Preparar el archivo firmado para ser subido al repositorio de almacenamiento.
+    const file = {
+      buffer : contractBufferSigned,
+      fieldname : "contract",
+      originalname: "Contract.pdf" 
+    }
 
-    // 2. Firmar el PDF (usando el Buffer del archivo cargado)
-    const contractBufferSigned = await signContract(pdfBuffer, signatureFile.buffer);
+    // Guardar el archivo firmado en el almacenamiento de la aplicación.
+    const firmaDigital = await StorageRepository.upload(req.user.id, file);
+    
+    // Actualizar el registro del crédito con la referencia del archivo firmado
+    // y cambiar su estatus a 'revision'.
+    const updatedCredit = await CreditRepository.updateCredit(paramId, { firmaDigital, estatus: 'revision' });
 
-    // 3. Enviar el PDF final al cliente
-    res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', `attachment; filename=Contrato_Firmado_${DATOS_DEL_CONTRATO.cuit}.pdf`);
-    res.send(contractBufferSigned);
+    // Respuesta exitosa al cliente.
+    res.status(200).json({status: "success", message:"Archivo cargado exitosamente"});
 
   } catch (error) {
     console.error(error.message);
     res.status(500).send(`Error en el procesamiento del contrato: ${error.message}`);
   }
 }
-
-/**
- * @fileoverview Controlador para generar dinámicamente el contrato PDF de crédito.
- * * Esta función es un controlador de Express que recupera los datos de un crédito
- * y la información del usuario de las bases de datos (mediante CreditRepository
- * y UserRepository), calcula las fechas de desembolso y primer pago, rellena
- * un objeto de datos de contrato y genera el PDF final para su descarga.
- * * Requiere que las funciones 'CreditRepository.findById', 'UserRepository.findById'
- * y 'generatePdfContract' estén definidas en el contexto global o importadas.
- */
 
 /**
  * Controlador de Express para la generación y descarga de un contrato de crédito.
