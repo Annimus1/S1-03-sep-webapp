@@ -11,6 +11,7 @@ import authRoutes from './routes/auth.routes.js';
 import creditRoutes from './routes/credit.routes.js';
 import uploadRoutes from './routes/upload.routes.js';
 import userRoutes from './routes/user.routes.js'; 
+import signatureRoutes from './routes/signature.routes.js';
 
 // --- 1. CONFIGURACIÓN INICIAL ---
 const app = express();
@@ -28,8 +29,7 @@ app.use(cors(corsOptions));
 // Helmet: Mejora la seguridad con varios headers HTTP
 app.use(helmet());
 
-// Middleware para parsear el body de peticiones JSON
-//app.use(express.json()); 
+// Middleware para parsear el body de peticiones JSON 
 
 // --- 3. MONTAJE DE RUTAS ---
 // Montar la interfaz de usuario de Swaggerq
@@ -38,6 +38,7 @@ app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Montar router
 app.use('/api/v1', uploadRoutes);
 app.use('/api/v1/credit', creditRoutes);
+app.use('/api/v1/signature', signatureRoutes);
 app.use('/api/v1/auth',express.json(), authRoutes); 
 app.use('/api/v1/profile', express.json(), userRoutes);
 

@@ -75,7 +75,7 @@ const CreditSchema = new Schema({
     ddjjBeneficiarioFinal: { type: String},
     consentimientoAnalisis: { type: String },
     constanciaPoliticasInternas: { type: String },
-    firmaDigital: { type: String,default: 'false' },
+    firmaDigital: { type: String,default: null },
 
     /* ------------------- DATOS DE ESTADO ------------------- */
     estatus: {
