@@ -60,5 +60,5 @@ export const authenticateRole = async (req, res, next) => {
     return;
   }
 
-  res.status(403).send({error:"", message:""});
+  res.status(403).send({error:"error", message:"Usuario no autorizado para fer esta informacion."});
 }

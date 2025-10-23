@@ -77,8 +77,8 @@ export const filesUploadMiddleware = upload.fields([
  *           description: Tipo de crédito solicitado
  *         firmaDigital:
  *           type: string
- *           default: 'false'
- *           description: Indica si el usuario ha firmado digitalmente el crédito 
+ *           default: null
+ *           description: Url del recurso firmado digitalmente en el crédito. 
  *         estatus:
  *           type: string
  *           enum: ['recaudacion de documentos', 'aprobado', 'rechazado', 'revision']
@@ -381,4 +381,5 @@ export const filesCreditMiddleware = upload.fields([
     { name: 'constanciaPoliticasInternas', maxCount: 1 },
     { name: 'firmaDigital', maxCount: 1 }
 ]);
+
 export default filesUploadMiddleware;

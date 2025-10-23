@@ -1,10 +1,11 @@
 import { Router } from 'express';
-import { desicionCredit, getCreditById, getCredits, updateCreditStatus, uploadCreditFiles } from '../controllers/credit.controller.js';
+import { desicionCredit, getCreditById, getCredits, uploadCreditFiles } from '../controllers/credit.controller.js';
 import { authenticateToken } from '../middlewares/auth.middleware.js';
 import { authenticateCreditandRole, authenticateRoleAsesor } from '../middlewares/role.middleware.js';
 import { filesCreditMiddleware } from '../middlewares/upload.middleware.js';
 
 const router = Router();
+
 /**
  * @swagger
  * /credit/upload:
@@ -120,7 +121,6 @@ const router = Router();
  *                       example: "Error interno del servidor."
  * 
 */
-
 router.post('/upload', authenticateToken, filesCreditMiddleware, uploadCreditFiles)
 
 /**
@@ -219,8 +219,8 @@ router.post('/upload', authenticateToken, filesCreditMiddleware, uploadCreditFil
  *                       example: "Error interno del servidor."
  * 
 */
-
 router.get('/:id',authenticateToken,authenticateCreditandRole, getCreditById);
+
 /**
  * @swagger
  * /credit:
@@ -311,117 +311,7 @@ router.get('/:id',authenticateToken,authenticateCreditandRole, getCreditById);
  *                       description: Mensaje de la respuesta.
  *                       example: "Error interno del servidor."
  */
-
 router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
-/**
- * @swagger
- * /credit/update-estatus/{id}:
- *   post:
- *     tags:
- *      - "Crédito"
- *     summary: Actualiza un Credito por la firmaDigital.
- *     description: Permite que al cargar la fimaDigital se actualice el estado a revision.
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *           description: El Identificador del credito que se quiere actualizar.
- *           example: "68f6bd80e3303d7586016068"
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             properties:
- *               firmaDigital:
- *                 type: string
- *                 description: Indica si la firma digital ha sido cargada.
- *                 example: "true"
- *     responses:
- *       200:
- *         description: Credito actualizado exitosamente.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     estatus:
- *                       type: string
- *                       description: Estado de la respuesta.
- *                       example: "revision"
- *                     message:
- *                       type: string
- *                       description: Mensaje de la respuesta.
- *                       example: "Credito actualizado."
- *                     credit:
- *                       type: object
- *                       description: Objeto crédito.
- *       403:
- *         description: No autorizado.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     status:
- *                       type: string
- *                       description: Estado de la respuesta.
- *                       example: "error"
- *                     message:
- *                       type: string
- *                       description: Mensaje de la respuesta.
- *                       example: "No esta autorizado a ver este crédito"
- *       404:
- *         description: Credito no encontrado.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     status:
- *                       type: string
- *                       description: Estado de la respuesta.
- *                       example: "error"
- *                     message:
- *                       type: string
- *                       description: Mensaje de la respuesta.
- *                       example: "Credito no encontrado."
- *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     status:
- *                       type: string
- *                       description: Estado de la respuesta.
- *                       example: "error"
- *                     message:
- *                       type: string
- *                       description: Mensaje de la respuesta.
- *                       example: "Error interno del servidor."
- * 
-*/
-
-router.post('/update-estatus/:id',authenticateToken,authenticateCreditandRole, updateCreditStatus);
 
 /**
  * @swagger
@@ -527,6 +417,6 @@ router.post('/update-estatus/:id',authenticateToken,authenticateCreditandRole, u
  *                       example: "Error interno del servidor."
  * 
 */
-
 router.post('/desicion/:id',authenticateToken,authenticateRoleAsesor, desicionCredit); 
+
 export default router;
