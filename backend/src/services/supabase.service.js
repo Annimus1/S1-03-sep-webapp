@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js';
 import path from 'path';
 
 /**
@@ -53,7 +53,7 @@ class SupabaseStorage {
       throw new Error(`Fallo al guardar el archivo: ${error.message}`);
     } else {
       console.log(data)
-      return data.path
+      return `${process.env.API_URL}/uploads/${data.path}`;
     }
   }
 

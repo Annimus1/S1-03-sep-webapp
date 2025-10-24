@@ -15,7 +15,7 @@ class LocalStorage {
   uploadDir = path.join(process.cwd(), 'uploads');
 
   /** @type {string} */
-  baseUrl = `http://localhost:${process.env.PORT}/api/v1/uploads/`;
+  baseUrl = `${process.env.API_URL}/uploads/`;
 
   constructor() {
     // Asegura que el directorio 'uploads' exista al inicializar la clase
