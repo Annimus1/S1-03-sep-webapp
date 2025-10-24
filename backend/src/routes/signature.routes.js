@@ -1,8 +1,9 @@
 import { Router } from 'express';
-import { authenticateToken}  from '../middlewares/auth.middleware.js';
-import { authenticateCreditandRole } from '../middlewares/role.middleware.js'
-import { signatureUploadMiddleware } from '../middlewares/signature.middleware.js'
-import { signContractController,contractController } from '../controllers/signature.controller.js';
+import { contractController, signContractController } from '../controllers/signature.controller.js';
+import { authenticateToken } from '../middlewares/auth.middleware.js';
+import { DatosVerificados } from '../middlewares/credit.validation.middleware.js';
+import { authenticateCreditandRole } from '../middlewares/role.middleware.js';
+import { signatureUploadMiddleware } from '../middlewares/signature.middleware.js';
 const router = Router();
 
 /**
@@ -239,6 +240,6 @@ router.get('/contract/:id', authenticateToken, authenticateCreditandRole, contra
  *                       description: Mensaje de la respuesta.
  *                       example: "Error interno del servidor."
  */
-router.post('/sign/:id', authenticateToken, authenticateCreditandRole, signatureUploadMiddleware, signContractController);
+router.post('/sign/:id', authenticateToken, authenticateCreditandRole,DatosVerificados, signatureUploadMiddleware, signContractController);
 
 export default router;
