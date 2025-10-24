@@ -7,8 +7,6 @@ import { filesCreditMiddleware } from '../middlewares/upload.middleware.js';
 
 const router = Router();
 
-router.post('/create',express.json(),authenticateToken, createCredit )
-
 /**
  * @swagger
  * /credit/upload:
@@ -44,16 +42,14 @@ router.post('/create',express.json(),authenticateToken, createCredit )
  *                 data:
  *                   type: object
  *                   properties:
- *                     files:
- *                       type: array
- *                       description: Lista de los nombres de los archivos recibidos.
- *                       items:
- *                         type: string
- *                         example: "estatutoSocial"
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "success"
  *                     message:
  *                       type: string
  *                       description: Mensaje de la respuesta.
- *                       example: "Archivos procesados correctamente."
+ *                       example: "Credito creado correctamente."
  *                     credit:
  *                       type: object
  *                       description: Objeto crédito actualizado.
@@ -112,6 +108,104 @@ router.post('/create',express.json(),authenticateToken, createCredit )
  *                     type: string
  *                     description: Mensaje de la respuesta.
  *                     example: "Error mientras procesaba estatutoSocial."
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
+ */
+router.post('/create',express.json(),authenticateToken, createCredit )
+
+/**
+ * @swagger
+ * /credit/create:
+ *   post:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Crea un credito.
+ *     description: Permite al usuario un crédito.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreditCreate'
+ *     responses:
+ *       201:
+ *         description: Documentos guardados exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     files:
+ *                       type: array
+ *                       description: Lista de los nombres de los archivos recibidos.
+ *                       items:
+ *                         type: string
+ *                         example: "estatutoSocial"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Archivos procesados correctamente."
+ *                     credit:
+ *                       type: object
+ *                       description: Objeto crédito creado.
+ *       401:
+ *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No autorizado."
+ *       403:
+ *         description: Hay creditos exitentes en revision.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No puede iniciar un nuevo crédito hasta que todos los anteriores estén aprobados o rechazados."
  *       500:
  *         description: Error interno del servidor.
  *         content:
@@ -372,6 +466,24 @@ router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
  *                       type: string
  *                       description: Mensaje de la respuesta.
  *                       example: "Credito actualizado."
+ *       400:
+ *         description: Faltan campos obligatorios en el credito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Faltan campos obligatorios en el credito."
  *       403:
  *         description: No autorizado.
  *         content:

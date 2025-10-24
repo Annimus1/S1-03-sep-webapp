@@ -320,6 +320,25 @@ export const filesUploadMiddleware = upload.fields([
  *           format: binary
  *           description: Archivo obligatorio
  * */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CreditCreate:
+ *       type: object
+ *       properties:
+ *         userId:
+ *           type: string
+ *           description: ID del usuario propietario del crédito
+ *         monto_credito:
+ *           type: number
+ *           description: Monto del crédito solicitado
+ *           example: 150000
+ *         plazos:
+ *           type: number
+ *           description: Plazo del crédito en años
+ *           example: 2
+ * */
 export const filesCreditMiddleware = upload.fields([
     { name: 'estadosContablesAuditados', maxCount: 1 }, 
     { name: 'estadosContableIntermedios', maxCount: 1 },
