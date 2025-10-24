@@ -1,6 +1,7 @@
-import { Router } from 'express';
-import { desicionCredit, getCreditById, getCredits, uploadCreditFiles } from '../controllers/credit.controller.js';
+import express, { Router } from 'express';
+import { createCredit, desicionCredit, getCreditById, getCredits, uploadCreditFiles } from '../controllers/credit.controller.js';
 import { authenticateToken } from '../middlewares/auth.middleware.js';
+import { DatosVerificados } from '../middlewares/credit.validation.middleware.js';
 import { authenticateCreditandRole, authenticateRoleAsesor } from '../middlewares/role.middleware.js';
 import { filesCreditMiddleware } from '../middlewares/upload.middleware.js';
 
@@ -14,6 +15,14 @@ const router = Router();
  *      - "Crédito"
  *     summary: Sube documentos al credito.
  *     description: Permite al usuario subir todos los archivos relacionados con su crédito.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: El Identificador del credito al que se le cargan archivos.
+ *           example: "68f66016068"
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -33,16 +42,14 @@ const router = Router();
  *                 data:
  *                   type: object
  *                   properties:
- *                     files:
- *                       type: array
- *                       description: Lista de los nombres de los archivos recibidos.
- *                       items:
- *                         type: string
- *                         example: "estatutoSocial"
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "success"
  *                     message:
  *                       type: string
  *                       description: Mensaje de la respuesta.
- *                       example: "Archivos procesados correctamente."
+ *                       example: "Credito creado correctamente."
  *                     credit:
  *                       type: object
  *                       description: Objeto crédito actualizado.
@@ -120,8 +127,106 @@ const router = Router();
  *                       description: Mensaje de la respuesta.
  *                       example: "Error interno del servidor."
  * 
+ */
+router.post('/create',express.json(),authenticateToken, createCredit )
+
+/**
+ * @swagger
+ * /credit/create:
+ *   post:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Crea un credito.
+ *     description: Permite al usuario un crédito.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreditCreate'
+ *     responses:
+ *       201:
+ *         description: Documentos guardados exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     files:
+ *                       type: array
+ *                       description: Lista de los nombres de los archivos recibidos.
+ *                       items:
+ *                         type: string
+ *                         example: "estatutoSocial"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Archivos procesados correctamente."
+ *                     credit:
+ *                       type: object
+ *                       description: Objeto crédito creado.
+ *       401:
+ *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No autorizado."
+ *       403:
+ *         description: Hay creditos exitentes en revision.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No puede iniciar un nuevo crédito hasta que todos los anteriores estén aprobados o rechazados."
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
 */
-router.post('/upload', authenticateToken, filesCreditMiddleware, uploadCreditFiles)
+router.post('/upload/:id', authenticateToken, filesCreditMiddleware, uploadCreditFiles)
 
 /**
  * @swagger
@@ -315,7 +420,7 @@ router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
 
 /**
  * @swagger
- * /credit/desicion/{id}:
+ * /credit/decision/{id}:
  *   post:
  *     tags:
  *      - "Crédito"
@@ -361,6 +466,24 @@ router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
  *                       type: string
  *                       description: Mensaje de la respuesta.
  *                       example: "Credito actualizado."
+ *       400:
+ *         description: Faltan campos obligatorios en el credito
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Faltan campos obligatorios en el credito."
  *       403:
  *         description: No autorizado.
  *         content:
@@ -417,6 +540,6 @@ router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
  *                       example: "Error interno del servidor."
  * 
 */
-router.post('/desicion/:id',authenticateToken,authenticateRoleAsesor, desicionCredit); 
+router.post('/decision/:id',express.json(),authenticateToken,authenticateRoleAsesor,DatosVerificados, desicionCredit); 
 
 export default router;

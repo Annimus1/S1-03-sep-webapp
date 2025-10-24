@@ -1,15 +1,16 @@
 import CreditRepository from '../repositories/credit.repository.js';
 
 export const authenticateCreditandRole = async (req, res, next) => {
-    const id = req.user.id;
-    const role = req.user.role;
-    const paramId = req.params.id
-    const credit = await CreditRepository.findById(paramId);
-    if(!credit){
+
+    try{
+        const id = req.user.id;
+        const role = req.user.role;
+        const paramId = req.params.id
+        const credit = await CreditRepository.findById(paramId);
+        if(!credit){
         res.status(404).send({error:"No se encontró el crédito", message:""});
         return;
-    }
-    try{
+        }
         const creditUserId = credit.userId?._id?.toString() || credit.userId?.toString();
         if(id == creditUserId || role == 'asesor'){
             next();

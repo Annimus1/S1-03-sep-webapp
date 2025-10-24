@@ -6,13 +6,23 @@ const { Schema } = mongoose;
 ------------------------------------------------------------------ */
 const CreditSchema = new Schema({
   // Referencia al usuario propietario del crédito
-    userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: Schema.Types.ObjectId, ref: 'User'},
 
   // Tipo de crédito
     creditType: {
         type: String,
         enum: ['inversion', 'capital_trabajo'], 
-        required: true
+        default: 'inversion'
+    },
+    //Monto solicitado
+    monto_credito: {
+      type: Number,
+      default: null
+    },
+    //Plazo solicitado
+    plazos: {
+      type: Number,
+      default: null
     },
 
   /* ------------------- DOCUMENTACIÓN GENERAL ------------------- */
@@ -80,13 +90,12 @@ const CreditSchema = new Schema({
     /* ------------------- DATOS DE ESTADO ------------------- */
     estatus: {
         type: String,
-        enum: ['recaudacion de documentos', 'aprobado', 'rechazado', 'revision'],
-        default: 'recaudacion de documentos'
+        enum: ['recaudacion_documentos', 'aprobado', 'rechazado', 'revision'],
+        default: 'recaudacion_documentos'
     },
     datosVerificados: {
-        type: String,
-        enum: ['true', 'false'],
-        default: 'false', // Debe ser true para avanzar a la siguiente seccion.
+        type: Boolean,
+        default: false, // Debe ser true para avanzar a la siguiente seccion.
     },
 
 }, { timestamps: true });

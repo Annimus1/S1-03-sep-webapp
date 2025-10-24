@@ -31,7 +31,7 @@ import upload from './multer.middleware.config.js';
  *           type: string
  *           format: binary
  *           description: Documento PDF del Comprobante de Domicilio Fiscal.
- *         certificadoPyes:
+ *         certificadoPyMes:
  *           type: string
  *           format: binary
  *           description: Documento PDF del Certificado PyMEs.
@@ -54,7 +54,7 @@ export const filesUploadMiddleware = upload.fields([
     { name: 'poderRepresentante', maxCount: 1 },
     { name: 'inscripcionFiscal', maxCount: 1 }, 
     { name: 'comprobanteDomicilioFiscal', maxCount: 1 },
-    { name: 'certificadoPyes', maxCount:1},
+    { name: 'certificadoPyMes', maxCount:1},
     { name: 'DeclaracionJurada', maxCount:1},
     { name: 'DNI', maxCount:1},
     { name: 'comprobanteDomicilioPersonal', maxCount:1},  
@@ -85,9 +85,8 @@ export const filesUploadMiddleware = upload.fields([
  *           default: 'recaudacion de documentos'
  *           description: Estado actual del crédito
  *         datosVerificados:
- *           type: string
- *           enum: ['true', 'false']
- *           default: 'false'
+ *           type: boolean
+ *           default: false
  *           description: Indica si todos los archivos obligatorios fueron cargados
  *         estadosContablesAuditados:
  *           type: string
@@ -320,6 +319,25 @@ export const filesUploadMiddleware = upload.fields([
  *           type: string
  *           format: binary
  *           description: Archivo obligatorio
+ * */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     CreditCreate:
+ *       type: object
+ *       properties:
+ *         userId:
+ *           type: string
+ *           description: ID del usuario propietario del crédito
+ *         monto_credito:
+ *           type: number
+ *           description: Monto del crédito solicitado
+ *           example: 150000
+ *         plazos:
+ *           type: number
+ *           description: Plazo del crédito en años
+ *           example: 2
  * */
 export const filesCreditMiddleware = upload.fields([
     { name: 'estadosContablesAuditados', maxCount: 1 }, 

@@ -1,5 +1,5 @@
-import UserRepository from '../repositories/user.repository.js';
 import StorageRepository from '../repositories/storage.repository.js';
+import UserRepository from '../repositories/user.repository.js';
 
 export const validateAccountFiles = async (req, res) => {
     const ID = req.user.id;
@@ -44,7 +44,7 @@ export const validateAccountFiles = async (req, res) => {
             'poderRepresentante',
             'inscripcionFiscal',
             'comprobanteDomicilioFiscal',
-            'certificadoPyes',
+            'certificadoPyMes',
             'DeclaracionJurada',
             'DNI',
             'comprobanteDomicilioPersonal'
