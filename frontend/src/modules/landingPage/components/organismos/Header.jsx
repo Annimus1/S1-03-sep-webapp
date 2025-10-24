@@ -61,7 +61,7 @@ export const Header = () => {
           {/* Botón de Registro a la cuenta */}
           <BotonAnimado
             tamaño={tamanioBoton}
-            variante="moradoSuave"
+            variante="moradoSuave"  
             onClick={() => window.location.href = '/registro'}
             ancho="auto"
           >

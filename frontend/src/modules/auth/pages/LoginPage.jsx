@@ -5,11 +5,11 @@ import { PantallaExito } from '../components/organismos/PantallaExito';
 import { LoginCard } from '../components/organismos/LoginCard';
 import { Logo } from '../../../globals/components/atomos/Logo';
 import style from './LoginPage.module.css';
-import { Footer } from '../components/organismos/Footer';
 import { AnimacionCarga } from '../../../globals/components/atomos/AnimacionCarga';
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 import { UserContext } from "../../../stores/UserContext";
+import { Footer } from '../components/organismos/Footer';
 import { Header } from '../../landingPage/components/organismos/Header';
 
 const LoginPage = () => {
