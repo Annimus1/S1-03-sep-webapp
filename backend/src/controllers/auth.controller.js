@@ -23,7 +23,6 @@ export const authController = async (req, res) => {
       fechaConstitucion,
       numeroRegistro,
       pep,
-      certificadoPyME
     } = req.body;
     
     // Verificar si el email ya existe
@@ -50,7 +49,6 @@ export const authController = async (req, res) => {
       actividadEconomicaPrincipal,
       fechaConstitucion,
       numeroRegistro,
-      certificadoPyME,
       pep
     });
     // Crear token JWT
