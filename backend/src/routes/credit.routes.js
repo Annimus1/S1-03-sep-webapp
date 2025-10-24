@@ -1,10 +1,13 @@
-import { Router } from 'express';
-import { desicionCredit, getCreditById, getCredits, uploadCreditFiles } from '../controllers/credit.controller.js';
+import express, { Router } from 'express';
+import { createCredit, desicionCredit, getCreditById, getCredits, uploadCreditFiles } from '../controllers/credit.controller.js';
 import { authenticateToken } from '../middlewares/auth.middleware.js';
+import { DatosVerificados } from '../middlewares/credit.validation.middleware.js';
 import { authenticateCreditandRole, authenticateRoleAsesor } from '../middlewares/role.middleware.js';
 import { filesCreditMiddleware } from '../middlewares/upload.middleware.js';
 
 const router = Router();
+
+router.post('/create',express.json(),authenticateToken, createCredit )
 
 /**
  * @swagger
@@ -14,6 +17,14 @@ const router = Router();
  *      - "Crédito"
  *     summary: Sube documentos al credito.
  *     description: Permite al usuario subir todos los archivos relacionados con su crédito.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: El Identificador del credito al que se le cargan archivos.
+ *           example: "68f66016068"
  *     security:
  *       - bearerAuth: []
  *     requestBody:
@@ -121,7 +132,7 @@ const router = Router();
  *                       example: "Error interno del servidor."
  * 
 */
-router.post('/upload', authenticateToken, filesCreditMiddleware, uploadCreditFiles)
+router.post('/upload/:id', authenticateToken, filesCreditMiddleware, uploadCreditFiles)
 
 /**
  * @swagger
@@ -315,7 +326,7 @@ router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
 
 /**
  * @swagger
- * /credit/desicion/{id}:
+ * /credit/decision/{id}:
  *   post:
  *     tags:
  *      - "Crédito"
@@ -417,6 +428,6 @@ router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
  *                       example: "Error interno del servidor."
  * 
 */
-router.post('/desicion/:id',authenticateToken,authenticateRoleAsesor, desicionCredit); 
+router.post('/decision/:id',express.json(),authenticateToken,authenticateRoleAsesor,DatosVerificados, desicionCredit); 
 
 export default router;
