@@ -49,6 +49,7 @@ export const RegistrationTemplate = ({ children, onBack, onContinue, showContinu
           display: flex;
           flex-direction: column;
           position: relative;
+          height: 100%;
         }
 
         .template-header {
@@ -72,6 +73,7 @@ export const RegistrationTemplate = ({ children, onBack, onContinue, showContinu
           flex: 1;
           display: flex;
           flex-direction: column;
+          justify-content: flex-end;
         }
 
         .template-content {
@@ -112,7 +114,12 @@ export const RegistrationTemplate = ({ children, onBack, onContinue, showContinu
         }
 
         .content-footer {
-          margin-top: 10px;
+          position: absolute;
+          bottom: 20px;
+          left: 60px;
+          width: 100%;
+          margin: 0; /* elimina el margin-top */
+          padding: 1rem; /* opcional, para darle espacio interno */
         }
 
         .footer-note {
