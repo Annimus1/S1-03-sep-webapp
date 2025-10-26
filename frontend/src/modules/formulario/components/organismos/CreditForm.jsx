@@ -3,7 +3,7 @@ import { Input } from '../atomos/Input';
 import { AmountSelector } from '../moleculas/AmountSelector';
 import { BotonAnimado } from '../../../../globals/components/atomos/BotonAnimado';
 
-export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInteres, setTasaInteres, fechaInicio, setFechaInicio, fechaInicioInput, setFechaInicioInput, selectedAmount, setSelectedAmount }) => {
+export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInteres, setTasaInteres, fechaInicio, setFechaInicio, fechaInicioInput, setFechaInicioInput, selectedAmount, setSelectedAmount, setPasoActual }) => {
   
   const handleMontoChange = (e) => {
     const valor = e.target.value.replace(/[^0-9]/g, '');
@@ -130,7 +130,7 @@ export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInt
         </div>
       </div>
 
-      <BotonAnimado ancho="completo" variante="naranja">
+      <BotonAnimado ancho="completo" variante="naranja" onClick={() => { setPasoActual(1); }}>
         Iniciar mi solicitud crédito PyME
       </BotonAnimado>
     </div>

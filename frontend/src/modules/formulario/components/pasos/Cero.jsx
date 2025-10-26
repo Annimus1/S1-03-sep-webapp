@@ -2,7 +2,7 @@ import { CreditForm } from "../organismos/CreditForm";
 import { PaymentSummary } from "../organismos/PaymentSummary";
 import { useState } from "react";
 
-export const CreditRequestTemplate = () => {
+export const Cero = ({ setPasoActual }) => {
   const [monto, setMonto] = useState(25000);
   const [plazoAnios, setPlazoAnios] = useState(6);
   const [tasaInteres, setTasaInteres] = useState(20);
@@ -85,6 +85,7 @@ export const CreditRequestTemplate = () => {
             setFechaInicioInput={setFechaInicioInput}
             selectedAmount={selectedAmount}
             setSelectedAmount={setSelectedAmount}
+            setPasoActual={setPasoActual}
           />
           <PaymentSummary 
             pagoMensual={formatearNumero(calcularPagoMensual())}

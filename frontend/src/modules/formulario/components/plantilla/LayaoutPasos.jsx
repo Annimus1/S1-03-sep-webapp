@@ -2,7 +2,6 @@ import { useState } from "react";
 import { RegistrationStepper } from "../organismos/RegistrationStepper";
 
 export function LayaoutPasos( { paso }) {
-  const [currentStep] = useState(paso); 
 
   return (
     <>
@@ -87,7 +86,7 @@ export function LayaoutPasos( { paso }) {
       `}</style>
 
       <div className="registration-page">
-        <RegistrationStepper currentStep={currentStep} />
+        <RegistrationStepper currentStep={paso} />
       </div>
     </>
   );
