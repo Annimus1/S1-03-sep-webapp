@@ -5,10 +5,11 @@ import { LayaoutPasos } from "../components/plantilla/LayaoutPasos";
 import { Cero } from "../components/pasos/Cero";
 import { Uno } from "../components/pasos/Uno";
 import { Dos } from "../components/pasos/Dos";
+import { Tres } from "../components/pasos/Tres";
 
 // 🌟 COMPONENTE PRINCIPAL
 export default function Formulario() {
-  const [pasoActual, setPasoActual] = useState(2);
+  const [pasoActual, setPasoActual] = useState(3);
 
   return (
     <div
@@ -48,6 +49,8 @@ export default function Formulario() {
           <Uno setPasoActual={setPasoActual} />
         ) : pasoActual === 2 ? (
           <Dos setPasoActual={setPasoActual} />
+        ) : pasoActual === 3 ? (
+          <Tres setPasoActual={setPasoActual} />
         ) : null}
       </main>
 
