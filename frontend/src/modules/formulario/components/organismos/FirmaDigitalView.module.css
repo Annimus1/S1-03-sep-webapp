@@ -269,3 +269,125 @@
     top: -100px;
   }
 }
+
+/* PANTALLAS DE ESTADO */
+.statusScreen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 24px;
+}
+
+.statusCard {
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+}
+
+.successHeader {
+  background: #0D6546;
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  padding: 20px 32px;
+  border-radius: 30px;
+  margin-bottom: 32px;
+  display: inline-block;
+}
+
+.errorHeader {
+  background: #952014;
+  color: white;
+  font-size: 24px;
+  font-weight: 600;
+  padding: 20px 32px;
+  border-radius: 50px;
+  margin-bottom: 32px;
+  display: inline-block;
+}
+
+.statusContent {
+  margin-bottom: 32px;
+}
+
+.statusContent p {
+  font-size: 16px;
+  color: #4a5568;
+  margin: 8px 0;
+  line-height: 1.6;
+}
+
+.statusButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  background: #F59E0B;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.primaryButton:hover {
+  background: #D97706;
+  transform: translateY(-2px);
+}
+
+.secondaryButton {
+  background: #7C3AED;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.secondaryButton:hover {
+  background: #6D28D9;
+  transform: translateY(-2px);
+}
+
+.supportText {
+  margin-top: 24px;
+  font-size: 15px;
+  color: #4a5568;
+}
+
+.supportLink {
+  color: #7C3AED;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.supportLink:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .successHeader,
+  .errorHeader {
+    font-size: 20px;
+    padding: 16px 24px;
+  }
+
+  .statusButtons {
+    flex-direction: column;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}

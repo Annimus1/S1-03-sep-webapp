@@ -29,7 +29,7 @@ const Dashboard = () => {
       {isLoading ? (
         <WelcomeLoadingScreen userName={user?.user?.nombre || 'Usuario'} />
       ) : (
-        <DashboardASESOR/>
+        <DashboardPYMENEW/>
       )}
     </main>
   );

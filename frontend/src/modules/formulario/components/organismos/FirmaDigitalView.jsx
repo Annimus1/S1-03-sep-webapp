@@ -11,6 +11,7 @@ export const FirmaDigitalView = ({ contratoHTML, onComplete }) => {
   const [authorizedSignature, setAuthorizedSignature] = useState(false);
   const [showError, setShowError] = useState(false);
   const [showContractModal, setShowContractModal] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
 
   const handleDownload = () => {
     const element = document.createElement("div");
@@ -65,12 +66,96 @@ export const FirmaDigitalView = ({ contratoHTML, onComplete }) => {
 
     setShowError(false);
     
+    // Simular envío con posibilidad de éxito o error
     setTimeout(() => {
-      alert("¡Contrato firmado exitosamente! ✅");
-      onComplete();
+      // Simular 90% éxito, 10% error (puedes cambiar esta lógica)
+      const isSuccess = Math.random() > 0.1;
+      
+      if (isSuccess) {
+        setSubmitStatus('success');
+      } else {
+        setSubmitStatus('error');
+      }
     }, 1000);
   };
 
+  const handleRetry = () => {
+    setSubmitStatus(null);
+  };
+
+  const handleViewStatus = () => {
+    // Aquí puedes navegar a la página de estado
+    onComplete();
+  };
+
+  // Pantalla de éxito
+  if (submitStatus === 'success') {
+    return (
+      <div className={styles.statusScreen}>
+        <div className={styles.statusCard}>
+          <div className={styles.successHeader}>
+            ¡Firma digital completada con éxito!
+          </div>
+          
+          <div className={styles.statusContent}>
+            <p>Tu contrato fue firmado de manera segura.</p>
+            <p>En unos segundos podrás revisar el estado actualizado de tu solicitud.</p>
+          </div>
+
+          <div className={styles.statusButtons}>
+            <BotonAnimado  variante="morado"
+              className={styles.secondaryButton}
+              onClick={handleDownload}
+            >
+              Descargar tu contrato firmado
+            </BotonAnimado>
+            <BotonAnimado  variante="naranja"
+              className={styles.primaryButton}
+              onClick={handleViewStatus}
+            >
+              Ver estado de mi solicitud
+            </BotonAnimado>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Pantalla de error
+  if (submitStatus === 'error') {
+    return (
+      <div className={styles.statusScreen}>
+        <div className={styles.statusCard}>
+          <div className={styles.errorHeader}>
+            No pudimos confirmar tu firma digital
+          </div>
+          
+          <div className={styles.statusContent}>
+            <p>Es posible que la sesión en el "espacio seguro Kredia" haya expirado o se haya cancelado.</p>
+            <p>Intenta nuevamente o comunícate con nuestro soporte.</p>
+          </div>
+
+          <div className={styles.statusButtons}>
+            <button 
+              className={styles.primaryButton}
+              onClick={handleRetry}
+            >
+              Reintentar firma
+            </button>
+          </div>
+
+          <div className={styles.supportText}>
+            ¿Aún no consigues firmar?{" "}
+            <a href="#" className={styles.supportLink}>
+              Contacta nuestro Soporte
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Pantalla principal de firma
   return (
     <div className={styles.firmaView}>
       {/* Sección del contrato */}
@@ -98,16 +183,22 @@ export const FirmaDigitalView = ({ contratoHTML, onComplete }) => {
         </div>
       </div>
 
-      {/* Sección de firma - CON POSITION RELATIVE */}
+      {/* Sección de firma */}
       <div className={styles.signatureSectionWrapper}>
-        {/* Mensaje de error - POSITION ABSOLUTE FLOTANDO */}
+        {/* Mensaje de error flotante */}
         {showError && (
           <div className={styles.errorMessage}>
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+              />
+            </svg>
             <div>
               <strong>No se puede continuar</strong>
               <p>Para continuar, debes aceptar los Términos & Condiciones y autorizar tu firma digital.</p>
             </div>
-            <button className={styles.closeButton} onClick={() => setShowError(false)}>×</button>
+            <button onClick={() => setShowError(false)} className={styles.closeButton}>×</button>
           </div>
         )}
 
