@@ -11,7 +11,7 @@ import { Navigate } from 'react-router-dom';
 import './styles/index.css';
 import DashboardLayout  from './globals/layouts/DashboardLayout';
 import Formulario from './modules/formulario/page/Formulario';
-
+import VerDocumento from './modules/visualizarDocumentos/page/VerDocumento';
 
 const App = () => {
   return (
@@ -35,6 +35,8 @@ const App = () => {
             <Route path="*" element={<Navigate to="/" replace />} />
 
             <Route path="/Formulario" element={<Formulario />} />
+            <Route path="/documentos" element={<VerDocumento />} />
+
             {/* 🔒 Ruta privada con MainLayout */}
             <Route element={< DashboardLayout />}>
               <Route
