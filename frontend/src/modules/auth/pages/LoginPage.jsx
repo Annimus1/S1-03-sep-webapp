@@ -86,7 +86,7 @@ const LoginPage = () => {
         }}
       >
       {/* HEADER */}
-      <Header texto="¿Aún no tienes tu cuenta? Regístrate" textoMovil='Regístrate' direccionar='/registro'/>
+      <Header ruta="/registro" textoWindows="¿Aún no tienes tu cuenta? Regístrate" textoMovil="Regístrate"/>
 
       {/* CONTENIDO CENTRAL CENTRADO */}
       <div

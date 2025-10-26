@@ -13,7 +13,7 @@ import { Siete } from "../components/pasos/Siete";
 
 // 🌟 COMPONENTE PRINCIPAL
 export default function Formulario() {
-  const [pasoActual, setPasoActual] = useState(7);
+  const [pasoActual, setPasoActual] = useState(2);
 
   return (
     <div
@@ -26,9 +26,7 @@ export default function Formulario() {
     >
       {/* HEADER */}
       <Header
-        texto="¿Aún no tienes tu cuenta? Regístrate"
-        textoMovil="Regístrate"
-        direccionar="/registro"
+        ruta="/" textoWindows="Guardar y Continuar después" textoMovil="Guardar y Continuar"
       />
 
       {/* PASOS */}

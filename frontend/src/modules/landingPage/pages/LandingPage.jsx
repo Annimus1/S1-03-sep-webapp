@@ -10,7 +10,7 @@ import { SeccionSimulador } from "../components/organismos/SeccionSimulador";
  */
 export const LandingPage = () => (
   <div>
-    <Header/>
+    <Header ruta="/login" textoWindows="Ingresar a tu espacio" textoMovil="Ingresar"/>
   <div
     className="container"
     style={{
