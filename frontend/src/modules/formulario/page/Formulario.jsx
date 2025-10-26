@@ -9,10 +9,11 @@ import { Tres } from "../components/pasos/Tres";
 import { Cuatro } from "../components/pasos/Cuatro";
 import { Cinco } from "../components/pasos/Cinco";
 import { Seis } from "../components/pasos/Seis";
+import { Siete } from "../components/pasos/Siete";
 
 // 🌟 COMPONENTE PRINCIPAL
 export default function Formulario() {
-  const [pasoActual, setPasoActual] = useState(6);
+  const [pasoActual, setPasoActual] = useState(7);
 
   return (
     <div
@@ -60,6 +61,8 @@ export default function Formulario() {
           <Cinco setPasoActual={setPasoActual} />
         ) : pasoActual === 6 ? (
           <Seis setPasoActual={setPasoActual} />
+        ) : pasoActual === 7 ? (
+          <Siete setPasoActual={setPasoActual} />
         ) : null}
       </main>
 
