@@ -35,7 +35,7 @@ const App = () => {
             <Route path="*" element={<Navigate to="/" replace />} />
 
             <Route path="/Formulario" element={<Formulario />} />
-            <Route path="/ver-documento" element={<VerDocumento />} />
+            <Route path="/documentos" element={<VerDocumento />} />
 
             {/* 🔒 Ruta privada con MainLayout */}
             <Route element={< DashboardLayout />}>

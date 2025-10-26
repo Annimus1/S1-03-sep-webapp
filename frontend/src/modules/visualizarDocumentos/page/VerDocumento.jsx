@@ -1,23 +1,47 @@
+import { useState } from "react";
+import { Header } from "../../landingPage/components/organismos/Header";
+import { Footer } from "../../auth/components/organismos/Footer";
+import { StepperConNavegacion } from "../components/plantilla/StepperConNavegacion";
 import { DocumentosAdjuntados } from "../components/plantilla/DocumentosAdjuntados";
 
 const VerDocumento = () => {
+  // ====== STEPPER ======
+  const [pasoActual, setPasoActual] = useState(0);
+
+  const pasos = [
+    "Verificación de Identidad",
+    "Información financiera",
+    "Información operativa",
+    "Propósito del crédito",
+    "Validación Crediticia",
+  ];
+
+  const handleStepChange = (nuevoPaso) => {
+    console.log(`Cambio al paso ${nuevoPaso + 1}: ${pasos[nuevoPaso]}`);
+    setPasoActual(nuevoPaso);
+  };
+
+  const handleComplete = () => {
+    console.log("¡Proceso completado!");
+    alert("¡Has completado todos los pasos!");
+  };
+
+  // ====== FUNCIONES DE PDF ======
   const handleVisualizarPDF = (url, nombre) => {
     console.log(`Visualizar: ${nombre} - ${url}`);
-    // Aquí abrirías el PDF en un modal o nueva ventana
     window.open(url, "_blank");
   };
 
   const handleDescargarPDF = (url, nombre) => {
     console.log(`Descargar: ${nombre} - ${url}`);
-    // Aquí descargarías el PDF
     const link = document.createElement("a");
     link.href = url;
     link.download = nombre;
     link.click();
   };
 
+  // ====== DATOS DE LAS PÁGINAS ======
   const datosPaginas = [
-    // PÁGINA 1
     {
       secciones: [
         {
@@ -84,7 +108,6 @@ const VerDocumento = () => {
         },
       ],
     },
-    // PÁGINA 2
     {
       secciones: [
         {
@@ -158,7 +181,6 @@ const VerDocumento = () => {
         },
       ],
     },
-    // PÁGINA 3
     {
       secciones: [
         {
@@ -228,13 +250,55 @@ const VerDocumento = () => {
     },
   ];
 
+  // ====== RENDER ======
   return (
-    <DocumentosAdjuntados
-      titulo="Documentos Adjuntados - Información Crediticia, Garantías y Cumplimiento Regulatorio"
-      paginas={datosPaginas}
-      onVisualizarPDF={handleVisualizarPDF}
-      onDescargarPDF={handleDescargarPDF}
-    />
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        backgroundColor: "#f5f5f5",
+      }}
+    >
+      {/* HEADER */}
+      <Header
+        ruta="/"
+        textoWindows="Volver a mi espacio"
+        textoMovil="Volver"
+      />
+
+      {/* CONTENIDO PRINCIPAL */}
+      <main
+        style={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          padding: "40px 20px",
+        }}
+      >
+        {/* STEPPER */}
+        <StepperConNavegacion
+          currentStep={pasoActual}
+          steps={pasos}
+          onStepChange={handleStepChange}
+          onComplete={handleComplete}
+        />
+
+        {/* DOCUMENTOS ADJUNTADOS */}
+        <div style={{ marginTop: "60px", width: "100%" }}>
+          <DocumentosAdjuntados
+            titulo="Documentos Adjuntados - Información Crediticia, Garantías y Cumplimiento Regulatorio"
+            paginas={datosPaginas}
+            onVisualizarPDF={handleVisualizarPDF}
+            onDescargarPDF={handleDescargarPDF}
+          />
+        </div>
+      </main>
+
+      {/* FOOTER */}
+      <Footer />
+    </div>
   );
 };
 

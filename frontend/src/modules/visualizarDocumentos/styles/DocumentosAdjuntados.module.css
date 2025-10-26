@@ -4,18 +4,24 @@
   padding: 40px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   max-width: 1200px;
-  margin: 0 auto;
+  height: 650px;
+  margin: -20px auto;
+
+  display: flex;              /* 👈 nuevo */
+  flex-direction: column;     /* 👈 nuevo */
 }
 
 .tituloPrincipal {
   font-size: 20px;
   font-weight: 600;
   color: #1a3a3a;
-  margin: 0 0 32px 0;
+  margin: 0 0 40px 0;
   text-align: center;
 }
 
+/* El contenido ocupará el espacio disponible */
 .contenidoPagina {
+  flex: 1;                    /* 👈 nuevo */
   display: flex;
   flex-direction: column;
   gap: 40px;
@@ -103,8 +109,9 @@
   cursor: not-allowed;
 }
 
-/* ========== PAGINACIÓN ========== */
+/* ========== PAGINACIÓN (pegada abajo) ========== */
 .paginacion {
+  margin-top: auto;           /* 👈 nuevo: empuja la paginación hacia abajo */
   display: flex;
   align-items: center;
   justify-content: center;
