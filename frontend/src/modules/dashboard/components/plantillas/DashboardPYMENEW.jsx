@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Placeholder } from "../../../../globals/components/atomos/Placeholder";
 import { useMediaQuery } from "../../../../globals/hooks/useMediaQuery";
 import { GridContainer } from "../../../../globals/components/atomos/GridContainer";
@@ -10,21 +11,54 @@ import { CreditStatusCard } from "../organismos/CreditStatusCard";
 import { NewFeatureCard } from "../organismos/NewFeatureCard";
 import { SupportCard } from "../organismos/SupportCard";
 import { StartApplicationCardActivo } from "../organismos/StartApplicationCardActivo";
+import { SolicitudDetallesModal } from "../moleculas/SolicitudDetallesModal";
+
 export const DashboardPYMENEW = () => {
+  // Estado para controlar el modal
+  const [showDetallesModal, setShowDetallesModal] = useState(false);
+
   // Detectar tamaños de pantalla
-  const isDesktop = useMediaQuery('(min-width: 992px)');   // >= 992px
-  const isTablet = useMediaQuery('(min-width: 768px)');    // >= 768px
-  const isMobile = useMediaQuery('(max-width: 767px)');    // <= 767px
+  const isDesktop = useMediaQuery('(min-width: 992px)');
+  const isTablet = useMediaQuery('(min-width: 768px)');
+  const isMobile = useMediaQuery('(max-width: 767px)');
 
   // Definir columnas según el tamaño de pantalla
-  const mainColumns = isDesktop ? '60% 40%' : '1fr';  // Desktop: 2 cols, Mobile: 1 col
-  const innerColumns = isTablet ? '1fr 1fr' : '1fr';  // Tablet+: 2 cols, Mobile: 1 col
+  const mainColumns = isDesktop ? '60% 40%' : '1fr';
+  const innerColumns = isTablet ? '1fr 1fr' : '1fr';
+
+  // Datos de la solicitud
+  const solicitudData = {
+    nombreEmpresa: "Mobile Tech",
+    cuit: "9873 2345",
+    proposito: "Capital de Trabajo",
+    contacto: "pabloc.admin@mobilet.com",
+    fecha: "23/10/2025",
+    notificacion: "El asesor necesita un nuevo documento"
+  };
+
+  // Handlers
+  const handleVerSolicitud = () => {
+    setShowDetallesModal(true);
+  };
+
+  const handleSubirDocumentos = () => {
+    console.log("Subir documentos");
+    setShowDetallesModal(false);
+    // Aquí rediriges a la página de documentos
+  };
+
+  const handleVerContrato = () => {
+    console.log("Ver contrato");
+    setShowDetallesModal(false);
+    // Aquí abres el contrato
+  };
 
   return (
     <main style={{ 
       margin: '0 auto',
       maxWidth: '1300px',
-      padding: isMobile ? '20px' : '30px 50px' 
+      padding: isMobile ? '20px' : '30px 50px',
+      position: 'relative' // Para que el modal se posicione correctamente
     }}>
       
       <GridContainer 
@@ -38,20 +72,20 @@ export const DashboardPYMENEW = () => {
           
           {/* Grid interno: Notificaciones + Documentos */}
           <GridContainer columns={innerColumns} gap="20px">
-          <NotificationCard
-            notifications={[
-              {
-                message: 'Tu solicitud ha sido aprobada',
-                backgroundColor: '#A0E7D4',
-                type: 'success'
-              },
-              {
-                message: 'Falta documentación',
-                backgroundColor: '#FFB8B8',
-                type: 'error'
-              }
-            ]}
-          />
+            <NotificationCard
+              notifications={[
+                {
+                  message: 'Tu solicitud ha sido aprobada',
+                  backgroundColor: '#A0E7D4',
+                  type: 'success'
+                },
+                {
+                  message: 'Falta documentación',
+                  backgroundColor: '#FFB8B8',
+                  type: 'error'
+                }
+              ]}
+            />
             <QuickAccessButtons />
           </GridContainer>
           
@@ -66,6 +100,7 @@ export const DashboardPYMENEW = () => {
             statusMessage="El asesor necesito un nuevo documento"
             statusMessageColor="#FFD88C"
             height="128px"
+            onViewButtonClick={handleVerSolicitud}
           />
           
           {/* Proceso de la solicitud */}
@@ -91,6 +126,16 @@ export const DashboardPYMENEW = () => {
         </div>
         
       </GridContainer>
+
+      {/* Modal de detalles - flotante en el medio */}
+      {showDetallesModal && (
+        <SolicitudDetallesModal
+          solicitud={solicitudData}
+          onClose={() => setShowDetallesModal(false)}
+          onSubirDocumentos={handleSubirDocumentos}
+          onVerContrato={handleVerContrato}
+        />
+      )}
     </main>
   );
 };

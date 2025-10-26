@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 /**
  * Barra de navegación superior con logo y botón de ingreso
  */
-export const Header = () => {
+export const Header = ({ ruta, textoWindows, textoMovil }) => {
 
   const [tamanioBoton, setTamanioBoton] = useState('m');
 
@@ -50,24 +50,12 @@ export const Header = () => {
           <BotonAnimado
             tamaño={tamanioBoton}
             variante="moradoSuave"
-            onClick={() => window.location.href = '/login'}
+            onClick={() => window.location.href = ruta}
             ancho="auto"
           >
             {/* Texto completo en desktop, abreviado en móvil */}
-            <span className="d-none d-md-inline">{"Login"}</span>
-            <span className="d-md-none">{"Ingresar"}</span>
-          </BotonAnimado>
-
-          {/* Botón de Registro a la cuenta */}
-          <BotonAnimado
-            tamaño={tamanioBoton}
-            variante="moradoSuave"
-            onClick={() => window.location.href = '/registro'}
-            ancho="auto"
-          >
-            {/* Texto completo en desktop, abreviado en móvil */}
-            <span className="d-none d-md-inline">{"Registro"}</span>
-            <span className="d-md-none">{"Registro"}</span>
+            <span className="d-none d-md-inline">{textoWindows}</span>
+            <span className="d-md-none">{textoMovil}</span>
           </BotonAnimado>
         </div>
       </div>

@@ -10,7 +10,7 @@ import { UserProvider } from './stores/UserContext';
 import { Navigate } from 'react-router-dom';
 import './styles/index.css';
 import DashboardLayout  from './globals/layouts/DashboardLayout';
-import FormularioKredia from './modules/Formulario.jsx/FormularioKredia';
+import Formulario from './modules/formulario/page/Formulario';
 
 
 const App = () => {
@@ -34,7 +34,7 @@ const App = () => {
 
             <Route path="*" element={<Navigate to="/" replace />} />
 
-            <Route path="/Formulario" element={<FormularioKredia />} />
+            <Route path="/Formulario" element={<Formulario />} />
             {/* 🔒 Ruta privada con MainLayout */}
             <Route element={< DashboardLayout />}>
               <Route

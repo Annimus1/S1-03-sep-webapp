@@ -137,9 +137,6 @@ export default function Registro() {
     <div
       style={{
         minHeight: '100vh',
-        backgroundImage: 'url("/src/assets/Trama.svg")',
-        backgroundSize: 'auto',
-        backgroundPosition: 'top left',
         backgroundColor: '#F5F6F8',
 
         display: 'flex',
@@ -147,7 +144,7 @@ export default function Registro() {
       }}
     >
 
-      <Header />
+      <Header ruta="/login" textoWindows="¿Ya estás registrado? Inicia Sesión" textoMovil="Login" />
 
       {/* CONTENIDO CENTRAL */}
       <div className="container d-flex justify-content-center align-items-center flex-grow-1 py-4">
