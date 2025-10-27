@@ -38,7 +38,6 @@ export const createCredit = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error en createCredit:', error);
     return res.status(500).json({
       data: {
         status: 'error',
@@ -90,7 +89,6 @@ export const uploadCreditFiles = async (req, res) => {
         await CreditRepository.updateCredit(credit._id, updatedField);
         await CreditRepository.updateCredit(credit._id, { $inc: { actualDocumentos: 1 } });
       } catch (err) {
-        console.error(`[uploadCreditFiles]: Error con ${file.fieldname}`, err);
         errors.push({ status: 'error', message: `Error procesando ${file.fieldname}` });
       }
     }
@@ -137,7 +135,13 @@ export const uploadCreditFiles = async (req, res) => {
     if (todosCargados && credit.descripcionNegocio) {
       await CreditRepository.updateCredit(credit._id,{datosVerificados: true});
     }
-
+    // Emitir notificación en tiempo real al asesor
+    const io = req.app.get('io');
+    io.emit('actualizacionCredito', {
+      message: 'Nuevo archivo cargado para revision',
+      creditId: updatedCredit._id,
+      user: updatedCredit.userId
+    });
     const updatedCredit = await CreditRepository.findById(credit._id);
     return res.status(201).json({
       data: {
@@ -149,7 +153,6 @@ export const uploadCreditFiles = async (req, res) => {
 
 
   } catch (error) {
-    console.error('Error general en uploadCreditFiles:', error);
     return res.status(500).json({
       data: { status: 'error', message: 'Error interno del servidor.' }
     });
@@ -176,7 +179,6 @@ export const getCreditById = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Error en getCreditByUser:', error);
     return res.status(500).json({
       data: { status: 'error', message: 'Error interno del servidor.' }
     });
@@ -206,7 +208,6 @@ export const getCredits = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error en getCredits:', error);
     return res.status(500).json({
       data: {
         status: 'error',
@@ -231,16 +232,29 @@ export const desicionCredit = async (req, res) => {
       });
     }
     if (estatus === 'aprobado') {
-      console.log('Actualizando estatus a aprobado para el crédito:', creditId);
-      await CreditRepository.updateCredit(credit._id, { estatus: 'aprobado' });
+      const updatedCredit =  await CreditRepository.updateCredit(credit._id, { estatus: 'aprobado' });
+        // Emitir notificación en tiempo real al user
+      const io = req.app.get('io');
+      io.emit('aprobacionCredito', {
+        message: 'Credito aprobado',
+        creditId: updatedCredit._id,
+        user: updatedCredit.userId
+      });
     }
 
     if (estatus === 'rechazado') {
-      console.log('Actualizando estatus a rechazado para el crédito:', creditId);
-      await CreditRepository.updateCredit(credit._id, { estatus: 'rechazado' });
+      const updatedCredit = await CreditRepository.updateCredit(credit._id, { estatus: 'rechazado' });
+        // Emitir notificación en tiempo real al user
+      const io = req.app.get('io');
+      io.emit('rechazoCredito', {
+        message: 'Credito rechazado',
+        creditId: updatedCredit._id,
+        user: updatedCredit.userId
+      });
     }
-    const updatedCredit = await CreditRepository.findById(creditId);
 
+
+    const updatedCreditStatus = await CreditRepository.findById(creditId);
     return res.status(200).json({
       data: {
         status: 'success',
@@ -248,7 +262,6 @@ export const desicionCredit = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Error en updateCreditStatus:', error);
     return res.status(500).json({ 
       data: {
         status: 'error',
