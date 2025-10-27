@@ -137,6 +137,7 @@ export const uploadCreditFiles = async (req, res) => {
     if (todosCargados && credit.descripcionNegocio) {
       await CreditRepository.updateCredit(credit._id,{datosVerificados: true});
     }
+    const updatedCredit = await CreditRepository.findById(credit._id);
     // Emitir notificación en tiempo real al asesor
     const io = req.app.get('io');
     io.emit('actualizacionCredito', {
@@ -144,7 +145,7 @@ export const uploadCreditFiles = async (req, res) => {
       creditId: updatedCredit._id,
       user: updatedCredit.userId
     });
-    const updatedCredit = await CreditRepository.findById(credit._id);
+
     return res.status(201).json({
       data: {
         files: Object.keys(req.files),
