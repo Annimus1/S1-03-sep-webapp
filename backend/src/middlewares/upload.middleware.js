@@ -336,8 +336,8 @@ export const filesUploadMiddleware = upload.fields([
  *           example: 150000
  *         plazos:
  *           type: number
- *           description: Plazo del crédito en años
- *           example: 2
+ *           description: Plazo del crédito en meses
+ *           example: 24
  * */
 export const filesCreditMiddleware = upload.fields([
     { name: 'estadosContablesAuditados', maxCount: 1 }, 
