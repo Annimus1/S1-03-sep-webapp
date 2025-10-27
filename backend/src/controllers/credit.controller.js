@@ -38,6 +38,7 @@ export const createCredit = async (req, res) => {
     });
 
   } catch (error) {
+    console.error('Error en createCredit:', error);
     return res.status(500).json({
       data: {
         status: 'error',
@@ -89,6 +90,7 @@ export const uploadCreditFiles = async (req, res) => {
         await CreditRepository.updateCredit(credit._id, updatedField);
         await CreditRepository.updateCredit(credit._id, { $inc: { actualDocumentos: 1 } });
       } catch (err) {
+        console.error(`[uploadCreditFiles]: Error con ${file.fieldname}`, err);
         errors.push({ status: 'error', message: `Error procesando ${file.fieldname}` });
       }
     }
@@ -153,6 +155,7 @@ export const uploadCreditFiles = async (req, res) => {
 
 
   } catch (error) {
+    console.error('Error general en uploadCreditFiles:', error);
     return res.status(500).json({
       data: { status: 'error', message: 'Error interno del servidor.' }
     });
@@ -179,6 +182,7 @@ export const getCreditById = async (req, res) => {
       });
     }
   } catch (error) {
+    console.error('Error en getCreditByUser:', error);
     return res.status(500).json({
       data: { status: 'error', message: 'Error interno del servidor.' }
     });
@@ -262,6 +266,7 @@ export const desicionCredit = async (req, res) => {
       }
     });
   } catch (error) {
+    console.error('Error en updateCreditStatus:', error);
     return res.status(500).json({ 
       data: {
         status: 'error',
