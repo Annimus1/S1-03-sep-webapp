@@ -26,8 +26,7 @@ async function startServer() {
         // Crear instancia de Socket.io y configurar CORS
         const io = new SocketServer(server, {
             cors: {
-                //origin: process.env.FRONTEND_URL || "http://localhost:5173",
-                origin : "*",
+                origin: process.env.FRONTEND_URL || "http://localhost:5173",
                 methods: ["GET", "POST"],
                 credentials: true
             }
