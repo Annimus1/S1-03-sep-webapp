@@ -9,7 +9,105 @@ const router = Router();
 
 /**
  * @swagger
- * /credit/upload:
+ * /credit/create:
+ *   post:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Crea un credito.
+ *     description: Permite al usuario un crédito.
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/CreditCreate'
+ *     responses:
+ *       201:
+ *         description: Documentos guardados exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     files:
+ *                       type: array
+ *                       description: Lista de los nombres de los archivos recibidos.
+ *                       items:
+ *                         type: string
+ *                         example: "estatutoSocial"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Archivos procesados correctamente."
+ *                     credit:
+ *                       type: object
+ *                       description: Objeto crédito creado.
+ *       401:
+ *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No autorizado."
+ *       403:
+ *         description: Hay creditos exitentes en revision.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No puede iniciar un nuevo crédito hasta que todos los anteriores estén aprobados o rechazados."
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
+*/
+router.post('/create',express.json(),authenticateToken, createCredit )
+
+/**
+ * @swagger
+ * /credit/upload/{id}:
  *   post:
  *     tags:
  *      - "Crédito"
@@ -128,104 +226,6 @@ const router = Router();
  *                       example: "Error interno del servidor."
  * 
  */
-router.post('/create',express.json(),authenticateToken, createCredit )
-
-/**
- * @swagger
- * /credit/create:
- *   post:
- *     tags:
- *      - "Crédito"
- *     summary: Crea un credito.
- *     description: Permite al usuario un crédito.
- *     security:
- *       - bearerAuth: []
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             $ref: '#/components/schemas/CreditCreate'
- *     responses:
- *       201:
- *         description: Documentos guardados exitosamente.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     files:
- *                       type: array
- *                       description: Lista de los nombres de los archivos recibidos.
- *                       items:
- *                         type: string
- *                         example: "estatutoSocial"
- *                     message:
- *                       type: string
- *                       description: Mensaje de la respuesta.
- *                       example: "Archivos procesados correctamente."
- *                     credit:
- *                       type: object
- *                       description: Objeto crédito creado.
- *       401:
- *         description: No autorizado.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     status:
- *                       type: string
- *                       description: Estado de la respuesta.
- *                       example: "error"
- *                     message:
- *                       type: string
- *                       description: Mensaje de la respuesta.
- *                       example: "No autorizado."
- *       403:
- *         description: Hay creditos exitentes en revision.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     status:
- *                       type: string
- *                       description: Estado de la respuesta.
- *                       example: "error"
- *                     message:
- *                       type: string
- *                       description: Mensaje de la respuesta.
- *                       example: "No puede iniciar un nuevo crédito hasta que todos los anteriores estén aprobados o rechazados."
- *       500:
- *         description: Error interno del servidor.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 data:
- *                   type: object
- *                   properties:
- *                     status:
- *                       type: string
- *                       description: Estado de la respuesta.
- *                       example: "error"
- *                     message:
- *                       type: string
- *                       description: Mensaje de la respuesta.
- *                       example: "Error interno del servidor."
- * 
-*/
 router.post('/upload/:id', authenticateToken, filesCreditMiddleware, uploadCreditFiles)
 
 /**
