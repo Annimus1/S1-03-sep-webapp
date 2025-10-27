@@ -257,9 +257,6 @@ export const desicionCredit = async (req, res) => {
         user: updatedCredit.userId
       });
     }
-
-
-    const updatedCreditStatus = await CreditRepository.findById(creditId);
     return res.status(200).json({
       data: {
         status: 'success',
