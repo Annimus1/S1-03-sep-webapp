@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BandejaTemplate } from '../plantilla/BandejaTemplate';
 import { FilterButton } from '../moleculas/FilterButton';
 import { FilterPanel } from '../moleculas/FilterPanel';
 import { SolicitudesTable } from '../organismos/SolicitudesTable';
 import { UserContext } from '../../../../stores/UserContext';
+import { useNavigate } from "react-router";
 import axios from 'axios';
 
-export const BandejaSolicitudesPage = () => {
+export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
   const [selectedId, setSelectedId] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
@@ -17,7 +18,8 @@ export const BandejaSolicitudesPage = () => {
   });
   const { user, isLoading } = useContext(UserContext);
   const API_URL = import.meta.env.VITE_API_URL;
-
+  const navigate = useNavigate();
+  const { logout } = useContext(UserContext);
   const allSolicitudes = [
     {
       id: 1,
@@ -111,8 +113,20 @@ export const BandejaSolicitudesPage = () => {
   };
 
   const handleSelectSolicitud = (id) => {
+    // cambiar id selecionado
     setSelectedId(id);
-  };
+    // obtener info
+    const solicitud = solicitudes.filter(s => s.id === id);
+    setAsesorData({
+      ...asesorData,
+      detallesSolicitud: {
+        nombre: solicitud[0].solicitante,
+        id: solicitud[0].id,
+        cantidad: solicitud[0].monto,
+        estado: solicitud[0].estado
+      }
+    })
+  }
 
   const fetchData = async () => {
     const responseData = []
@@ -120,19 +134,28 @@ export const BandejaSolicitudesPage = () => {
     const response = await axios.get(`${API_URL}/credit`,
       { headers: { 'Authorization': `Bearer ${user.user.token}` } })
 
-    console.log(response.status)
     if (response.status == 200) {
       response.data.data.credits.forEach(credit => {
         responseData.push({
           id: credit._id,
           solicitante: credit.userId.nombres || 'Soledad V.',
-          monto: `ARG ${credit.monto_credit || 50000000}`,
-          montoNumerico: credit.monto_credit || 50000000,
-          estado: credit.estatus,
+          monto: `ARG ${credit.monto_credit || 2500000}`,
+          montoNumerico: credit.monto_credit || 2500000,
+          estado: credit.estatus.split(' ')[0],
           fecha: credit.updatedAt.split('T')[0]
         })
         if (firstElement) {
           setSelectedId(credit._id);
+
+          setAsesorData({
+            ...asesorData,
+            detallesSolicitud: {
+              nombre: credit.userId.nombres || 'Soledad V.',
+              id: credit._id,
+              cantidad: credit.monto_credit || 2500000,
+              estado: credit.estatus.split(' ')[0]
+            }
+          })
           firstElement = false;
         }
       });
@@ -140,7 +163,8 @@ export const BandejaSolicitudesPage = () => {
     }
 
     if (response.status == 401) {
-      // redireccionar 
+      logout();
+      navigate('/login');
     }
   }
 

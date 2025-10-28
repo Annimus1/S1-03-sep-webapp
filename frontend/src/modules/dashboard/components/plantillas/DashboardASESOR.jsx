@@ -10,8 +10,14 @@ import { NewFeatureCard } from "../organismos/NewFeatureCard";
 import { DetalleSolicitud } from "../organismos/DetalleSolicitud";
 import { BandejaSolicitudesPage } from "./BandejaSolicitudesPage";
 import { SolicitudesTemplate } from "../plantilla/SolicitudesTemplate";
+import { useState } from "react";
 
 export const DashboardASESOR = () => {
+  // estado globar para compartir entre componentes hijo
+  const [ asesorData, setAsesorData ] = useState({
+    detallesSolicitud: {nombre:'', id:'', cantidad:0, estado:''},
+    stats: {pendientes: 0 , tiempoAprobacion: 2, evaluacion: 0, total: 0}
+  });
   // Detectar tamaños de pantalla
   const isDesktop = useMediaQuery('(min-width: 992px)');   // >= 992px
   const isTablet = useMediaQuery('(min-width: 768px)');    // >= 768px
@@ -26,17 +32,17 @@ export const DashboardASESOR = () => {
   // Calculando porcentajes basados en 32 solicitudes totales
   const statusData = [
     {
-      label: 'Aprobados',
+      label: 'aprobados',
       percentage: 62.5, // ~20 de 32
       color: '#2d5f4f'
     },
     {
-      label: 'Rechazados',
+      label: 'rechazados',
       percentage: 15.6, // ~5 de 32
       color: '#8b3a3a'
     },
     {
-      label: 'En revisión',
+      label: 'recaudacion',
       percentage: 21.9, // ~7 de 32
       color: '#1e5a7d'
     }
@@ -78,12 +84,12 @@ export const DashboardASESOR = () => {
           
           {/* Avance de la solicitud */}
           <GridContainer columns={detailColumns} gap="20px">
-            <DetalleSolicitud columns={innerColumns}/>
+            <DetalleSolicitud columns={innerColumns} asesorData={asesorData}/>
             <QuickAccessButtons/>
           </GridContainer>
           
           {/* Proceso de la solicitud */}
-          <BandejaSolicitudesPage />
+          <BandejaSolicitudesPage setAsesorData={setAsesorData} asesorData={asesorData}/>
           
         </div>
         
