@@ -33,7 +33,8 @@ export const SolicitudesTemplate = ({
     <div style={styles.container}>
       <GridContainer columns={columns} gap="2px">
         <StatCard
-          title="Solicitudes pendientes"
+          // recaudacion
+          title="Solicitudes pendientes (recaudacion)"
           value={pendientes}
           marginBottom={marginBottom}
         />

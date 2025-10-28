@@ -20,50 +20,7 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
   const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
   const { logout } = useContext(UserContext);
-  const allSolicitudes = [
-    {
-      id: 1,
-      solicitante: 'Soledad V.',
-      monto: '$25,000',
-      montoNumerico: 25000,
-      estado: 'Pendiente',
-      fecha: '10/10/2025'
-    },
-    {
-      id: 2,
-      solicitante: 'Miguel C.',
-      monto: '$2,500',
-      montoNumerico: 2500,
-      estado: 'Aprobado',
-      fecha: '05/10/2025'
-    },
-    {
-      id: 3,
-      solicitante: 'Jose Tomás D.',
-      monto: '$12,500',
-      montoNumerico: 12500,
-      estado: 'Rechazado',
-      fecha: '28/09/2025'
-    },
-    {
-      id: 4,
-      solicitante: 'Luis Cordero',
-      monto: '$40,000',
-      montoNumerico: 40000,
-      estado: 'En revisión',
-      fecha: '21/09/2025'
-    },
-    {
-      id: 5,
-      solicitante: 'Pablo Cortéz',
-      monto: '$5,000',
-      montoNumerico: 5000,
-      estado: 'En pausa',
-      fecha: '17/09/2025'
-    }
-  ];
-
-  const [solicitudes, setSolicitudes] = useState(allSolicitudes);
+  const [solicitudes, setSolicitudes] = useState([]);
 
   const handleFilterClick = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -135,6 +92,7 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
       { headers: { 'Authorization': `Bearer ${user.user.token}` } })
 
     if (response.status == 200) {
+      const stats = {total:0, recaudacion:0, aprobado:0, rechazado:0, revision:0}
       response.data.data.credits.forEach(credit => {
         responseData.push({
           id: credit._id,
@@ -158,8 +116,32 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
           })
           firstElement = false;
         }
+        // add stats
+        stats.total = stats.total + 1;
+        switch (credit.estatus.split(' ')[0]){
+          case 'recaudacion':
+            stats.recaudacion = stats.recaudacion + 1;
+            break
+          case 'aprobado':
+            stats.aprobado = stats.aprobado + 1;
+            break
+          case 'rechazado':
+            stats.rechazado = stats.rechazado + 1;
+            break
+          case 'revision':
+            stats.revision = stats.revision + 1;
+            break
+        }
       });
       setSolicitudes(responseData);
+      setAsesorData({...asesorData, 
+        stats:{
+          pendientes: stats.recaudacion, 
+          evaluacion: stats.revision, 
+          aprobados: stats.aprobado, 
+          rechazados: stats.rechazado,
+          total: stats.total 
+        }})
     }
 
     if (response.status == 401) {

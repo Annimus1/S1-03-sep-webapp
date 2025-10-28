@@ -16,7 +16,7 @@ export const DashboardASESOR = () => {
   // estado globar para compartir entre componentes hijo
   const [ asesorData, setAsesorData ] = useState({
     detallesSolicitud: {nombre:'', id:'', cantidad:0, estado:''},
-    stats: {pendientes: 0 , tiempoAprobacion: 2, evaluacion: 0, total: 0}
+    stats: {pendientes: 0 , evaluacion: 0, total: 0, aprobados: 0, rechazados: 0}
   });
   // Detectar tamaños de pantalla
   const isDesktop = useMediaQuery('(min-width: 992px)');   // >= 992px
@@ -33,17 +33,17 @@ export const DashboardASESOR = () => {
   const statusData = [
     {
       label: 'aprobados',
-      percentage: 62.5, // ~20 de 32
+      percentage: (asesorData.stats.aprobados/asesorData.stats.total)*100, // ~20 de 32
       color: '#2d5f4f'
     },
     {
       label: 'rechazados',
-      percentage: 15.6, // ~5 de 32
+      percentage: (asesorData.stats.rechazados/asesorData.stats.total)*100, // ~5 de 32
       color: '#8b3a3a'
     },
     {
       label: 'recaudacion',
-      percentage: 21.9, // ~7 de 32
+      percentage: (asesorData.stats.pendientes/asesorData.stats.total)*100, // ~7 de 32
       color: '#1e5a7d'
     }
   ];
@@ -97,10 +97,13 @@ export const DashboardASESOR = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           {/* STATS? */}
-          <SolicitudesTemplate   pendientes="8"
+          <SolicitudesTemplate   
+            pendientes={asesorData.stats.pendientes}
             tiempoPromedio="2 días"
-            enEvaluacion="4"
-            totales="32" statusData={statusData} />
+            enEvaluacion={asesorData.stats.evaluacion}
+            totales={asesorData.stats.total} 
+            statusData={statusData} 
+          />
           
           {/* Grid interno: Pronto + Soporte */}
           <GridContainer columns={innerColumns} gap="20px">
