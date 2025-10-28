@@ -1,11 +1,14 @@
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 import { ItemFAQ } from "../moleculas/ItemFAQ";
+import { useNavigate } from "react-router";
 
 /**
  * Sección de preguntas frecuentes
  * Muestra las dudas más comunes de los usuarios
  */
-export const SeccionFAQ = () => (
+export const SeccionFAQ = () => {
+  const navigate = useNavigate()
+  return (
   <section style={{ backgroundColor: 'white', padding: '50px 0' }}>
     <div className="container">
       {/* Encabezado de la sección */}
@@ -49,9 +52,10 @@ export const SeccionFAQ = () => (
         
         {/* Botón para más ayuda */}
         <div className="text-center mt-4">
-          <BotonAnimado variante="naranja">Ingresa y acelera tu crédito</BotonAnimado>
+          <BotonAnimado variante="naranja" onClick={()=>{navigate('/registro')}}>Ingresa y acelera tu crédito</BotonAnimado>
         </div>
       </div>
     </div>
   </section>
-);
+)
+};
