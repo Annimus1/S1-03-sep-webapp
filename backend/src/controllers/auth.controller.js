@@ -67,6 +67,7 @@ export const authController = async (req, res) => {
         role,
         nombres,
         email,
+        companyName: newUser.nombreComercial,
         token
       }
     });
@@ -107,7 +108,6 @@ export const authLoginController = async (req, res) => {
     const { role, nombres } = existingUser;
     const token = jwt.sign({ id: existingUser._id.toString(),nombres, role, email });
 
-    console.log(token);
     // Guardar jwt en cache
     tokenRepository.whitelistToken(existingUser._id, token);
     console.log(`Inicio de sesion: ${email} -> ${token}`)
@@ -120,6 +120,7 @@ export const authLoginController = async (req, res) => {
         role,
         nombres,
         email,
+        companyName: existingUser.nombreComercial,
         token
       }
     });
