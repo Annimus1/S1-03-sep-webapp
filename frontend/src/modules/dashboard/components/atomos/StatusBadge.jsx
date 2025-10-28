@@ -1,28 +1,24 @@
 export const StatusBadge = ({ status }) => {
   const getStatusConfig = (status) => {
     const configs = {
-      'Pendiente': {
-        background: '#6c757d',
-        color: 'white'
-      },
-      'Aprobado': {
+      'aprobado': {
         background: '#1e5a47',
         color: 'white'
       },
-      'Rechazado': {
+      'rechazado': {
         background: '#8b2b2b',
         color: 'white'
       },
-      'En revisión': {
+      'revision': {
         background: '#1a4d7a',
         color: 'white'
       },
-      'En pausa': {
+      'recaudacion de documentos': {
         background: '#d4a337',
         color: '#2c2c2c'
       }
     };
-    return configs[status] || configs['Pendiente'];
+    return configs[status] || configs['recaudacion de documentos'];
   };
 
   const config = getStatusConfig(status);
@@ -39,5 +35,5 @@ export const StatusBadge = ({ status }) => {
     }
   };
 
-  return <span style={styles.badge}>{status}</span>;
+  return <span style={styles.badge}>{status.split(' ')[0]}</span>;
 };

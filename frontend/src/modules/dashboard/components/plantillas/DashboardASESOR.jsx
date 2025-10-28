@@ -91,8 +91,6 @@ export const DashboardASESOR = () => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           
           {/* STATS? */}
-          
-
           <SolicitudesTemplate   pendientes="8"
             tiempoPromedio="2 días"
             enEvaluacion="4"

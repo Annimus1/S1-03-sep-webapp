@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BandejaTemplate } from '../plantilla/BandejaTemplate';
 import { FilterButton } from '../moleculas/FilterButton';
 import { FilterPanel } from '../moleculas/FilterPanel';
 import { SolicitudesTable } from '../organismos/SolicitudesTable';
+import { UserContext } from '../../../../stores/UserContext';
+import axios from 'axios';
 
 export const BandejaSolicitudesPage = () => {
   const [selectedId, setSelectedId] = useState(1);
@@ -13,7 +15,9 @@ export const BandejaSolicitudesPage = () => {
     montoMin: '',
     montoMax: ''
   });
-  
+  const { user, isLoading } = useContext(UserContext);
+  const API_URL = import.meta.env.VITE_API_URL;
+
   const allSolicitudes = [
     {
       id: 1,
@@ -54,38 +58,6 @@ export const BandejaSolicitudesPage = () => {
       montoNumerico: 5000,
       estado: 'En pausa',
       fecha: '17/09/2025'
-    },
-    {
-      id: 6,
-      solicitante: 'Luis Cordero',
-      monto: '$40,000',
-      montoNumerico: 40000,
-      estado: 'En revisión',
-      fecha: '21/09/2025'
-    },
-    {
-      id: 7,
-      solicitante: 'Pablo Cortéz',
-      monto: '$5,000',
-      montoNumerico: 5000,
-      estado: 'En pausa',
-      fecha: '17/09/2025'
-    },
-    {
-      id: 8,
-      solicitante: 'Luis Cordero',
-      monto: '$40,000',
-      montoNumerico: 40000,
-      estado: 'En revisión',
-      fecha: '21/09/2025'
-    },
-    {
-      id: 9,
-      solicitante: 'Pablo Cortéz',
-      monto: '$5,000',
-      montoNumerico: 5000,
-      estado: 'En pausa',
-      fecha: '17/09/2025'
     }
   ];
 
@@ -104,7 +76,7 @@ export const BandejaSolicitudesPage = () => {
 
     // Filtrar por solicitante
     if (filters.solicitante) {
-      filtered = filtered.filter(s => 
+      filtered = filtered.filter(s =>
         s.solicitante.toLowerCase().includes(filters.solicitante.toLowerCase())
       );
     }
@@ -142,6 +114,46 @@ export const BandejaSolicitudesPage = () => {
     setSelectedId(id);
   };
 
+  const fetchData = async () => {
+    const responseData = []
+    let firstElement = true;
+    const response = await axios.get(`${API_URL}/credit`,
+      { headers: { 'Authorization': `Bearer ${user.user.token}` } })
+
+    console.log(response.status)
+    if (response.status == 200) {
+      response.data.data.credits.forEach(credit => {
+        responseData.push({
+          id: credit._id,
+          solicitante: credit.userId.nombres || 'Soledad V.',
+          monto: `ARG ${credit.monto_credit || 50000000}`,
+          montoNumerico: credit.monto_credit || 50000000,
+          estado: credit.estatus,
+          fecha: credit.updatedAt.split('T')[0]
+        })
+        if (firstElement) {
+          setSelectedId(credit._id);
+          firstElement = false;
+        }
+      });
+      setSolicitudes(responseData);
+    }
+
+    if (response.status == 401) {
+      // redireccionar 
+    }
+  }
+
+  useEffect(() => {
+    if (!isLoading) {
+      fetchData();
+    }
+  }, [isLoading, user, API_URL]);
+
+  if (isLoading) {
+    return <div>Cargando datos de usuario...</div>;
+  }
+
   return (
     <BandejaTemplate
       title="Bandeja de solicitudes"
@@ -154,7 +166,7 @@ export const BandejaSolicitudesPage = () => {
             top: '-50px',
             left: 0,
             width: '100%',
-            zIndex: 9999 
+            zIndex: 9999
           }}
         >
           <FilterPanel
