@@ -1,3 +1,4 @@
+import sgMail from '@sendgrid/mail';
 import CreditRepository from '../repositories/credit.repository.js';
 import StorageRepository from '../repositories/storage.repository.js';
 
@@ -245,6 +246,39 @@ export const desicionCredit = async (req, res) => {
         creditId: updatedCredit._id,
         user: updatedCredit.userId
       });
+      //Enviar email de bienvenida
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+      const msg = {
+          to: credit.userId.email,
+          from: 'krediawebapp@gmail.com', 
+          subject: '¡Felicidades! Tu crédito ha sido aprobado',
+          text: 'Tu crédito ha sido aprobado exitosamente.',
+          html: `<div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
+          <div style="background-color: #004aad; color: white; padding: 20px; text-align: center;">
+            <h2>✨ ¡Felicitaciones, ${credit.userId.nombres || 'Usuario'}!</h2>
+          </div>
+          <div style="padding: 20px; text-align: center;">
+            <p style="font-size: 16px;">Tu crédito ha sido <strong>aprobado exitosamente</strong>. Ya podés ingresar a tu cuenta para ver los detalles.</p>
+            <a href="http://ec2-3-145-192-140.us-east-2.compute.amazonaws.com/" 
+              style="display: inline-block; background-color: #004aad; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;">
+              Ir a mi cuenta
+            </a>
+          </div>
+          <div style="background-color: #f8f8f8; padding: 10px; text-align: center; font-size: 13px; color: #777;">
+            <p>Gracias por confiar en <strong>Kredia</strong>.</p>
+            <p>Este es un mensaje automático, no respondas a este correo.</p>
+          </div>
+        </div>
+        `,
+      }
+      sgMail
+          .send(msg)
+          .then(() => {
+            console.log('Email sent')
+          })
+          .catch((error) => {
+            console.error('Error al enviar el email',error)
+          })
     }
 
     if (estatus === 'rechazado') {
@@ -256,6 +290,37 @@ export const desicionCredit = async (req, res) => {
         creditId: updatedCredit._id,
         user: updatedCredit.userId
       });
+      //Enviar email de bienvenida
+      sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+      const msg = {
+          to: credit.userId.email,
+          from: 'krediawebapp@gmail.com', 
+          subject: 'Lo sentimos! Tu crédito ha sido rechazado',
+          text: 'Tu crédito ha sido rechazado.',
+          html:  `
+            <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
+              <div style="background-color: #e53935; color: white; padding: 20px; text-align: center;">
+                <h2>Lo sentimos, ${credit.userId.nombres || 'Usuario'}</h2>
+              </div>
+              <div style="padding: 20px; text-align: center;">
+                <p style="font-size: 16px;">Tu solicitud de crédito no ha sido aprobada en esta ocasión.</p>
+                <p>Podés revisar tus datos o intentarlo nuevamente más adelante.</p>
+                <a href="http://ec2-3-145-192-140.us-east-2.compute.amazonaws.com/"
+                  style="display: inline-block; background-color: #e53935; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;">
+                  Contactar soporte
+                </a>
+              </div>
+            </div>
+            `,
+      }
+      sgMail
+          .send(msg)
+          .then(() => {
+            console.log('Email sent')
+          })
+          .catch((error) => {
+            console.error('Error al enviar el email',error)
+          })
     }
     return res.status(200).json({
       data: {
@@ -265,7 +330,7 @@ export const desicionCredit = async (req, res) => {
     });
   } catch (error) {
     console.error('Error en updateCreditStatus:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       data: {
         status: 'error',
         message: 'Error interno del servidor.',

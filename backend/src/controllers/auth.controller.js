@@ -1,7 +1,9 @@
+import sgMail from '@sendgrid/mail';
 import AsesorRepository from '../repositories/asesor.repository.js';
 import tokenRepository from '../repositories/token.repository.js';
 import UserRepository from '../repositories/user.repository.js';
 import JWT from '../services/jwt.service.js';
+
 
 export const authController = async (req, res) => {
   try {
@@ -58,7 +60,42 @@ export const authController = async (req, res) => {
 
     // Guardar en Redis (whitelist)
     await tokenRepository.whitelistToken(_id.toString(), token);
-
+    //Enviar email de bienvenida
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+    const msg = {
+      to: email,
+      from: 'krediawebapp@gmail.com', 
+      subject: 'Bienvenido a Kredia',
+      text: 'Registro exitoso en Kredia',
+      html: `<div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
+        <div style="background-color: #2e7d32; color: white; padding: 20px; text-align: center;">
+          <h2>🌟 ¡Hola ${nombres || 'Usuario'}!</h2>
+          <p>¡Tu registro en <strong>Kredia</strong> fue exitoso!</p>
+        </div>
+        <div style="padding: 20px; text-align: center;">
+            Nos alegra tenerte con nosotros. Desde ahora podés acceder a tu cuenta para gestionar tus créditos,
+            ver tus solicitudes y disfrutar de todos los beneficios que ofrecemos.
+          </p>
+          <a href="http://ec2-3-145-192-140.us-east-2.compute.amazonaws.com/"
+            style="display: inline-block; background-color: #2e7d32; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;">
+            Iniciar sesión en Kredia
+          </a>
+        </div>
+        <div style="background-color: #f8f8f8; padding: 15px; text-align: center; font-size: 13px; color: #777;">
+          <p> Gracias por confiar en <strong>Kredia</strong>.</p>
+          <p>Este mensaje se envía automáticamente, por favor no respondas a este correo.</p>
+        </div>
+      </div>
+    `,
+    }
+    sgMail
+      .send(msg)
+      .then(() => {
+        console.log('Email sent')
+      })
+      .catch((error) => {
+        console.error('Error al enviar el email',error)
+      })
     // Respuesta
     return res.status(201).json({
       message: 'Registro de usuario exitoso.',
