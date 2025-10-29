@@ -1,5 +1,6 @@
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 import { MarcadorPosicionIcono } from "../atomos/MarcadorPosicionIcono";
+import { useNavigate } from "react-router";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export const TarjetaCaracteristica = ({
@@ -9,7 +10,10 @@ export const TarjetaCaracteristica = ({
   botonFlotante = true,
   espacioInferior = false,
   altura = "250px",
-}) => (
+}) => {
+  const navigate = useNavigate();
+  
+  return (
   <div
     style={{
       backgroundColor: colorFondo,
@@ -50,8 +54,9 @@ export const TarjetaCaracteristica = ({
           bottom: botonFlotante ? "-15px" : "0",
         }}
       >
-        <BotonAnimado variante="naranja">{textoBoton}</BotonAnimado>
+        <BotonAnimado variante="naranja" onClick={()=>{navigate('/registro')}}>{textoBoton}</BotonAnimado>
       </div>
     )}
   </div>
-);
+)
+};
