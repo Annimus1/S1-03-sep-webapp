@@ -89,7 +89,7 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
     const responseData = []
     let firstElement = true;
     const response = await axios.get(`${API_URL}/credit`,
-      { headers: { 'Authorization': `Bearer ${user.user.token}` } })
+      { headers: { 'Authorization': `Bearer ${user.token}` } })
 
     if (response.status == 200) {
       const stats = {total:0, recaudacion:0, aprobado:0, rechazado:0, revision:0}

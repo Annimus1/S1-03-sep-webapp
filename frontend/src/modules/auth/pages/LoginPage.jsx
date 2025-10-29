@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, use } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BotonAnimado } from '../../../globals/components/atomos/BotonAnimado';
 import { PantallaExito } from '../components/organismos/PantallaExito';
@@ -43,25 +43,39 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(`${API_URL}/auth/login`, { email, password });
 
       if (response.status === 200) {
+        const userData = response.data.user;
         setSuccess(true);
-        setUser(response.data);
-        console.log('✅ Usuario autenticado:', response.data);
-        localStorage.setItem('data', JSON.stringify(response.data));
-        window.location.href = '/dashboard';
+        setUser(userData);
+        console.log('✅ Usuario autenticado:', userData);
+        localStorage.setItem('data', JSON.stringify(userData));
+        localStorage.setItem('token', userData.token);
+
+        console.log('✅ Token guardado en localStorage');
+        console.log(userData)
+
+        navigate('/dashboard');
+      } else {
+        setError('Respuesta inesperada del servidor.');
       }
+
     } catch (err) {
       console.error('❌ Error en login:', err.response?.data || err.message);
-      setError('Correo o contraseña incorrectos.');
+
+      if (err.response?.status === 401) {
+        setError('Credenciales inválidas. Verifica tu correo y contraseña.');
+      } else if (err.response?.status === 400 || err.response?.status === 422) {
+        setError('Faltan datos o son inválidos.');
+      } else {
+        setError('Ocurrió un error interno. Intenta nuevamente.');
+      }
     } finally {
       setLoading(false);
     }
   };
+
   const handleForgotPassword = () => {
     alert('Funcionalidad de recuperación de contraseña');
   };

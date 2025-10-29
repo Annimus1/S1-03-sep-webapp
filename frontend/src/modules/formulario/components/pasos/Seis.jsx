@@ -14,7 +14,7 @@ export const Seis = ({ setPasoActual }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   const handleBack = () => {
-    setPasoActual(4); // vuelve al paso anterior
+    setPasoActual(6); // vuelve al paso anterior
   };
 
   const handleTextChange = (name, value) => {
@@ -57,15 +57,7 @@ export const Seis = ({ setPasoActual }) => {
       return;
     }
 
-    // Simular proceso de firma
-    setIsSaving(true);
-    setTimeout(() => {
-      setIsSaving(false);
-      console.log("Firma digital enviada:", formData);
-      alert("¡Solicitud firmada y enviada exitosamente! ✅");
-      // Aquí podrías redirigir a una página de confirmación
-      // setPasoActual(6); o history.push('/confirmacion')
-    }, 2000);
+    setPasoActual(7); // Avanzar al siguiente paso (finalizar)
   };
 
   return (

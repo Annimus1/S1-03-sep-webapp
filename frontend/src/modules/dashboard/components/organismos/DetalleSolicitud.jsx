@@ -26,7 +26,7 @@ export function DetalleSolicitud ( { height = '100%', columns = '1fr 1fr', butto
         <LabelDetalle text = "Cantidad" valor={asesorData.detallesSolicitud.cantidad}/>
       </div>
       <div style={{ padding: '5px' }  }>
-        <LabelDetalle text = "ID de la solicitud" valor={asesorData.detallesSolicitud.id}/>
+        <LabelDetalle text = "ID" valor={asesorData.detallesSolicitud.id}/>
         <LabelDetalle text = "Estado" valor={asesorData.detallesSolicitud.estado}/>
       </div>
     </GridContainer>

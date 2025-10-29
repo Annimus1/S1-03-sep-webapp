@@ -1,15 +1,16 @@
+import { useEffect } from "react";
 import { FormSection } from "../moleculas/FormSection";
 import { FileUploadInput } from "../atomos/FileUploadInput";
 import { FormFieldWithInfo } from "../moleculas/FormFieldWithInfo";
 import { ToggleButtonGroup } from "../moleculas/ToggleButtonGroup";
 
-export const TipoCredito = ({ 
-  formData, 
-  setFormData, 
-  errors, 
+export const TipoCredito = ({
+  formData,
+  setFormData,
+  errors,
   setErrors,
   tipoCredito,
-  setTipoCredito 
+  setTipoCredito
 }) => {
   const creditOptions = [
     { value: "inversion", label: "Crédito de Inversión/Expansión" },
@@ -17,18 +18,18 @@ export const TipoCredito = ({
   ];
 
   const handleFileChange = (fieldName, file, error) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [fieldName]: file
+      [fieldName]: file,
     }));
 
     if (error) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [fieldName]: error
+        [fieldName]: error,
       }));
     } else {
-      setErrors(prev => {
+      setErrors((prev) => {
         const newErrors = { ...prev };
         delete newErrors[fieldName];
         return newErrors;
@@ -36,11 +37,34 @@ export const TipoCredito = ({
     }
   };
 
+  // 🔹 Limpia los campos del otro tipo de crédito cuando se cambia la opción
+  useEffect(() => {
+    if (tipoCredito === "inversion") {
+      setFormData((prev) => ({
+        ...prev,
+        detalleUsoFondos: null,
+        proyeccionFlujo: null,
+        listadoGastos: null,
+        facturasProforma: null,
+        evidenciaAumento: null,
+      }));
+    } else if (tipoCredito === "capital") {
+      setFormData((prev) => ({
+        ...prev,
+        presupuestoInversion: null,
+        cotizacionesProveedores: null,
+        planImplementacion: null,
+        estudioFactibilidad: null,
+        licenciasObra: null,
+        planMantenimiento: null,
+        facturaProforma: null,
+        informeTecnico: null,
+      }));
+    }
+  }, [tipoCredito, setFormData]);
+
   return (
-    <FormSection
-      title="Tipo de Crédito y Documentación Específica"
-      subtitle=""
-    >
+    <FormSection title="Tipo de Crédito y Documentación Específica" subtitle="">
       <div style={{ gridColumn: "1 / -1" }}>
         <ToggleButtonGroup
           options={creditOptions}
@@ -54,7 +78,6 @@ export const TipoCredito = ({
           <FormFieldWithInfo
             label="Presupuesto detallado de inversión"
             info="Maquinaria, tecnología, obras, etc."
-            required
           >
             <FileUploadInput
               name="presupuestoInversion"
@@ -65,10 +88,7 @@ export const TipoCredito = ({
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Tres cotizaciones de proveedores"
-            required
-          >
+          <FormFieldWithInfo label="Tres cotizaciones de proveedores">
             <FileUploadInput
               name="cotizacionesProveedores"
               placeholder="Si supera monto mínimo $5M"
@@ -78,10 +98,7 @@ export const TipoCredito = ({
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Plan de implementación o cronograma de ejecución"
-            required
-          >
+          <FormFieldWithInfo label="Plan de implementación o cronograma de ejecución">
             <FileUploadInput
               name="planImplementacion"
               placeholder="Si involucra obras o expansión"
@@ -91,23 +108,16 @@ export const TipoCredito = ({
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Estudio de factibilidad o ROI"
-            required
-          >
+          <FormFieldWithInfo label="Estudio de factibilidad o ROI">
             <FileUploadInput
               name="estudioFactibilidad"
-              placeholder=""
               maxSize={10}
               onChange={handleFileChange}
               error={errors.estudioFactibilidad}
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Licencias o permisos de obra"
-            required
-          >
+          <FormFieldWithInfo label="Licencias o permisos de obra">
             <FileUploadInput
               name="licenciasObra"
               placeholder="Si hay construcción"
@@ -117,10 +127,7 @@ export const TipoCredito = ({
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Plan de mantenimiento del activo"
-            required
-          >
+          <FormFieldWithInfo label="Plan de mantenimiento del activo">
             <FileUploadInput
               name="planMantenimiento"
               placeholder="Si hay equipamiento"
@@ -130,10 +137,7 @@ export const TipoCredito = ({
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Factura proforma o contrato de compra"
-            required
-          >
+          <FormFieldWithInfo label="Factura proforma o contrato de compra">
             <FileUploadInput
               name="facturaProforma"
               placeholder="Si hay adquisición"
@@ -143,13 +147,9 @@ export const TipoCredito = ({
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Informe técnico del contador o ingeniero"
-            required
-          >
+          <FormFieldWithInfo label="Informe técnico del contador o ingeniero">
             <FileUploadInput
               name="informeTecnico"
-              placeholder=""
               maxSize={10}
               onChange={handleFileChange}
               error={errors.informeTecnico}
@@ -158,49 +158,34 @@ export const TipoCredito = ({
         </>
       ) : (
         <>
-          <FormFieldWithInfo
-            label="Detalle del uso de fondos"
-            required
-          >
+          <FormFieldWithInfo label="Detalle del uso de fondos">
             <FileUploadInput
               name="detalleUsoFondos"
-              placeholder=""
               maxSize={10}
               onChange={handleFileChange}
               error={errors.detalleUsoFondos}
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Proyección de flujo operativo con y sin crédito"
-            required
-          >
+          <FormFieldWithInfo label="Proyección de flujo operativo con y sin crédito">
             <FileUploadInput
               name="proyeccionFlujo"
-              placeholder=""
               maxSize={10}
               onChange={handleFileChange}
               error={errors.proyeccionFlujo}
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Listado de gastos operativos fijos y variables"
-            required
-          >
+          <FormFieldWithInfo label="Listado de gastos operativos fijos y variables">
             <FileUploadInput
               name="listadoGastos"
-              placeholder=""
               maxSize={10}
               onChange={handleFileChange}
               error={errors.listadoGastos}
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Facturas proforma o pedidos de compra"
-            required
-          >
+          <FormFieldWithInfo label="Facturas proforma o pedidos de compra">
             <FileUploadInput
               name="facturasProforma"
               placeholder="Si no hay compras previstas"
@@ -210,13 +195,9 @@ export const TipoCredito = ({
             />
           </FormFieldWithInfo>
 
-          <FormFieldWithInfo
-            label="Evidencia de aumento de demanda o expansión"
-            required
-          >
+          <FormFieldWithInfo label="Evidencia de aumento de demanda o expansión">
             <FileUploadInput
               name="evidenciaAumento"
-              placeholder=""
               maxSize={10}
               onChange={handleFileChange}
               error={errors.evidenciaAumento}

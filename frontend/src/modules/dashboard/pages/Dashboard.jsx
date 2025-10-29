@@ -27,15 +27,15 @@ const Dashboard = () => {
     >
       {
       isLoading &&
-        <WelcomeLoadingScreen userName={user?.user?.nombre || 'Usuario'} />
+        <WelcomeLoadingScreen userName={user?.nombres || 'Usuario'} />
       }
 
       {
-        !isLoading && user?.user?.role == 'user' &&  <DashboardPYMENEW/>
+        !isLoading && user?.role != 'asesor' &&  <DashboardPYMENEW/>
       }
 
       {
-        !isLoading && user?.user?.role == 'asesor' &&  <DashboardASESOR/>
+        !isLoading && user?.role == 'asesor' &&  <DashboardASESOR/>
       }
       
     </main>

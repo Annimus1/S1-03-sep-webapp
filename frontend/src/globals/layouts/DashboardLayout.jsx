@@ -38,7 +38,7 @@ const DashboardLayout = () => {
                 height: '100%'
               }}
             >
-              <GoodbyeLoadingScreen userName={user?.user?.nombre || 'Usuario'} />
+              <GoodbyeLoadingScreen userName={user?.nombres || 'Usuario'} />
             </div>
           ) : (
             <Outlet />
