@@ -89,7 +89,7 @@ export const Cero = ({ setPasoActual }) => {
   async function handleSubmit() {
     try {
 
-      const token = user?.user?.token;
+      const token = user?.token;
       const API_URL = import.meta.env.VITE_API_URL;
       const endpoint = `${API_URL}/credit/create`
 

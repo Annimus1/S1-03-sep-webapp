@@ -3,8 +3,23 @@ import { Input } from '../atomos/Input';
 import { AmountSelector } from '../moleculas/AmountSelector';
 import { BotonAnimado } from '../../../../globals/components/atomos/BotonAnimado';
 
-export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInteres, setTasaInteres, fechaInicio, setFechaInicio, fechaInicioInput, setFechaInicioInput, selectedAmount, setSelectedAmount, setPasoActual }) => {
-  
+export const CreditForm = ({
+  monto,
+  setMonto,
+  plazoMeses,
+  setPlazoMeses,
+  tasaMensual,
+  setTasaMensual,
+  fechaInicio,
+  setFechaInicio,
+  fechaInicioInput,
+  setFechaInicioInput,
+  selectedAmount,
+  setSelectedAmount,
+  setPasoActual,
+  onCrearCredito
+}) => {
+
   const handleMontoChange = (e) => {
     const valor = e.target.value.replace(/[^0-9]/g, '');
     setMonto(Number(valor) || 0);
@@ -26,7 +41,7 @@ export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInt
   const handleFechaChange = (e) => {
     const valor = e.target.value; // Formato: "2025-10"
     setFechaInicioInput(valor);
-    
+
     if (valor) {
       const [anio, mes] = valor.split('-');
       setFechaInicio(`${mes} / ${anio}`);
@@ -40,6 +55,8 @@ export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInt
       flexDirection: 'column',
       gap: '24px'
     }}>
+      
+      {/* Monto */}
       <div>
         <h2 style={{
           margin: '0 0 24px 0',
@@ -49,7 +66,7 @@ export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInt
         }}>
           Monto Solicitado
         </h2>
-        
+
         <div style={{ marginBottom: '16px' }}>
           <label style={{
             display: 'block',
@@ -73,6 +90,7 @@ export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInt
         />
       </div>
 
+      {/* Plazo en meses */}
       <div>
         <label style={{
           display: 'block',
@@ -81,15 +99,16 @@ export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInt
           color: '#1F2937',
           fontWeight: '500'
         }}>
-          Plazo del crédito (anual)
+          Plazo del crédito (meses)
         </label>
         <Input
-          value={plazoAnios}
-          onChange={(e) => setPlazoAnios(Number(e.target.value) || 1)}
-          suffix="años"
+          value={plazoMeses}
+          onChange={(e) => setPlazoMeses(Number(e.target.value) || 1)}
+          suffix="meses"
         />
       </div>
 
+      {/* Tasa mensual y fecha inicio */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: '1fr 1fr',
@@ -103,15 +122,15 @@ export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInt
             color: '#1F2937',
             fontWeight: '500'
           }}>
-            Taza de interés anual
+            Tasa de interés mensual
           </label>
           <Input
-            value={tasaInteres}
-            onChange={(e) => setTasaInteres(Number(e.target.value) || 0)}
+            value={tasaMensual}
+            onChange={(e) => setTasaMensual(Number(e.target.value) || 0)}
             suffix="%"
           />
         </div>
-        
+
         <div>
           <label style={{
             display: 'block',
@@ -130,7 +149,8 @@ export const CreditForm = ({ monto, setMonto, plazoAnios, setPlazoAnios, tasaInt
         </div>
       </div>
 
-      <BotonAnimado ancho="completo" variante="naranja" onClick={() => { setPasoActual(1); }}>
+      {/* Botón */}
+      <BotonAnimado ancho="completo" variante="naranja" onClick={() => { console.log("Crear crédito"); onCrearCredito(); }}>
         Iniciar mi solicitud crédito PyME
       </BotonAnimado>
     </div>

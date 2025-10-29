@@ -1,6 +1,6 @@
 export const ProgressBar = ({ completed = false, active = false, style = {} }) => (
   <div style={{
-    width: '100px',
+    width: '90px',
     height: '12px',
     borderRadius: '10px',
     backgroundColor: completed ? '#044574' : active ? '#F4D35E' : '#F5F6F8',

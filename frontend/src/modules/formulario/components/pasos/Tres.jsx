@@ -3,11 +3,12 @@ import { MiniFormsTemplate } from "../plantilla/MiniFormsTemplate";
 import { InformacionOperativaNegocioUNO } from "../organismos/InformacionOperativaNegocioUNO";
 import { InformacionOperativaNegocioDOS } from "../organismos/InformacionOperativaNegocioDOS";
 import styles from "./FormSections.module.css";
+import axios from "axios";
 
 export const Tres = ({ setPasoActual }) => {
   const [formData, setFormData] = useState({
     // ✅ Parte 1
-    descripcionNegocio: null,
+    descripcionNegocio: "", // es texto, no archivo
     principalesClientes: null,
     principalesProveedores: null,
     contratosComerciales: null,
@@ -26,28 +27,34 @@ export const Tres = ({ setPasoActual }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [isPrimeraParte, setIsPrimeraParte] = useState(true);
 
-  // ⬅️ Botón Atrás
-  const handleBack = () => {
-    if (isPrimeraParte) {
-      setPasoActual(2); // vuelve al paso financiero
-    } else {
-      handleParteToggle();
-    }
-  };
+  const API_URL = import.meta.env.VITE_API_URL;
+  const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
+  const creditId = creditInfo?.credit?._id;
+  const userId = creditInfo?.credit?.userId;
+  const creditType = creditInfo?.credit?.creditType;
 
   // 🔁 Cambiar entre Parte 1 y Parte 2
   const handleParteToggle = () => {
     setIsPrimeraParte(!isPrimeraParte);
   };
 
-  // ✅ Botón Continuar
-  const handleContinue = () => {
+  // ⬅️ Botón Atrás
+  const handleBack = () => {
+    if (isPrimeraParte) {
+      setPasoActual(3);
+    } else {
+      handleParteToggle();
+    }
+  };
+
+  // ✅ Subir archivos al backend
+  const handleContinue = async () => {
     if (isPrimeraParte) {
       handleParteToggle();
       return;
     }
 
-    // ✅ Campos obligatorios según el diseño
+    // Validar campos obligatorios
     const requiredFields = [
       "descripcionNegocio",
       "principalesClientes",
@@ -73,15 +80,80 @@ export const Tres = ({ setPasoActual }) => {
       return;
     }
 
-    setIsSaving(true);
-    setTimeout(() => {
-      setIsSaving(false);
-      console.log("Información operativa enviada:", formData);
-      alert("Información enviada correctamente ✅");
+    if (!creditId) {
+      alert("No se encontró el ID del crédito en localStorage");
+      return;
+    }
 
-      // 👉 Avanzar al siguiente paso del wizard
+    // Construir el FormData
+    const data = new FormData();
+    data.append("userId", userId);
+    data.append("creditType", creditType);
+    data.append("estatus", "documentacion_operativa");
+    data.append("datosVerificados", false);
+
+    // 🔹 Mapear campos de frontend → backend
+    const fileMap = {
+      principalesClientes: "principalesClientes",
+      principalesProveedores: "principalesProveedores",
+      contratosComerciales: "contratosComerciales",
+      organigrama: "organigramaPersonal",
+      facturacionReciente: "comprobanteFacturacion",
+      certificadosPermisos: "permisosHabilitantes",
+      comprobantePropiedad: "comprobantePropiedad",
+      fotosEstablecimiento: "fotosEstablecimiento",
+      evidenciaOnline: "evidenciaActividadOnline",
+      descripcionMercado: "descripcionMercado",
+    };
+
+    // Descripción general del negocio (texto)
+    if (formData.descripcionNegocio) {
+      data.append("descripcionNegocio", formData.descripcionNegocio);
+    }
+
+    // Archivos reales
+    Object.entries(fileMap).forEach(([frontendKey, backendKey]) => {
+      if (formData[frontendKey]) {
+        data.append(backendKey, formData[frontendKey]);
+      }
+    });
+
+    try {
+      setIsSaving(true);
+      const token = localStorage.getItem("token");
+
+      const response = await axios.post(
+        `${API_URL}/credit/upload/${creditId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("✅ Respuesta subida:", response.data);
+
+      // Actualizar creditInfo en localStorage
+      const updatedCredit = response.data?.data?.credit;
+      localStorage.setItem(
+        "creditInfo",
+        JSON.stringify({
+          ...creditInfo,
+          credit: updatedCredit,
+          PasoActual: 4,
+        })
+      );
+
+      alert("Información operativa subida correctamente.");
       setPasoActual(4);
-    }, 1500);
+    } catch (error) {
+      console.error("❌ Error al subir archivos:", error);
+      alert("Error al subir documentos. Verifica tu conexión o formato de archivos.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -89,7 +161,7 @@ export const Tres = ({ setPasoActual }) => {
       onBack={handleBack}
       onContinue={handleContinue}
       isSaving={isSaving}
-      text="Cuéntanos cómo opera tu empresa día a día. Esta información nos ayuda a entender mejor tu modelo de negocio."
+      text="Sube la documentación operativa requerida para completar la evaluación de tu crédito"
     >
       <div className={styles.unifiedContent}>
         {isPrimeraParte ? (

@@ -1,278 +1,143 @@
-import React, { useState } from "react";
-import { SignatureCanvas } from "../atomos/SignatureCanvas";
-import { ContractModal } from "../moleculas/ContractModal";
-import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
-import styles from "./FirmaDigitalView.module.css";
+import React, { useState, useRef } from "react";
+import axios from "axios";
 import html2pdf from "html2pdf.js";
+import { contratoHTML } from "../data/contratoTemplate";
 
-export const FirmaDigitalView = ({ contratoHTML, onComplete }) => {
-  const [signature, setSignature] = useState(null);
-  const [acceptedTerms, setAcceptedTerms] = useState(false);
-  const [authorizedSignature, setAuthorizedSignature] = useState(false);
-  const [showError, setShowError] = useState(false);
-  const [showContractModal, setShowContractModal] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success' | 'error' | null
+export const FirmaDigitalView = ({ setPasoActual }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const canvasRef = useRef(null);
+  const [isDrawing, setIsDrawing] = useState(false);
 
-  const handleDownload = () => {
-    const element = document.createElement("div");
-    element.innerHTML = contratoHTML;
-
-    if (signature) {
-      const signatureContainer = document.createElement("div");
-      signatureContainer.style.textAlign = "center";
-      signatureContainer.style.marginTop = "40px";
-
-      const label = document.createElement("p");
-      label.textContent = "Firma del cliente:";
-      label.style.marginBottom = "8px";
-      label.style.fontWeight = "bold";
-
-      const img = document.createElement("img");
-      img.src = signature;
-      img.style.width = "200px";
-      img.style.borderTop = "1px solid #000";
-      img.style.display = "block";
-      img.style.margin = "auto";
-
-      signatureContainer.appendChild(label);
-      signatureContainer.appendChild(img);
-      element.appendChild(signatureContainer);
-    }
-
-    const options = {
-      margin: 10,
-      filename: "contrato-kredia.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-    };
-
-    html2pdf().set(options).from(element).save();
+  const startDrawing = (e) => {
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.beginPath();
+    ctx.moveTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    setIsDrawing(true);
   };
 
-  const handleZoomContract = () => {
-    setShowContractModal(true);
+  const draw = (e) => {
+    if (!isDrawing) return;
+    const ctx = canvasRef.current.getContext("2d");
+    ctx.lineTo(e.nativeEvent.offsetX, e.nativeEvent.offsetY);
+    ctx.strokeStyle = "#000";
+    ctx.lineWidth = 2;
+    ctx.lineCap = "round";
+    ctx.stroke();
   };
 
-  const handleSignatureComplete = (signatureData) => {
-    setSignature(signatureData);
+  const stopDrawing = () => setIsDrawing(false);
+
+  const handleClear = () => {
+    const canvas = canvasRef.current;
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
   };
 
-  const handleSubmit = () => {
-    if (!acceptedTerms || !authorizedSignature || !signature) {
-      setShowError(true);
-      return;
-    }
+  const handleSubmit = async () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return alert("No se encontró el lienzo de la firma");
 
-    setShowError(false);
-    
-    // Simular envío con posibilidad de éxito o error
-    setTimeout(() => {
-      // Simular 90% éxito, 10% error (puedes cambiar esta lógica)
-      const isSuccess = Math.random() > 0.1;
-      
-      if (isSuccess) {
-        setSubmitStatus('success');
-      } else {
-        setSubmitStatus('error');
-      }
-    }, 1000);
-  };
-
-  const handleRetry = () => {
-    setSubmitStatus(null);
-  };
-
-  const handleViewStatus = () => {
-    // Aquí puedes navegar a la página de estado
-    onComplete();
-  };
-
-  // Pantalla de éxito
-  if (submitStatus === 'success') {
-    return (
-      <div className={styles.statusScreen}>
-        <div className={styles.statusCard}>
-          <div className={styles.successHeader}>
-            ¡Firma digital completada con éxito!
-          </div>
-          
-          <div className={styles.statusContent}>
-            <p>Tu contrato fue firmado de manera segura.</p>
-            <p>En unos segundos podrás revisar el estado actualizado de tu solicitud.</p>
-          </div>
-
-          <div className={styles.statusButtons}>
-            <BotonAnimado  variante="morado"
-              className={styles.secondaryButton}
-              onClick={handleDownload}
-            >
-              Descargar tu contrato firmado
-            </BotonAnimado>
-            <BotonAnimado  variante="naranja"
-              className={styles.primaryButton}
-              onClick={handleViewStatus}
-            >
-              Ver estado de mi solicitud
-            </BotonAnimado>
-          </div>
-        </div>
-      </div>
+    // ✅ Convertir la firma en Blob PNG
+    const signatureBlob = await new Promise((resolve) =>
+      canvas.toBlob(resolve, "image/png")
     );
-  }
+    if (!signatureBlob) return alert("Por favor dibuja tu firma antes de continuar.");
 
-  // Pantalla de error
-  if (submitStatus === 'error') {
-    return (
-      <div className={styles.statusScreen}>
-        <div className={styles.statusCard}>
-          <div className={styles.errorHeader}>
-            No pudimos confirmar tu firma digital
-          </div>
-          
-          <div className={styles.statusContent}>
-            <p>Es posible que la sesión en el "espacio seguro Kredia" haya expirado o se haya cancelado.</p>
-            <p>Intenta nuevamente o comunícate con nuestro soporte.</p>
-          </div>
+    // 🔑 Obtener crédito y token
+    const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
+    const creditId = creditInfo?.credit?._id;
+    const token = localStorage.getItem("token");
+    const API_URL = import.meta.env.VITE_API_URL;
 
-          <div className={styles.statusButtons}>
-            <button 
-              className={styles.primaryButton}
-              onClick={handleRetry}
-            >
-              Reintentar firma
-            </button>
-          </div>
+    if (!creditId) return alert("No se encontró el ID del crédito.");
 
-          <div className={styles.supportText}>
-            ¿Aún no consigues firmar?{" "}
-            <a href="#" className={styles.supportLink}>
-              Contacta nuestro Soporte
-            </a>
-          </div>
-        </div>
-      </div>
-    );
-  }
+    // ✅ Generar PDF real en Blob usando html2pdf con `.output('blob')`
+    const contratoElement = document.createElement("div");
+    contratoElement.innerHTML = contratoHTML;
 
-  // Pantalla principal de firma
+    const pdfBlob = await html2pdf()
+      .from(contratoElement)
+      .set({
+        margin: 10,
+        filename: "contrato.pdf",
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      })
+      .output("blob");
+
+    // 📦 Crear el FormData correcto
+    const formData = new FormData();
+    formData.append("signature", signatureBlob, "firma.png");
+    formData.append("contract", pdfBlob, "contrato.pdf");
+
+    console.log("📤 Enviando al backend:", [...formData.entries()]);
+
+    try {
+      setIsSubmitting(true);
+
+      const res = await axios.post(`${API_URL}/signature/sign/${creditId}`, formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        responseType: "blob",
+      });
+
+      // ✅ Descargar el PDF devuelto (contrato firmado)
+      const pdfResponse = new Blob([res.data], { type: "application/pdf" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(pdfResponse);
+      link.download = "Contrato_Firmado.pdf";
+      link.click();
+
+      alert("✅ Firma y contrato enviados correctamente.");
+      setPasoActual(8);
+    } catch (err) {
+      console.error("❌ Error al enviar la firma:", err);
+      const msg =
+        err.response?.data?.message ||
+        err.response?.data?.data?.message ||
+        "Error al enviar la firma o contrato.";
+      alert(`❌ ${msg}`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className={styles.firmaView}>
-      {/* Sección del contrato */}
-      <div className={styles.backgroundOverlay}>
-        <div className={styles.header}>
-          <button className={styles.downloadButton} onClick={handleDownload}>
-            Descargar tu contrato
-          </button>
-          <h2 className={styles.title}>Firma Digital</h2>
-        </div>
+    <div className="flex flex-col items-center justify-center p-6">
+      <h2 className="text-xl font-semibold mb-4">✍️ Firma Digital del Contrato</h2>
+      <p className="mb-4 text-gray-600 text-center">
+        Dibuja tu firma en el recuadro y envíala junto con el contrato PDF.
+      </p>
 
-        <div className={styles.contractViewer}>
-          <button className={styles.zoomButton} onClick={handleZoomContract}>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
-              <path d="M21 21l-4.35-4.35" stroke="currentColor" strokeWidth="2"/>
-              <path d="M11 8v6M8 11h6" stroke="currentColor" strokeWidth="2"/>
-            </svg>
-          </button>
+      <canvas
+        ref={canvasRef}
+        width={400}
+        height={200}
+        className="border border-gray-400 rounded-lg bg-white shadow-md"
+        onMouseDown={startDrawing}
+        onMouseMove={draw}
+        onMouseUp={stopDrawing}
+        onMouseLeave={stopDrawing}
+      ></canvas>
 
-          <div 
-            className={styles.contractContent}
-            dangerouslySetInnerHTML={{ __html: contratoHTML.substring(0, 1000) + "..." }}
-          />
-        </div>
-      </div>
-
-      {/* Sección de firma */}
-      <div className={styles.signatureSectionWrapper}>
-        {/* Mensaje de error flotante */}
-        {showError && (
-          <div className={styles.errorMessage}>
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
-              />
-            </svg>
-            <div>
-              <strong>No se puede continuar</strong>
-              <p>Para continuar, debes aceptar los Términos & Condiciones y autorizar tu firma digital.</p>
-            </div>
-            <button onClick={() => setShowError(false)} className={styles.closeButton}>×</button>
-          </div>
-        )}
-
-        <div className={styles.signatureSection}>
-          {/* Título y subtítulo */}
-          <div className={styles.signatureHeader}>
-            <h3 className={styles.sectionTitle}>
-              Firma Digital 
-              <span className={styles.sectionSubtitle}>
-                Escribe aquí tu firma en la pizarra para validar tu solicitud de forma segura.
-              </span>
-            </h3>
-          </div>
-
-          {/* Grid: Canvas izquierda, Checkboxes derecha */}
-          <div className={styles.signatureGrid}>
-            {/* Columna izquierda: Canvas */}
-            <div className={styles.signatureCanvasWrapper}>
-              <SignatureCanvas onSignatureComplete={handleSignatureComplete} />
-            </div>
-
-            {/* Columna derecha: Checkboxes */}
-            <div className={styles.checkboxesWrapper}>
-              <label className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={acceptedTerms}
-                  onChange={(e) => setAcceptedTerms(e.target.checked)}
-                  className={styles.checkbox}
-                />
-                <span>
-                  Confirmo que he leído y acepto los{" "}
-                  <span className={styles.link} onClick={handleZoomContract}>
-                    Términos y Condiciones
-                  </span>{" "}
-                  de KREDIA.
-                </span>
-              </label>
-
-              <label className={styles.checkboxLabel}>
-                <input
-                  type="checkbox"
-                  checked={authorizedSignature}
-                  onChange={(e) => setAuthorizedSignature(e.target.checked)}
-                  className={styles.checkbox}
-                />
-                <span>
-                  <strong>Autorizo</strong> el uso de mi firma digital para validar 
-                  y enviar esta solicitud de crédito.
-                </span>
-              </label>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Botón de envío */}
-      <div className={styles.submitButtonWrapper}>
-        <BotonAnimado
-          variante="naranja"
-          onClick={handleSubmit}
-          disabled={!signature || !acceptedTerms || !authorizedSignature}
+      <div className="flex gap-4 mt-4">
+        <button
+          onClick={handleClear}
+          className="bg-gray-300 hover:bg-gray-400 text-black font-medium py-2 px-4 rounded-lg"
         >
-          Firma digital lista
-        </BotonAnimado>
-      </div>
+          Limpiar
+        </button>
 
-      {/* Modal del contrato */}
-      {showContractModal && (
-        <ContractModal
-          contratoHTML={contratoHTML}
-          onClose={() => setShowContractModal(false)}
-        />
-      )}
+        <button
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg"
+        >
+          {isSubmitting ? "Enviando..." : "Enviar Firma"}
+        </button>
+      </div>
     </div>
   );
 };

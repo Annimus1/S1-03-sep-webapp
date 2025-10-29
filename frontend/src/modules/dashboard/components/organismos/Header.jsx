@@ -12,7 +12,6 @@ export const Header = ({ onLogout }) => (
       <div className="d-flex justify-content-between align-items-center">
         <Logo />
         <div className="d-flex align-items-center gap-3">
-          <UserIconSmall />
           <LogoutButton onClick={onLogout} />
         </div>
       </div>

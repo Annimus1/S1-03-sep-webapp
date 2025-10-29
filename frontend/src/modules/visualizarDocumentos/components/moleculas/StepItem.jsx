@@ -1,5 +1,5 @@
 import styles from "../../styles/StepperNavegacion.module.css";
-import { StepCircle } from "../atomos/StepCircle.JSX";
+import { StepCircle } from "../atomos/StepCircle.jsx";
 
 export const StepItem = ({ number, label, isActive, isCompleted }) => {
   return (

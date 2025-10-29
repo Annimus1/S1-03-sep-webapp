@@ -1,5 +1,5 @@
 import styles from "../../styles/StepperNavegacion.module.css";
-import { MiniCircle } from "../atomos/StepCircle.JSX";
+import { MiniCircle } from "../atomos/StepCircle.jsx";
 
 export const StepConnector = ({ completedCount }) => {
   return (

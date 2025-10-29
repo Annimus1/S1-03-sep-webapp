@@ -83,7 +83,7 @@ export const DashboardASESOR = () => {
           </GridContainer>
           
           {/* Avance de la solicitud */}
-          <GridContainer columns={detailColumns} gap="20px">
+          <GridContainer columns='77% 20%' gap="20px" >
             <DetalleSolicitud columns={innerColumns} asesorData={asesorData}/>
             <QuickAccessButtons/>
           </GridContainer>

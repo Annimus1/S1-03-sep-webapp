@@ -1,42 +1,71 @@
-import React, { createContext, useState, useEffect } from 'react'
+import React, { createContext, useState, useEffect } from 'react';
 
-export const UserContext = createContext()
+export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(null)
-  // 1. NUEVO: Estado para saber si la carga inicial ha terminado
-  const [isLoading, setIsLoading] = useState(true) 
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // 2. Lee los datos
-    const storedUser = localStorage.getItem("data")
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+    try {
+      const storedUser = localStorage.getItem("data");
+      if (storedUser && storedUser !== "undefined") {
+        setUser(JSON.parse(storedUser));
+      } else {
+        localStorage.removeItem("data");
+      }
+    } catch (error) {
+      console.error("⚠️ Error al leer usuario del localStorage:", error);
+      localStorage.removeItem("data");
     }
-    // 3. Indica que la carga INICIAL ha terminado
-    setIsLoading(false) 
-  }, [])
+  }, []);
 
   useEffect(() => {
-    // Solo guarda si la carga inicial terminó (para no sobrescribir)
-    if (!isLoading) { 
-        if (user) {
-          localStorage.setItem("data", JSON.stringify(user))
+    try {
+      if (user) {
+        localStorage.setItem("data", JSON.stringify(user));
+      } else {
+        localStorage.removeItem("data");
+      }
+    } catch (error) {
+      console.error("⚠️ Error al guardar usuario en localStorage:", error);
+    }
+  }, [user]);
+
+  // 🚀 Nuevo logout que llama al backend
+  const logout = async () => {
+    const token = localStorage.getItem("token");
+
+    try {
+      if (token) {
+        const response = await fetch("http://localhost:3001/api/v1/auth/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          console.warn("⚠️ Error al cerrar sesión:", errorData.message);
         } else {
-          localStorage.removeItem("data")
+          console.log("✅ Sesión cerrada correctamente en el servidor.");
         }
+      }
+    } catch (error) {
+      console.error("❌ Error en la solicitud de logout:", error);
+    } finally {
+      // 🧹 Limpieza local (se ejecuta siempre)
+      setUser(null);
+      localStorage.removeItem("data");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     }
-  }, [user, isLoading]) // dependencia de isLoading para el primer login/logout
+  };
 
-  const logout = () => {
-    setUser(null)
-    // El useEffect se encargará de removerlo si isLoading es false
-  }
-  
-  // 4. Incluye isLoading en el value
   return (
-    <UserContext.Provider value={{ user, setUser, logout, isLoading }}>
+    <UserContext.Provider value={{ user, setUser, logout }}>
       {children}
     </UserContext.Provider>
-  )
-}
+  );
+};
