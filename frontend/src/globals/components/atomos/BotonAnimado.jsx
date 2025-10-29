@@ -52,7 +52,7 @@ export const BotonAnimado = ({
   const configuracionEstilos = {
     naranja: {
       backgroundColor: '#F39C12',
-      color: '#FFFFFF',
+      color: '#000',
       border: '2px solid #F39C12',
       borderColor: '#F39C12', 
       hoverBg: '#FFBE58',
