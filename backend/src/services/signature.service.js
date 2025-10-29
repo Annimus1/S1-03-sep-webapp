@@ -42,7 +42,7 @@ export async function generatePdfContract(datos) {
     try {
         const existingPdfBytes = await readFile(TEMPLATE_PATH);
         const pdfDoc = await PDFDocument.load(existingPdfBytes);
-
+      
         // 💡 OBTENEMOS TODAS LAS PÁGINAS DEL DOCUMENTO
         const pages = pdfDoc.getPages();
         const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
@@ -50,7 +50,8 @@ export async function generatePdfContract(datos) {
 
         // 3. Iterar sobre las coordenadas y dibujar el texto en la página correcta
         for (const [key, { page: pageIndex, x, y }] of Object.entries(FIELD_COORDINATES)) {
-            const text = datos[key] || '';
+            // const text = datos[key] || '';
+            const text = String(datos[key] || '');
             
             // SELECCIONAMOS LA PÁGINA BASÁNDONOS EN EL ÍNDICE
             const targetPage = pages[pageIndex]; 
