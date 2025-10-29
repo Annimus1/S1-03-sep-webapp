@@ -1,20 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 import { useNavigate } from "react-router";
 import { ModuloAmortizacion } from '../organismos/TablaAmortizacion';
+import { UserContext } from '../../../../stores/UserContext.jsx'
+import { ErrorPopup } from '../../../../globals/components/moleculas/ErrorPopUp.jsx';
+import axios from 'axios';
 
-/**
- * Calculadora interactiva de crédito
- * Permite a los usuarios simular su crédito con diferentes montos y plazos
- */
-export const Cero = () => {
+export const Cero = ({ setPasoActual }) => {
   // Estados para controlar los valores del simulador
   const [monto, setMonto] = useState(2500000); // Monto del crédito solicitado
   const [meses, setMeses] = useState(6); // Plazo en meses
   const [tasaInteres] = useState(75); // Tasa de interés anual (fija)
   const [fechaActual, _] = useState(new Date());
   const [fechaInicio, setFechaInico] = useState(new Date());
+  const { user, logout } = useContext(UserContext)
+  const [error, setError] = useState({ isVisible: true, status: 404, message: "Not Found." });
   const navigate = useNavigate();
 
   const configuracionMoradoSuave = {
@@ -85,8 +86,56 @@ export const Cero = () => {
     setFechaInico(new Date(fechaActual));
   }, [])
 
+  async function handleSubmit() {
+    try {
+
+      const token = user?.user?.token;
+      const API_URL = import.meta.env.VITE_API_URL;
+      const endpoint = `${API_URL}/credit/create`
+
+      // crear objeto
+      const data = {
+        monto_credito: monto,
+        plazos: meses
+      }
+
+      // crear peticion
+      const response = await axios.post(endpoint, data, { headers: { 'Authorization': `Bearer ${token}` } })
+
+      // recibir respuesta
+      if (response.status == 201) {
+        console.log(response);
+        window.localStorage.setItem('creditInfo', JSON.stringify({credit: response.data.data.credit, PasoActual:1}));
+        setPasoActual(1);
+      }
+    }
+    catch (error) {
+
+      // manejar errores
+      if (error.status == 401) {
+        logout();
+        setTimeout(navigate('/login'), 1000);
+      }
+
+
+      else {
+        setError({ isVisible: true, status: error.status, message: error.response.data.data.message })
+      }
+    }
+  }
+
+  function handleCloseError() {
+    setError({ isVisible: false, status: null, message: "" })
+  }
   return (
     <section style={{ padding: '50px 0' }}>
+      {error.isVisible && (
+        <ErrorPopup
+          status={error.status}
+          message={error.message}
+          onClose={handleCloseError}
+        />
+      )}
       <div className="container mx-auto">
         <div style={{
           backgroundColor: '#7FDED2',
@@ -98,7 +147,7 @@ export const Cero = () => {
           justifyContent: 'center',
           alignItems: 'center'
         }}>
-          <h3 style={{ placeSelf:'flex-start', color: 'black', fontSize: 'clamp(20px, 4vw, 28px)', fontWeight: 700, marginBottom: 30 }}>
+          <h3 style={{ placeSelf: 'flex-start', color: 'black', fontSize: 'clamp(20px, 4vw, 28px)', fontWeight: 700, marginBottom: 30 }}>
             Monto Solicitado
           </h3>
 
@@ -260,14 +309,14 @@ export const Cero = () => {
                   *El monto seleccionado es una referencia inicial y puede ajustarse según la evaluación crediticia de tu empresa y la documentación presentada. Nuestro objetivo es ofrecerte una opción segura y acorde a tu capacidad de pago.
                 </p>
 
-                <ModuloAmortizacion monto={monto} meses={meses} fechaInicioPrestamo={fechaInicio}/>
+                <ModuloAmortizacion monto={monto} meses={meses} fechaInicioPrestamo={fechaInicio} />
 
               </div>
             </div>
           </div>
 
           {/* Botones de acción */}
-          <BotonAnimado variante="naranja" className={'fs-5 text-black'} ancho="auto" onClick={()=>{alert("Crear Credito")}}>
+          <BotonAnimado variante="naranja" className={'fs-5 text-black'} ancho="auto" onClick={handleSubmit}>
             Iniciar mi solicitud crédito PyME
           </BotonAnimado>
         </div>
