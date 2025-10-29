@@ -132,7 +132,8 @@ export const uploadCreditFiles = async (req, res) => {
       await CreditRepository.updateCredit(credit._id,{creditType : creditType});
 
     };
-    const todosCargados = archivosRequeridos.every(campo => req.files && req.files[campo]);
+    const archivosNuevos = req.files || {};
+    const todosCargados = archivosRequeridos.every(campo => archivosNuevos[campo] || credit[campo]);
 
     if (todosCargados && credit.descripcionNegocio) {
       await CreditRepository.updateCredit(credit._id,{datosVerificados: true});
