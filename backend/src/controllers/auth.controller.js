@@ -67,18 +67,24 @@ export const authController = async (req, res) => {
       from: 'krediawebapp@gmail.com', 
       subject: 'Bienvenido a Kredia',
       text: 'Registro exitoso en Kredia',
-      html: `<div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
-        <div style="background-color: #2e7d32; color: white; padding: 20px; text-align: center;">
-          <h2>🌟 ¡Hola ${nombres || 'Usuario'}!</h2>
-          <p>¡Tu registro en <strong>Kredia</strong> fue exitoso!</p>
+      html: `<div style="font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
+        <div style="background-color: #5BE2C5; color: black; padding: 20px; text-align: center; text-size: 24px; font-weight: bold;">
+          <h2>¡Creación de Cuenta Exitosa!</h2>
+          <p>¡Tu registro en <strong>Kredia</strong> ya esta listo!</p>
         </div>
-        <div style="padding: 20px; text-align: center;">
-            Nos alegra tenerte con nosotros. Desde ahora podés acceder a tu cuenta para gestionar tus créditos,
-            ver tus solicitudes y disfrutar de todos los beneficios que ofrecemos.
+        <div style="padding: 20px; text-align: left;">
+          <p style="font-size: 16px;">
+            Hola ${nombres || 'Usuario'},
+          </p>
+          <p style="font-size: 16px;">
+            ¡Tu cuenta ha sido creada exitosamente!
+          </p>
+          <p style="font-size: 16px;">
+            Desde hoy puedes comenzar tu solicitud de crédito 100% online, en pocos pasos y con seguimiento en tiempo real.
           </p>
           <a href="http://ec2-3-145-192-140.us-east-2.compute.amazonaws.com/"
-            style="display: inline-block; background-color: #2e7d32; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;">
-            Iniciar sesión en Kredia
+            style="display: inline-block; background-color: #F39C12; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;text-align: center;">
+            Comenzar mi solicitud
           </a>
         </div>
         <div style="background-color: #f8f8f8; padding: 15px; text-align: center; font-size: 13px; color: #777;">

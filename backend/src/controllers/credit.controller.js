@@ -253,19 +253,24 @@ export const desicionCredit = async (req, res) => {
           from: 'krediawebapp@gmail.com', 
           subject: '¡Felicidades! Tu crédito ha sido aprobado',
           text: 'Tu crédito ha sido aprobado exitosamente.',
-          html: `<div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
-          <div style="background-color: #004aad; color: white; padding: 20px; text-align: center;">
-            <h2>✨ ¡Felicitaciones, ${credit.userId.nombres || 'Usuario'}!</h2>
+          html: `<div style="font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
+          <div style="background-color: #0D6546; color: white; padding: 20px; text-align: center; text-size: 24px; font-weight: bold;">
+            <h2> ¡Felicidades, ${credit.userId.nombres || 'Usuario'}!</h2>
           </div>
-          <div style="padding: 20px; text-align: center;">
-            <p style="font-size: 16px;">Tu crédito ha sido <strong>aprobado exitosamente</strong>. Ya podés ingresar a tu cuenta para ver los detalles.</p>
+          <div style="padding: 20px; text-align: left;">
+            <p style="font-size: 16px;">
+            Tenemos buenas noticias! Tu solicitud de crédito fue <strong>aprobada con éxito</strong>.</p>
+            <p style="font-size: 16px;">
+            <br>
+            Ya podés revisar los detalles en tu perfil.<br>
+            Pronto el asesor realizará el desembolso de tu crédito. Recibirás una notificación cuando el monto esté en tu cuenta.</p>
             <a href="http://ec2-3-145-192-140.us-east-2.compute.amazonaws.com/" 
-              style="display: inline-block; background-color: #004aad; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;">
+              style="display: inline-block; background-color: #F39C12; color: black; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px; text-align: center;">
               Ir a mi cuenta
             </a>
           </div>
           <div style="background-color: #f8f8f8; padding: 10px; text-align: center; font-size: 13px; color: #777;">
-            <p>Gracias por confiar en <strong>Kredia</strong>.</p>
+            <p>Gracias por confiar en <strong>Kredia</strong>.Estamos aquí para apoyar el crecimiento de tu PyME.</p>
             <p>Este es un mensaje automático, no respondas a este correo.</p>
           </div>
         </div>
@@ -298,17 +303,26 @@ export const desicionCredit = async (req, res) => {
           subject: 'Lo sentimos! Tu crédito ha sido rechazado',
           text: 'Tu crédito ha sido rechazado.',
           html:  `
-            <div style="font-family: Arial, sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
-              <div style="background-color: #e53935; color: white; padding: 20px; text-align: center;">
-                <h2>Lo sentimos, ${credit.userId.nombres || 'Usuario'}</h2>
+            <div style="font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
+              <div style="background-color: #952014; color: white; padding: 20px; text-align: center; text-size: 24px; font-weight: bold;">
+                <h2>Rechazo del Crédito</h2>
               </div>
-              <div style="padding: 20px; text-align: center;">
-                <p style="font-size: 16px;">Tu solicitud de crédito no ha sido aprobada en esta ocasión.</p>
-                <p>Podés revisar tus datos o intentarlo nuevamente más adelante.</p>
+              <div style="padding: 20px; text-align: left;">
+                <p style="font-size: 16px;">
+                Gracias por completar tu solicitud, ${credit.userId.nombres || 'Usuario'}.</p>
+                <p style="font-size: 16px;">
+                En esta ocasión, no pudimos aprobar tu crédito, pero no te desanimes.
+                Sabemos que cada negocio es distinto y queremos ayudarte a estar más cerca de una próxima aprobación. 
+                Muy pronto podrás acceder a nuevas oportunidades adaptadas a tu perfil.</p>
+                <p style="font-size: 16px;">¿Tienes dudas o necesitas asesoría? Estamos para ayudarte</p>
                 <a href="http://ec2-3-145-192-140.us-east-2.compute.amazonaws.com/"
-                  style="display: inline-block; background-color: #e53935; color: white; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;">
-                  Contactar soporte
+                  style="display: inline-block; background-color: #F39C12; color: black; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;text-align: center;">
+                  Chatea con nosotros
                 </a>
+              </div>
+              <div style="background-color: #f8f8f8; padding: 10px; text-align: center; font-size: 13px; color: #777;">
+                <p>Gracias por confiar en <strong>Kredia</strong>.Estamos aquí para apoyar el crecimiento de tu PyME.</p>
+                <p>Este es un mensaje automático, no respondas a este correo.</p>
               </div>
             </div>
             `,
