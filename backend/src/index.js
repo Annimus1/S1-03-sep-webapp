@@ -1,10 +1,10 @@
 import 'dotenv/config'; // 1. Cargar variables de entorno desde .env
-import app from './server.js';
-import DatabaseSingleton from './database/DatabaseSingleton.js';
 import CacheSingleton from './database/CacheSingleton.js';
+import DatabaseSingleton from './database/DatabaseSingleton.js';
+import app from './server.js';
 
 // Define el puerto, usando la variable de entorno o el 3001 por defecto
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 3001;
 
 /**
  * Función principal para iniciar la aplicación.

@@ -22,7 +22,6 @@ class DatabaseSingleton {
         }
         DatabaseSingleton.instance = this;
     }
-
     /**
      * Conecta a MongoDB o retorna la conexión existente.
      * Implementa el principio Fail-Fast.
@@ -36,17 +35,26 @@ class DatabaseSingleton {
         }
 
         // 2. Obtener la URI
-        const MONGO_URI = process.env.MONGO_URI;
-        if (!MONGO_URI) {
+        
+        const env = process.env.NODE_ENV || "development";
+
+        let mongoUri;
+
+        if (env === "production") {
+        mongoUri = process.env.MONGO_ATLAS_URI;
+        } else {
+        mongoUri = process.env.MONGO_TEST_URI;
+        }
+        //const MONGO_URI = process.env.MONGO_URI;
+        if (!mongoUri) {
             console.error('❌ Error: MONGO_URI no está definido en el entorno.');
             process.exit(1); // Fail-Fast
         }
 
         try {
             // 3. Establecer la nueva conexión
-            const options = {};
-            
-            this.connection = await mongoose.connect(MONGO_URI, options);
+            const options = { };
+            this.connection = await mongoose.connect(mongoUri, options);
             console.log('🔌 Conectado a MongoDB satisfactoriamente.');
             
             // Manejo de eventos de conexión después del inicio
