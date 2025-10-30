@@ -1,6 +1,6 @@
 import CreditRepository from '../repositories/credit.repository.js';
-import UserRepository from '../repositories/user.repository.js';
 import StorageRepository from '../repositories/storage.repository.js';
+import UserRepository from '../repositories/user.repository.js';
 import { generatePdfContract, signContract } from '../services/signature.service.js';
 
 
@@ -50,7 +50,13 @@ export const signContractController = async (req, res) => {
     // Actualizar el registro del crédito con la referencia del archivo firmado
     // y cambiar su estatus a 'revision'.
     const updatedCredit = await CreditRepository.updateCredit(paramId, { firmaDigital, estatus: 'revision' });
-
+    // Emitir notificación en tiempo real al asesor
+    const io = req.app.get('io');
+    io.emit('nuevoCredito', {
+      message: 'Nuevo contrato para revision',
+      creditId: updatedCredit._id,
+      user: updatedCredit.userId
+    });
     // Respuesta exitosa al cliente.
     res.status(200).json({status: "success", message:"Archivo cargado exitosamente"});
 

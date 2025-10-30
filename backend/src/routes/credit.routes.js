@@ -1,11 +1,65 @@
 import express, { Router } from 'express';
-import { createCredit, desicionCredit, getCreditById, getCredits, uploadCreditFiles } from '../controllers/credit.controller.js';
+import { createCredit, desicionCredit, getCreditById, getCredits, uploadCreditFiles, statusCheck } from '../controllers/credit.controller.js';
 import { authenticateToken } from '../middlewares/auth.middleware.js';
 import { DatosVerificados } from '../middlewares/credit.validation.middleware.js';
 import { authenticateCreditandRole, authenticateRoleAsesor } from '../middlewares/role.middleware.js';
 import { filesCreditMiddleware } from '../middlewares/upload.middleware.js';
 
 const router = Router();
+
+/**
+ * @swagger
+ * /credit/status-check:
+ *   get:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Obtiene el Credito en curso.
+ *     description: Permite al usuario obtener un crédito en curso.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Credito encontrado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 credit:
+ *                   type: object
+ *                   description: Objeto crédito.
+ *       404:
+ *         description: Credito no encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 credit:
+ *                   type: object
+ *                   description: Objeto crédito.
+ *                   example: null
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
+*/
+router.get('/status-check', express.json(), authenticateToken, statusCheck);
 
 /**
  * @swagger
@@ -157,19 +211,57 @@ router.post('/create',express.json(),authenticateToken, createCredit )
  *                 data:
  *                   type: object
  *                   properties:
- *                     files:
- *                       type: array
- *                       description: Lista de los nombres de los archivos recibidos.
- *                       items:
- *                         type: string
- *                         example: "estatutoSocial"
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "success"
  *                     message:
  *                       type: string
  *                       description: Mensaje de la respuesta.
- *                       example: "Archivos procesados correctamente."
+ *                       example: "Credito creado correctamente."
  *                     credit:
  *                       type: object
- *                       description: Objeto crédito creado.
+ *                       properties:
+ *                         _id:
+ *                           type: string
+ *                           description: ID del crédito
+ *                           example: "68f6bd80e3303d7586017668"
+ *                         userId:
+ *                           type: string
+ *                           description: ID del usuario propietario del crédito
+ *                           example: "68f6bd80e3303d7586016068"
+ *                         monto_credito:
+ *                           type: number
+ *                           description: Monto del crédito solicitado
+ *                           example: 150000
+ *                         plazos:
+ *                           type: number
+ *                           description: Plazo del crédito en mese
+ *                           example: 24
+ *                         creditType:
+ *                           type: string
+ *                           description: Tipo de crédito
+ *                           example: "inversion"
+ *                         firmaDigital:
+ *                           type: boolean
+ *                           description: Indica si el usuario ha cargado la firma digita
+ *                           example: false
+ *                         estatus:
+ *                           type: string
+ *                           description: Estatus actual del crédito
+ *                           example: "recaudacion_documentos"
+ *                         datosVerificados:
+ *                           type: boolean
+ *                           description: Indica si los datos del usuario han sido verificados
+ *                           example: false
+ *                         createdAt:
+ *                           type: string
+ *                           description: Fecha de creación del crédito
+ *                           example: "2023-09-12T14:23:45.678Z"  
+ *                         updatedAt:
+ *                           type: string
+ *                           description: Fecha de la última actualización del crédito
+ *                           example: "2023-09-12T14:23:45.678Z"
  *       401:
  *         description: No autorizado.
  *         content:
@@ -226,6 +318,182 @@ router.post('/create',express.json(),authenticateToken, createCredit )
  *                       example: "Error interno del servidor."
  * 
 */
+router.post('/create',express.json(),authenticateToken, createCredit )
+
+/**
+ * @swagger
+ * /credit/upload/{id}:
+ *   post:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Sube documentos al credito.
+ *     description: Permite al usuario subir todos los archivos relacionados con su crédito.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: El Identificador del credito al que se le cargan archivos.
+ *           example: "68f66016068"
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/Credit'
+ *     responses:
+ *       201:
+ *         description: Documentos guardados exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     files:
+ *                       type: array
+ *                       description: Lista de los nombres de los archivos recibidos.
+ *                       items:
+ *                         type: string
+ *                         example: 
+ *                           - "ddjjImpositivas"
+ *                           - "detalleCuentas"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Archivos procesados correctamente."
+ *                     credit:
+ *                       type: object
+ *                       description: Objeto crédito actualizado.
+ *                       properties:
+ *                         _id:
+ *                           type: string
+ *                           description: ID del crédito
+ *                           example: "68f6bd80e3303d7586017668"
+ *                         userId:
+ *                           type: string
+ *                           description: ID del usuario propietario del crédito
+ *                           example: "68f6bd80e3303d7586016068"
+ *                         monto_credito:
+ *                           type: number
+ *                           description: Monto del crédito solicitado
+ *                           example: 150000
+ *                         plazos:
+ *                           type: number
+ *                           description: Plazo del crédito en mese
+ *                           example: 24
+ *                         creditType:
+ *                           type: string
+ *                           description: Tipo de crédito
+ *                           example: "inversion"
+ *                         firmaDigital:
+ *                           type: boolean
+ *                           description: Indica si el usuario ha cargado la firma digita
+ *                           example: false
+ *                         estatus:
+ *                           type: string
+ *                           description: Estatus actual del crédito
+ *                           example: "recaudacion_documentos"
+ *                         datosVerificados:
+ *                           type: boolean
+ *                           description: Indica si los datos del usuario han sido verificados
+ *                           example: false
+ *                         createdAt:
+ *                           type: string
+ *                           description: Fecha de creación del crédito
+ *                           example: "2023-09-12T14:23:45.678Z"  
+ *                         updatedAt:
+ *                           type: string
+ *                           description: Fecha de la última actualización del crédito
+ *                           example: "2023-09-12T14:23:45.678Z"
+ *                         ddjjImpositivas:
+ *                           type: string
+ *                           description: URL del archivo de las declaraciones juradas impositivas
+ *                           example: "http://localhost:3001/api/v1/uploads/68fff442308ceae3e662d578_ddjjImpositivas_1761605576444.pdf"
+ *                         detalleCuentas:
+ *                           type: string
+ *                           description: URL del archivo del detalle de cuentas bancarias
+ *                           example: "http://localhost:3001/api/v1/uploads/68fff442308ceae3e662d578_detalleCuentas_1761605576445.pdf"
+ *       400:
+ *         description: Tipo de archivo no valido | Archivo excede el peso limite.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Tipo de archivo no valido."
+ * 
+ *       401:
+ *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No autorizado."
+ *       422:
+ *         description: Error en subir un documento.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               description: Lista de errores ocurridos al subir los documentos.
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   status:
+ *                     type: string
+ *                     description: Estado de la respuesta.
+ *                     example: "error"
+ *                   message:
+ *                     type: string
+ *                     description: Mensaje de la respuesta.
+ *                     example: "Error mientras procesaba estatutoSocial."
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
+ */
 router.post('/upload/:id', authenticateToken, filesCreditMiddleware, uploadCreditFiles)
 
 /**
@@ -324,7 +592,7 @@ router.post('/upload/:id', authenticateToken, filesCreditMiddleware, uploadCredi
  *                       example: "Error interno del servidor."
  * 
 */
-router.get('/:id',authenticateToken,authenticateCreditandRole, getCreditById);
+router.get('/:id', authenticateToken, authenticateCreditandRole, getCreditById);
 
 /**
  * @swagger
@@ -416,7 +684,7 @@ router.get('/:id',authenticateToken,authenticateCreditandRole, getCreditById);
  *                       description: Mensaje de la respuesta.
  *                       example: "Error interno del servidor."
  */
-router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
+router.get('/', authenticateToken, authenticateRoleAsesor, getCredits);
 
 /**
  * @swagger
@@ -540,6 +808,6 @@ router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
  *                       example: "Error interno del servidor."
  * 
 */
-router.post('/decision/:id',express.json(),authenticateToken,authenticateRoleAsesor,DatosVerificados, desicionCredit); 
+router.post('/decision/:id', express.json(), authenticateToken, authenticateRoleAsesor, DatosVerificados, desicionCredit); 
 
 export default router;

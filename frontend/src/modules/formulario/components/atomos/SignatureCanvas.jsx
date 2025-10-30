@@ -9,12 +9,18 @@ export const SignatureCanvas = ({ onSignatureComplete }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
-    
-    // Configuración del canvas
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 2;
+
+    // ✅ Configuración del canvas con tamaño fijo 200x106 px
+    canvas.width = 2000;
+    canvas.height = 1006;
+
+    ctx.strokeStyle = "#000"; // Color negro
+    ctx.lineWidth = 16; // Grosor de línea
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
+
+    // Fondo transparente
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   }, []);
 
   const getCoordinates = (e) => {
@@ -24,7 +30,7 @@ export const SignatureCanvas = ({ onSignatureComplete }) => {
     const clientX = e.touches ? e.touches[0].clientX : e.clientX;
     const clientY = e.touches ? e.touches[0].clientY : e.clientY;
 
-    // Calcular escalado si el canvas se redimensiona visualmente
+    // Ajuste por escala si el canvas se visualiza redimensionado
     const scaleX = canvas.width / rect.width;
     const scaleY = canvas.height / rect.height;
 
@@ -34,13 +40,11 @@ export const SignatureCanvas = ({ onSignatureComplete }) => {
     };
   };
 
-
   const startDrawing = (e) => {
     e.preventDefault();
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvasRef.current.getContext("2d");
     const coords = getCoordinates(e);
-    
+
     ctx.beginPath();
     ctx.moveTo(coords.x, coords.y);
     setIsDrawing(true);
@@ -49,11 +53,9 @@ export const SignatureCanvas = ({ onSignatureComplete }) => {
   const draw = (e) => {
     if (!isDrawing) return;
     e.preventDefault();
-    
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvasRef.current.getContext("2d");
     const coords = getCoordinates(e);
-    
+
     ctx.lineTo(coords.x, coords.y);
     ctx.stroke();
     setIsEmpty(false);
@@ -63,7 +65,8 @@ export const SignatureCanvas = ({ onSignatureComplete }) => {
     setIsDrawing(false);
     if (!isEmpty) {
       const canvas = canvasRef.current;
-      onSignatureComplete(canvas.toDataURL());
+      // ✅ Exportar en PNG RGBA 32 bits
+      onSignatureComplete(canvas.toDataURL("image/png"));
     }
   };
 
@@ -79,8 +82,6 @@ export const SignatureCanvas = ({ onSignatureComplete }) => {
     <div className={styles.signatureContainer}>
       <canvas
         ref={canvasRef}
-        width={600}
-        height={200}
         className={styles.canvas}
         onMouseDown={startDrawing}
         onMouseMove={draw}
@@ -90,7 +91,7 @@ export const SignatureCanvas = ({ onSignatureComplete }) => {
         onTouchMove={draw}
         onTouchEnd={stopDrawing}
       />
-      
+
       {isEmpty && (
         <div className={styles.placeholder}>
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">

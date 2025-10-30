@@ -8,7 +8,7 @@ import { useNavigate } from "react-router";
 import axios from 'axios';
 
 export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
-  const [selectedId, setSelectedId] = useState(1);
+  const [selectedId, setSelectedId] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
     solicitante: '',
@@ -74,15 +74,15 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
     setSelectedId(id);
     // obtener info
     const solicitud = solicitudes.filter(s => s.id === id);
-    setAsesorData({
-      ...asesorData,
+    setAsesorData(prev => ({
+      ...prev,
       detallesSolicitud: {
         nombre: solicitud[0].solicitante,
         id: solicitud[0].id,
         cantidad: solicitud[0].monto,
         estado: solicitud[0].estado
       }
-    })
+    })); 
   }
 
   const fetchData = async () => {
@@ -96,29 +96,29 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
       response.data.data.credits.forEach(credit => {
         responseData.push({
           id: credit._id,
-          solicitante: credit.userId.nombres || 'Soledad V.',
-          monto: `ARG ${credit.monto_credit || 2500000}`,
-          montoNumerico: credit.monto_credit || 2500000,
-          estado: credit.estatus.split(' ')[0],
+          solicitante: credit.userId.nombres,
+          monto: `ARG ${credit.monto_credito}`,
+          montoNumerico: credit.monto_credito ,
+          estado: credit.estatus.split('_')[0],
           fecha: credit.updatedAt.split('T')[0]
         })
-        if (firstElement) {
+        if(firstElement) {
           setSelectedId(credit._id);
 
-          setAsesorData({
-            ...asesorData,
+          setAsesorData(prev => ({
+            ...prev,
             detallesSolicitud: {
-              nombre: credit.userId.nombres || 'Soledad V.',
+              nombre: credit.userId.nombres,
               id: credit._id,
-              cantidad: credit.monto_credit || 2500000,
-              estado: credit.estatus.split(' ')[0]
+              cantidad: `ARG ${credit.monto_credito}`,
+              estado: credit.estatus.split('_')[0]
             }
-          })
+          }))
           firstElement = false;
         }
         // add stats
         stats.total = stats.total + 1;
-        switch (credit.estatus.split(' ')[0]){
+        switch (credit.estatus.split('_')[0]){
           case 'recaudacion':
             stats.recaudacion = stats.recaudacion + 1;
             break
@@ -134,14 +134,16 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
         }
       });
       setSolicitudes(responseData);
-      setAsesorData({...asesorData, 
-        stats:{
-          pendientes: stats.recaudacion, 
-          evaluacion: stats.revision, 
-          aprobados: stats.aprobado, 
+      setAsesorData(prev => ({
+        ...prev,
+        stats: {
+          pendientes: stats.recaudacion,
+          evaluacion: stats.revision,
+          aprobados: stats.aprobado,
           rechazados: stats.rechazado,
-          total: stats.total 
-        }})
+          total: stats.total
+        }
+      }));
     }
 
     if (response.status == 401) {
