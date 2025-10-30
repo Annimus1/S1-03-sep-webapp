@@ -11,17 +11,16 @@ export const Cuatro = ({ setPasoActual }) => {
     presupuestoInversion: null,
     cotizacionProveedores: null,
     planImplementacion: null,
-    estudionFactibilidad: null,
+    estudioFactibilidad: null, // ✅ corregido
     permisosObra: null,
     planMantenimiento: null,
-    facturaProforma: null,
+    facturaProforma: null, // ✅ corregido
     informeTecnico: null,
 
     // Capital de Trabajo
     detalleFondos: null,
     proyeccionFlujoOperativo: null,
     gastosOperativos: null,
-    facturasProforma: null,
     evidenciaExpancion: null,
   });
 
@@ -33,46 +32,40 @@ export const Cuatro = ({ setPasoActual }) => {
   const userId = creditInfo?.credit?.userId;
   const creditType = creditInfo?.credit?.creditType;
 
-  // ⬅️ Botón Atrás
   const handleBack = () => {
     setPasoActual(3);
   };
 
-  // ✅ Subir archivos al backend (sin validaciones)
   const handleContinue = async () => {
     if (!creditId) {
       alert("No se encontró el ID del crédito en localStorage");
       return;
     }
 
-    // 🧱 Construir el FormData
     const data = new FormData();
     data.append("userId", userId);
     data.append("creditType", creditType);
     data.append("estatus", "documentacion_credito");
     data.append("datosVerificados", false);
 
-    // 🔹 Mapear campos de frontend → backend
     const fileMap = {
       // Crédito de Inversión
       presupuestoInversion: "presupuestoInversion",
       cotizacionProveedores: "cotizacionProveedores",
       planImplementacion: "planImplementacion",
-      estudionFactibilidad: "estudionFactibilidad",
+      estudioFactibilidad: "estudioFactibilidad", // ✅ corregido
       permisosObra: "permisosObra",
       planMantenimiento: "planMantenimiento",
-      facturaProforma: "facturaProforma",
+      facturaProforma: "facturaProforma", // ✅ corregido
       informeTecnico: "informeTecnico",
 
       // Capital de Trabajo
       detalleFondos: "detalleFondos",
       proyeccionFlujoOperativo: "proyeccionFlujoOperativo",
       gastosOperativos: "gastosOperativos",
-      facturasProforma: "facturasProforma",
       evidenciaExpancion: "evidenciaExpancion",
     };
 
-    // Agregar solo los archivos que tengan valor
     Object.keys(fileMap).forEach((field) => {
       const backendKey = fileMap[field];
       if (formData[field]) {
@@ -97,7 +90,6 @@ export const Cuatro = ({ setPasoActual }) => {
 
       console.log("✅ Respuesta subida:", response.data);
 
-      // Actualizar creditInfo en localStorage
       const updatedCredit = response.data?.data?.credit;
       localStorage.setItem(
         "creditInfo",
@@ -109,7 +101,7 @@ export const Cuatro = ({ setPasoActual }) => {
       );
 
       alert("Documentación del crédito subida correctamente.");
-      setPasoActual(5); // avanzar al paso siguiente
+      setPasoActual(5);
     } catch (error) {
       console.error("❌ Error al subir documentos:", error);
       alert(
@@ -131,8 +123,8 @@ export const Cuatro = ({ setPasoActual }) => {
         <TipoCredito
           formData={formData}
           setFormData={setFormData}
-          errors={{}} // sin errores
-          setErrors={() => {}} // función vacía
+          errors={{}}
+          setErrors={() => {}}
           tipoCredito={tipoCredito}
           setTipoCredito={setTipoCredito}
         />

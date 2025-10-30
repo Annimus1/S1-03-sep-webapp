@@ -2,14 +2,31 @@ import { useNavigate } from "react-router-dom";
 import { DocumentIcon } from "../atomos/DocumentIcon";
 import { SignatureIcon } from "../atomos/SignatureIcon";
 import { UserContext } from "../../../../stores/UserContext";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 
 export const QuickAccessButtons = ({ height = "100%", width = "100%" }) => {
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
+  const [firmaEnabled, setFirmaEnabled] = useState(false);
+
+  useEffect(() => {
+    // Leer creditInfo desde localStorage
+    const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
+    if (creditInfo?.PasoActual === 6) {
+      setFirmaEnabled(true);
+    } else {
+      setFirmaEnabled(false);
+    }
+  }, []);
 
   const goToDocumentos = () => {
     navigate("/documentos");
+  };
+
+  const goToFormulario = () => {
+    if (firmaEnabled) {
+      navigate("/formulario");
+    }
   };
 
   return (
@@ -29,7 +46,7 @@ export const QuickAccessButtons = ({ height = "100%", width = "100%" }) => {
       {/* ==== BOTÓN DOCUMENTOS ==== */}
       <div
         style={{ textAlign: "center", cursor: "pointer", color: "white" }}
-        onClick={goToDocumentos} // <-- función para ir a /documentos
+        onClick={goToDocumentos}
       >
         <span
           style={{
@@ -60,9 +77,16 @@ export const QuickAccessButtons = ({ height = "100%", width = "100%" }) => {
       </div>
 
       {/* ==== BOTÓN FIRMA DIGITAL ==== */}
-      {
-          user?.role != 'asesor' && (
-                  <div style={{ textAlign: "center", cursor: "pointer", color: "white" }}>
+      {user?.role !== "asesor" && (
+        <div
+          style={{
+            textAlign: "center",
+            cursor: firmaEnabled ? "pointer" : "not-allowed",
+            color: "white",
+            opacity: firmaEnabled ? 1 : 0.5,
+          }}
+          onClick={goToFormulario}
+        >
           <span
             style={{
               display: "block",
@@ -90,8 +114,7 @@ export const QuickAccessButtons = ({ height = "100%", width = "100%" }) => {
             <SignatureIcon />
           </div>
         </div>
-          )
-      }
+      )}
     </div>
   );
 };

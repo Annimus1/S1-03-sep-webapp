@@ -60,6 +60,8 @@ export const UserProvider = ({ children }) => {
       localStorage.removeItem("data");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("welcomeMessageShown");
+      //localStorage.removeItem("creditInfo");
     }
   };
 

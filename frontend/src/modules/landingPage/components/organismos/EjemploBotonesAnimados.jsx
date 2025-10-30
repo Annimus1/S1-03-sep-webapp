@@ -29,7 +29,7 @@ export const EjemplosBotonesAnimados = () => {
           }}>
             <div>
               <p style={{ marginBottom: 10, fontSize: 14, color: '#666' }}>Normal</p>
-              <BotonAnimado variante="naranja" onClick={() => alert('¡Clic!')}>
+              <BotonAnimado variante="naranja">
                 Continuar
               </BotonAnimado>
             </div>

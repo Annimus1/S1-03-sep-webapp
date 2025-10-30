@@ -100,12 +100,10 @@ export const Cinco = ({ setPasoActual }) => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      alert("Por favor completa todos los campos obligatorios");
       return;
     }
 
     if (!creditId) {
-      alert("No se encontró el ID del crédito en localStorage");
       return;
     }
 
@@ -182,11 +180,9 @@ export const Cinco = ({ setPasoActual }) => {
         })
       );
 
-      alert("Información crediticia subida correctamente ✅");
       setPasoActual(6);
     } catch (error) {
       console.error("❌ Error al subir información crediticia:", error);
-      alert("Error al subir la información. Verifica tu conexión o los archivos.");
     } finally {
       setIsSaving(false);
     }

@@ -3,6 +3,7 @@ import { MarcadorPosicionIcono } from '../atomos/MarcadorPosicionIcono';
 import { ItemPaso } from '../moleculas/ItemPaso';
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 import { useNavigate } from "react-router";
+import MacBook from '../../../../../public/MacBook.png';
 
 
 /**
@@ -49,8 +50,8 @@ export const SeccionPasos = () => {
         
         {/* Columna derecha: Imagen ilustrativa */}
         <div className="col-12 col-lg-5">
-          <div style={{ backgroundColor: 'white', borderRadius: 20, padding: 30 }}>
-            <MarcadorPosicionIcono size={150} />
+          <div style={{ background: '#f5dcffff', padding: '30px', borderRadius: 20  }}>
+            <img src={MacBook} alt="Ilustración de proceso de solicitud de crédito" style={{ width: '100%', borderRadius: 15 }} loading="lazy" />
           </div>
         </div>
       </div>

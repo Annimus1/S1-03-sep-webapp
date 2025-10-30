@@ -77,7 +77,6 @@ const LoginPage = () => {
   };
 
   const handleForgotPassword = () => {
-    alert('Funcionalidad de recuperación de contraseña');
   };
 
   useEffect( () => {
