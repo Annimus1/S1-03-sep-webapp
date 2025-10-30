@@ -1,0 +1,24 @@
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.formSectionTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1a3a3a;
+  margin: 0;
+}
+
+.formSectionContent {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .formSectionContent {
+    grid-template-columns: 1fr;
+  }
+}

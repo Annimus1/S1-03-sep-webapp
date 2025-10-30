@@ -2,11 +2,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { MarcadorPosicionIcono } from '../atomos/MarcadorPosicionIcono';
 import { ItemPaso } from '../moleculas/ItemPaso';
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
+import { useNavigate } from "react-router";
+
 
 /**
  * Sección que explica los 3 pasos simples para obtener el crédito
  */
-export const SeccionPasos = () => (
+export const SeccionPasos = () => {
+  const navigate = useNavigate();
+  
+  return(
   <section>
     <div className="container">
       <div className="row align-items-center">
@@ -38,17 +43,18 @@ export const SeccionPasos = () => (
           
           {/* Botón para comenzar */}
           <div className="mt-4">
-            <BotonAnimado variante="naranja">Comienza tu solicitud</BotonAnimado>
+            <BotonAnimado variante="naranja" onClick={()=>{navigate('/registro')}}>Comienza tu solicitud</BotonAnimado>
           </div>
         </div>
         
         {/* Columna derecha: Imagen ilustrativa */}
         <div className="col-12 col-lg-5">
           <div style={{ backgroundColor: 'white', borderRadius: 20, padding: 30 }}>
-            <MarcadorPosicionIcono size={150} />
+            <MarcadorPosicionIcono />
           </div>
         </div>
       </div>
     </div>
   </section>
-);
+)
+};

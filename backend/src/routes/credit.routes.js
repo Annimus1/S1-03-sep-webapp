@@ -1,11 +1,188 @@
 import express, { Router } from 'express';
-import { createCredit, desicionCredit, getCreditById, getCredits, uploadCreditFiles } from '../controllers/credit.controller.js';
+import { createCredit, desicionCredit, getCreditById, getCredits, uploadCreditFiles, statusCheck } from '../controllers/credit.controller.js';
 import { authenticateToken } from '../middlewares/auth.middleware.js';
 import { DatosVerificados } from '../middlewares/credit.validation.middleware.js';
 import { authenticateCreditandRole, authenticateRoleAsesor } from '../middlewares/role.middleware.js';
 import { filesCreditMiddleware } from '../middlewares/upload.middleware.js';
 
 const router = Router();
+
+/**
+ * @swagger
+ * /credit/status-check:
+ *   get:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Obtiene el Credito en curso.
+ *     description: Permite al usuario obtener un crédito en curso.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Credito encontrado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 credit:
+ *                   type: object
+ *                   description: Objeto crédito.
+ *       404:
+ *         description: Credito no encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 credit:
+ *                   type: object
+ *                   description: Objeto crédito.
+ *                   example: null
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
+*/
+router.get('/status-check', express.json(), authenticateToken, statusCheck);
+
+/**
+ * @swagger
+ * /credit/upload:
+ *   post:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Sube documentos al credito.
+ *     description: Permite al usuario subir todos los archivos relacionados con su crédito.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *           description: El Identificador del credito al que se le cargan archivos.
+ *           example: "68f66016068"
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             $ref: '#/components/schemas/Credit'
+ *     responses:
+ *       201:
+ *         description: Documentos guardados exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "success"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Credito creado correctamente."
+ *                     credit:
+ *                       type: object
+ *                       description: Objeto crédito actualizado.
+ *       400:
+ *         description: Tipo de archivo no valido | Archivo excede el peso limite.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Tipo de archivo no valido."
+ * 
+ *       401:
+ *         description: No autorizado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "No autorizado."
+ *       422:
+ *         description: Error en subir un documento.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               description: HLAAA
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   status:
+ *                     type: string
+ *                     description: Estado de la respuesta.
+ *                     example: "error"
+ *                   message:
+ *                     type: string
+ *                     description: Mensaje de la respuesta.
+ *                     example: "Error mientras procesaba estatutoSocial."
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
+ */
+router.post('/create',express.json(),authenticateToken, createCredit )
 
 /**
  * @swagger
@@ -415,7 +592,7 @@ router.post('/upload/:id', authenticateToken, filesCreditMiddleware, uploadCredi
  *                       example: "Error interno del servidor."
  * 
 */
-router.get('/:id',authenticateToken,authenticateCreditandRole, getCreditById);
+router.get('/:id', authenticateToken, authenticateCreditandRole, getCreditById);
 
 /**
  * @swagger
@@ -507,7 +684,7 @@ router.get('/:id',authenticateToken,authenticateCreditandRole, getCreditById);
  *                       description: Mensaje de la respuesta.
  *                       example: "Error interno del servidor."
  */
-router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
+router.get('/', authenticateToken, authenticateRoleAsesor, getCredits);
 
 /**
  * @swagger
@@ -631,6 +808,6 @@ router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
  *                       example: "Error interno del servidor."
  * 
 */
-router.post('/decision/:id',express.json(),authenticateToken,authenticateRoleAsesor,DatosVerificados, desicionCredit); 
+router.post('/decision/:id', express.json(), authenticateToken, authenticateRoleAsesor, DatosVerificados, desicionCredit); 
 
 export default router;

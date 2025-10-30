@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { BandejaTemplate } from '../plantilla/BandejaTemplate';
 import { FilterButton } from '../moleculas/FilterButton';
 import { FilterPanel } from '../moleculas/FilterPanel';
 import { SolicitudesTable } from '../organismos/SolicitudesTable';
+import { UserContext } from '../../../../stores/UserContext';
+import { useNavigate } from "react-router";
+import axios from 'axios';
 
-export const BandejaSolicitudesPage = () => {
-  const [selectedId, setSelectedId] = useState(1);
+export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
+  const [selectedId, setSelectedId] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [filters, setFilters] = useState({
     solicitante: '',
@@ -13,83 +16,11 @@ export const BandejaSolicitudesPage = () => {
     montoMin: '',
     montoMax: ''
   });
-  
-  const allSolicitudes = [
-    {
-      id: 1,
-      solicitante: 'Soledad V.',
-      monto: '$25,000',
-      montoNumerico: 25000,
-      estado: 'Pendiente',
-      fecha: '10/10/2025'
-    },
-    {
-      id: 2,
-      solicitante: 'Miguel C.',
-      monto: '$2,500',
-      montoNumerico: 2500,
-      estado: 'Aprobado',
-      fecha: '05/10/2025'
-    },
-    {
-      id: 3,
-      solicitante: 'Jose Tomás D.',
-      monto: '$12,500',
-      montoNumerico: 12500,
-      estado: 'Rechazado',
-      fecha: '28/09/2025'
-    },
-    {
-      id: 4,
-      solicitante: 'Luis Cordero',
-      monto: '$40,000',
-      montoNumerico: 40000,
-      estado: 'En revisión',
-      fecha: '21/09/2025'
-    },
-    {
-      id: 5,
-      solicitante: 'Pablo Cortéz',
-      monto: '$5,000',
-      montoNumerico: 5000,
-      estado: 'En pausa',
-      fecha: '17/09/2025'
-    },
-    {
-      id: 6,
-      solicitante: 'Luis Cordero',
-      monto: '$40,000',
-      montoNumerico: 40000,
-      estado: 'En revisión',
-      fecha: '21/09/2025'
-    },
-    {
-      id: 7,
-      solicitante: 'Pablo Cortéz',
-      monto: '$5,000',
-      montoNumerico: 5000,
-      estado: 'En pausa',
-      fecha: '17/09/2025'
-    },
-    {
-      id: 8,
-      solicitante: 'Luis Cordero',
-      monto: '$40,000',
-      montoNumerico: 40000,
-      estado: 'En revisión',
-      fecha: '21/09/2025'
-    },
-    {
-      id: 9,
-      solicitante: 'Pablo Cortéz',
-      monto: '$5,000',
-      montoNumerico: 5000,
-      estado: 'En pausa',
-      fecha: '17/09/2025'
-    }
-  ];
-
-  const [solicitudes, setSolicitudes] = useState(allSolicitudes);
+  const { user, isLoading } = useContext(UserContext);
+  const API_URL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+  const { logout } = useContext(UserContext);
+  const [solicitudes, setSolicitudes] = useState([]);
 
   const handleFilterClick = () => {
     setIsFilterOpen(!isFilterOpen);
@@ -104,7 +35,7 @@ export const BandejaSolicitudesPage = () => {
 
     // Filtrar por solicitante
     if (filters.solicitante) {
-      filtered = filtered.filter(s => 
+      filtered = filtered.filter(s =>
         s.solicitante.toLowerCase().includes(filters.solicitante.toLowerCase())
       );
     }
@@ -139,8 +70,97 @@ export const BandejaSolicitudesPage = () => {
   };
 
   const handleSelectSolicitud = (id) => {
+    // cambiar id selecionado
     setSelectedId(id);
-  };
+    // obtener info
+    const solicitud = solicitudes.filter(s => s.id === id);
+    setAsesorData(prev => ({
+      ...prev,
+      detallesSolicitud: {
+        nombre: solicitud[0].solicitante,
+        id: solicitud[0].id,
+        cantidad: solicitud[0].monto,
+        estado: solicitud[0].estado
+      }
+    })); 
+  }
+
+  const fetchData = async () => {
+    const responseData = []
+    let firstElement = true;
+    const response = await axios.get(`${API_URL}/credit`,
+      { headers: { 'Authorization': `Bearer ${user.token}` } })
+
+    if (response.status == 200) {
+      const stats = {total:0, recaudacion:0, aprobado:0, rechazado:0, revision:0}
+      response.data.data.credits.forEach(credit => {
+        responseData.push({
+          id: credit._id,
+          solicitante: credit.userId.nombres,
+          monto: `ARG ${credit.monto_credito}`,
+          montoNumerico: credit.monto_credito ,
+          estado: credit.estatus.split('_')[0],
+          fecha: credit.updatedAt.split('T')[0]
+        })
+        if(firstElement) {
+          setSelectedId(credit._id);
+
+          setAsesorData(prev => ({
+            ...prev,
+            detallesSolicitud: {
+              nombre: credit.userId.nombres,
+              id: credit._id,
+              cantidad: `ARG ${credit.monto_credito}`,
+              estado: credit.estatus.split('_')[0]
+            }
+          }))
+          firstElement = false;
+        }
+        // add stats
+        stats.total = stats.total + 1;
+        switch (credit.estatus.split('_')[0]){
+          case 'recaudacion':
+            stats.recaudacion = stats.recaudacion + 1;
+            break
+          case 'aprobado':
+            stats.aprobado = stats.aprobado + 1;
+            break
+          case 'rechazado':
+            stats.rechazado = stats.rechazado + 1;
+            break
+          case 'revision':
+            stats.revision = stats.revision + 1;
+            break
+        }
+      });
+      setSolicitudes(responseData);
+      setAsesorData(prev => ({
+        ...prev,
+        stats: {
+          pendientes: stats.recaudacion,
+          evaluacion: stats.revision,
+          aprobados: stats.aprobado,
+          rechazados: stats.rechazado,
+          total: stats.total
+        }
+      }));
+    }
+
+    if (response.status == 401) {
+      logout();
+      navigate('/login');
+    }
+  }
+
+  useEffect(() => {
+    if (!isLoading) {
+      fetchData();
+    }
+  }, [isLoading, user, API_URL]);
+
+  if (isLoading) {
+    return <div>Cargando datos de usuario...</div>;
+  }
 
   return (
     <BandejaTemplate
@@ -154,7 +174,7 @@ export const BandejaSolicitudesPage = () => {
             top: '-50px',
             left: 0,
             width: '100%',
-            zIndex: 9999 
+            zIndex: 9999
           }}
         >
           <FilterPanel

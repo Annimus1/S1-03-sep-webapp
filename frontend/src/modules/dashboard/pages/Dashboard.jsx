@@ -1,7 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { UserContext } from '../../../stores/UserContext';
-import { UserProfileCard } from '../components/moleculas/UserProfileCard';
 import { WelcomeLoadingScreen } from '../../../globals/components/moleculas/WelcomeLoadingScreen';
 import { DashboardPYMENEW } from '../components/plantillas/DashboardPYMENEW';
 import { DashboardASESOR } from '../components/plantillas/DashboardASESOR';
@@ -26,11 +25,19 @@ const Dashboard = () => {
         height: '100%',
       }}
     >
-      {isLoading ? (
-        <WelcomeLoadingScreen userName={user?.user?.nombre || 'Usuario'} />
-      ) : (
-        <DashboardASESOR/>
-      )}
+      {
+      isLoading &&
+        <WelcomeLoadingScreen userName={user?.nombres || 'Usuario'} />
+      }
+
+      {
+        !isLoading && user?.role != 'asesor' &&  <DashboardPYMENEW/>
+      }
+
+      {
+        !isLoading && user?.role == 'asesor' &&  <DashboardASESOR/>
+      }
+      
     </main>
   );
 };

@@ -1,0 +1,57 @@
+.textInputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.textInputLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a3a3a;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.requiredAsterisk {
+  color: #f59e0b;
+  font-size: 16px;
+}
+
+.textInputField {
+  width: 100%;
+  height: 50px;
+  border: 1px solid #d1d5db;
+  border-radius: 80px;
+  padding: 0 16px;
+  background-color: white;
+  font-size: 14px;
+  color: #1a3a3a;
+  transition: all 0.2s;
+  margin-top: 6px;
+}
+
+.textInputField::placeholder {
+  color: #6b7280;
+}
+
+.textInputField:hover {
+  border-color: #9ca3af;
+}
+
+.textInputField:focus {
+  outline: none;
+  border-color: #1a3a3a;
+  box-shadow: 0 0 0 2px rgba(26, 58, 58, 0.1);
+}
+
+.textInputField.error {
+  border-color: #ef4444;
+}
+
+.textInputError {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: -4px;
+}

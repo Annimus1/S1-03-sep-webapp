@@ -1,5 +1,6 @@
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 import { MarcadorPosicionIcono } from "../atomos/MarcadorPosicionIcono";
+import { useNavigate } from "react-router";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 export const TarjetaCaracteristica = ({
@@ -9,7 +10,13 @@ export const TarjetaCaracteristica = ({
   botonFlotante = true,
   espacioInferior = false,
   altura = "250px",
-}) => (
+  src = '#',
+  alt = '',
+  paddinY = 0
+}) => {
+  const navigate = useNavigate();
+  
+  return (
   <div
     style={{
       backgroundColor: colorFondo,
@@ -19,14 +26,21 @@ export const TarjetaCaracteristica = ({
       display: "flex",
       flexDirection: "column",
       justifyContent: "space-between",
+      alignContent: "center",
       position: "relative",
       overflow: "visible",
       marginBottom: espacioInferior ? "20px" : "0",
     }}
   >
+
     {/* Ícono */}
     <div className="mb-3">
-      <MarcadorPosicionIcono size={50} />
+      <img style={{
+        width:'100%', 
+        borderRadius:15,
+        paddingTop: paddinY,
+        paddingBottom: paddinY, 
+        height: 'auto'}} src={src} alt={alt}/>
     </div>
 
     {/* Contenido (texto, HTML, etc.) */}
@@ -50,8 +64,9 @@ export const TarjetaCaracteristica = ({
           bottom: botonFlotante ? "-15px" : "0",
         }}
       >
-        <BotonAnimado variante="naranja">{textoBoton}</BotonAnimado>
+        <BotonAnimado variante="naranja" onClick={()=>{navigate('/registro')}}>{textoBoton}</BotonAnimado>
       </div>
     )}
   </div>
-);
+)
+};
