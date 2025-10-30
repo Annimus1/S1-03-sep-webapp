@@ -168,6 +168,8 @@ const requiredFieldsStep4Parte3 = [
   "constanciaPoliticasInternas",
 ];
 
+const requiredFieldsStep4Parte4 = ["firmaDigital"];
+
 // Nombres amigables para mostrar al usuario
 const friendlyNamesStep4 = {
   constanciaCBU: "Constancia de CBU",
@@ -191,6 +193,7 @@ const friendlyNamesStep4 = {
   ddjjBeneficiarioFinal: "Declaración Jurada de Beneficiario Final",
   consentimientoAnalisis: "Consentimiento para Análisis Crediticio",
   constanciaPoliticasInternas: "Constancia de Políticas Internas",
+  firmaDigital: "Firma Digital",
 };
 
 const VerDocumento = () => {
@@ -467,6 +470,21 @@ const VerDocumento = () => {
               titulo: "Documentación Regulatoria",
               columnas: 2,
               documentos: requiredFieldsStep4Parte3.map((field) => ({
+                nombre: friendlyNamesStep4[field] || field,
+                estado: credit[field] ? "completado" : "pendiente",
+                pdfUrl: credit[field] || null,
+                pdfDescargarUrl: credit[field] || null,
+                disponible: !!credit[field],
+              })),
+            },
+          ],
+        },
+        {
+          secciones: [
+            {
+              titulo: "Firma Digital",
+              columnas: 2,
+              documentos: requiredFieldsStep4Parte4.map((field) => ({
                 nombre: friendlyNamesStep4[field] || field,
                 estado: credit[field] ? "completado" : "pendiente",
                 pdfUrl: credit[field] || null,

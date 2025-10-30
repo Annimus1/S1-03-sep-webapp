@@ -17,7 +17,7 @@ export const ModuloAmortizacionDashboard = ({ monto, meses, fechaInicioPrestamo 
  * @returns {Array<object>} Una tabla de pagos fila por fila.
  */
   const generarTablaAmortizacion = (principal, meses, tna, fechaInicioPrestamo) => {
-
+    console.log("entre");
     // Función auxiliar para redondear a 2 decimales
     const redondear = (num) => Math.round(num * 100) / 100;
 
@@ -34,6 +34,7 @@ export const ModuloAmortizacionDashboard = ({ monto, meses, fechaInicioPrestamo 
 
       // 🔑 Lógica para calcular la FECHA DE PAGO 🔑
       const fechaPago = new Date(fechaInicioPrestamo);
+      console.log("fecha", fechaPago);
       // Sumamos 'meses' al mes de inicio. JavaScript lo maneja automáticamente.
       fechaPago.setMonth(fechaPago.getMonth() + mes);
 

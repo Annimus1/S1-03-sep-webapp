@@ -50,7 +50,8 @@ export const createCredit = async (req, res) => {
 };
 
 export const statusCheck = async (req, res) => {
-  const credits = await CreditRepository.findAll({ userId: req.user.id })
+  const user = await UserRepository.findById(req.user.id);
+  const credits = await CreditRepository.findAll({ userId: user })
   if (!credits) {
     res.status(404).json({ credit: null });
   }

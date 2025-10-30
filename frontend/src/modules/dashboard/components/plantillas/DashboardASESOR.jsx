@@ -8,8 +8,11 @@ import { DetalleSolicitud } from "../organismos/DetalleSolicitud";
 import { BandejaSolicitudesPage } from "./BandejaSolicitudesPage";
 import { SolicitudesTemplate } from "../plantilla/SolicitudesTemplate";
 import { useState } from "react";
+import { SolicitudDetallesModalASESOR } from "../moleculas/SolicitudDetallesModalASESOR.jsx";
+
 
 export const DashboardASESOR = () => {
+  const [showDetallesModal, setShowDetallesModal] = useState(false);
   // estado globar para compartir entre componentes hijo
   const [ asesorData, setAsesorData ] = useState({
     detallesSolicitud: {nombre:'', id:'', cantidad:0, estado:''},
@@ -25,6 +28,20 @@ export const DashboardASESOR = () => {
   const innerColumns = isTablet ? '1fr 1fr' : '1fr';  // Tablet+: 2 cols, Mobile: 1 col
   const detailColumns = isTablet ? '57.5% 40%' : '1fr';  // Tablet+: 2 cols, Mobile: 1 col
 
+  const handleVerSolicitud = () => {
+    setShowDetallesModal(true);
+  };
+
+  
+
+    const solicitudData = {
+    nombreEmpresa: "Mobile Tech",
+    cuit: "9873 2345",
+    proposito: "Capital de Trabajo",
+    contacto: "pabloc.admin@mobilet.com",
+    fecha: "23/10/2025",
+    notificacion: "El asesor necesita un nuevo documento",
+  };
 
   // Calculando porcentajes basados en 32 solicitudes totales
   const statusData = [
@@ -81,7 +98,7 @@ export const DashboardASESOR = () => {
           
           {/* Avance de la solicitud */}
           <GridContainer columns='77% 20%' gap="20px" >
-            <DetalleSolicitud columns={innerColumns} asesorData={asesorData}/>
+            <DetalleSolicitud columns={innerColumns} asesorData={asesorData} onButtonClick={handleVerSolicitud}/>
             <QuickAccessButtons/>
           </GridContainer>
           
@@ -111,6 +128,15 @@ export const DashboardASESOR = () => {
         </div>
         
       </GridContainer>
+      {/* 🪟 Modal de detalles */}
+      {showDetallesModal && (
+        <SolicitudDetallesModalASESOR
+          solicitud={asesorData.detallesSolicitud}
+          onClose={() => setShowDetallesModal(false)}
+          onSubirDocumentos={() => {alert('APROBADO')}}
+          onVerContrato={() => {alert('RECHAZADO')}}
+        />
+      )}
     </main>
   );
 };
