@@ -1,11 +1,65 @@
 import express, { Router } from 'express';
-import { createCredit, desicionCredit, getCreditById, getCredits, uploadCreditFiles } from '../controllers/credit.controller.js';
+import { createCredit, desicionCredit, getCreditById, getCredits, uploadCreditFiles, statusCheck } from '../controllers/credit.controller.js';
 import { authenticateToken } from '../middlewares/auth.middleware.js';
 import { DatosVerificados } from '../middlewares/credit.validation.middleware.js';
 import { authenticateCreditandRole, authenticateRoleAsesor } from '../middlewares/role.middleware.js';
 import { filesCreditMiddleware } from '../middlewares/upload.middleware.js';
 
 const router = Router();
+
+/**
+ * @swagger
+ * /credit/status-check:
+ *   get:
+ *     tags:
+ *      - "Crédito"
+ *     summary: Obtiene el Credito en curso.
+ *     description: Permite al usuario obtener un crédito en curso.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Credito encontrado exitosamente.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 credit:
+ *                   type: object
+ *                   description: Objeto crédito.
+ *       404:
+ *         description: Credito no encontrado.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 credit:
+ *                   type: object
+ *                   description: Objeto crédito.
+ *                   example: null
+ *       500:
+ *         description: Error interno del servidor.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     status:
+ *                       type: string
+ *                       description: Estado de la respuesta.
+ *                       example: "error"
+ *                     message:
+ *                       type: string
+ *                       description: Mensaje de la respuesta.
+ *                       example: "Error interno del servidor."
+ * 
+*/
+router.get('/status-check', express.json(), authenticateToken, statusCheck);
 
 /**
  * @swagger
@@ -324,7 +378,7 @@ router.post('/upload/:id', authenticateToken, filesCreditMiddleware, uploadCredi
  *                       example: "Error interno del servidor."
  * 
 */
-router.get('/:id',authenticateToken,authenticateCreditandRole, getCreditById);
+router.get('/:id', authenticateToken, authenticateCreditandRole, getCreditById);
 
 /**
  * @swagger
@@ -416,7 +470,7 @@ router.get('/:id',authenticateToken,authenticateCreditandRole, getCreditById);
  *                       description: Mensaje de la respuesta.
  *                       example: "Error interno del servidor."
  */
-router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
+router.get('/', authenticateToken, authenticateRoleAsesor, getCredits);
 
 /**
  * @swagger
@@ -540,6 +594,6 @@ router.get('/',authenticateToken,authenticateRoleAsesor, getCredits);
  *                       example: "Error interno del servidor."
  * 
 */
-router.post('/decision/:id',express.json(),authenticateToken,authenticateRoleAsesor,DatosVerificados, desicionCredit); 
+router.post('/decision/:id', express.json(), authenticateToken, authenticateRoleAsesor, DatosVerificados, desicionCredit); 
 
 export default router;
