@@ -83,7 +83,7 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
         cantidad: solicitud.monto,
         estado: solicitud.estado
       }
-    });
+    }));
 
     // 🔹 Guardar en localStorage para persistencia
     localStorage.setItem("creditoSeleccionado", JSON.stringify({
