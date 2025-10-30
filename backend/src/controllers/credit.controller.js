@@ -1,6 +1,7 @@
-import sgMail from '@sendgrid/mail';
 import CreditRepository from '../repositories/credit.repository.js';
 import StorageRepository from '../repositories/storage.repository.js';
+import UserRepository from '../repositories/user.repository.js';
+import NotificationService from '../services/notification.service.js';
 
 export const createCredit = async (req, res) => {
   try {
@@ -245,6 +246,7 @@ export const desicionCredit = async (req, res) => {
     const creditId = req.params.id;
     const { estatus } = req.body;
     const credit = await CreditRepository.findById(creditId);
+    const user = await UserRepository.findById(credit.userId);
     if (!credit) {
       return res.status(404).json({
         data: {
@@ -262,44 +264,9 @@ export const desicionCredit = async (req, res) => {
         creditId: updatedCredit._id,
         user: updatedCredit.userId
       });
-      //Enviar email de bienvenida
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-      const msg = {
-          to: credit.userId.email,
-          from: 'krediawebapp@gmail.com', 
-          subject: '¡Felicidades! Tu crédito ha sido aprobado',
-          text: 'Tu crédito ha sido aprobado exitosamente.',
-          html: `<div style="font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
-          <div style="background-color: #0D6546; color: white; padding: 20px; text-align: center; text-size: 24px; font-weight: bold;">
-            <h2> ¡Felicidades, ${credit.userId.nombres || 'Usuario'}!</h2>
-          </div>
-          <div style="padding: 20px; text-align: left;">
-            <p style="font-size: 16px;">
-            Tenemos buenas noticias! Tu solicitud de crédito fue <strong>aprobada con éxito</strong>.</p>
-            <p style="font-size: 16px;">
-            <br>
-            Ya podés revisar los detalles en tu perfil.<br>
-            Pronto el asesor realizará el desembolso de tu crédito. Recibirás una notificación cuando el monto esté en tu cuenta.</p>
-            <a href="http://ec2-3-145-192-140.us-east-2.compute.amazonaws.com/" 
-              style="display: inline-block; background-color: #F39C12; color: black; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px; text-align: center;">
-              Ir a mi cuenta
-            </a>
-          </div>
-          <div style="background-color: #f8f8f8; padding: 10px; text-align: center; font-size: 13px; color: #777;">
-            <p>Gracias por confiar en <strong>Kredia</strong>.Estamos aquí para apoyar el crecimiento de tu PyME.</p>
-            <p>Este es un mensaje automático, no respondas a este correo.</p>
-          </div>
-        </div>
-        `,
-      }
-      sgMail
-          .send(msg)
-          .then(() => {
-            console.log('Email sent')
-          })
-          .catch((error) => {
-            console.error('Error al enviar el email',error)
-          })
+      //Enviar email de aprobacion
+      NotificationService.sendCreditApprovedEmail(user);
+      
     }
 
     if (estatus === 'rechazado') {
@@ -311,46 +278,8 @@ export const desicionCredit = async (req, res) => {
         creditId: updatedCredit._id,
         user: updatedCredit.userId
       });
-      //Enviar email de bienvenida
-      sgMail.setApiKey(process.env.SENDGRID_API_KEY)
-      const msg = {
-          to: credit.userId.email,
-          from: 'krediawebapp@gmail.com', 
-          subject: 'Lo sentimos! Tu crédito ha sido rechazado',
-          text: 'Tu crédito ha sido rechazado.',
-          html:  `
-            <div style="font-family: 'Trebuchet MS', 'Segoe UI', sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
-              <div style="background-color: #952014; color: white; padding: 20px; text-align: center; text-size: 24px; font-weight: bold;">
-                <h2>Rechazo del Crédito</h2>
-              </div>
-              <div style="padding: 20px; text-align: left;">
-                <p style="font-size: 16px;">
-                Gracias por completar tu solicitud, ${credit.userId.nombres || 'Usuario'}.</p>
-                <p style="font-size: 16px;">
-                En esta ocasión, no pudimos aprobar tu crédito, pero no te desanimes.
-                Sabemos que cada negocio es distinto y queremos ayudarte a estar más cerca de una próxima aprobación. 
-                Muy pronto podrás acceder a nuevas oportunidades adaptadas a tu perfil.</p>
-                <p style="font-size: 16px;">¿Tienes dudas o necesitas asesoría? Estamos para ayudarte</p>
-                <a href="http://ec2-3-145-192-140.us-east-2.compute.amazonaws.com/"
-                  style="display: inline-block; background-color: #F39C12; color: black; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: bold; margin-top: 15px;text-align: center;">
-                  Chatea con nosotros
-                </a>
-              </div>
-              <div style="background-color: #f8f8f8; padding: 10px; text-align: center; font-size: 13px; color: #777;">
-                <p>Gracias por confiar en <strong>Kredia</strong>.Estamos aquí para apoyar el crecimiento de tu PyME.</p>
-                <p>Este es un mensaje automático, no respondas a este correo.</p>
-              </div>
-            </div>
-            `,
-      }
-      sgMail
-          .send(msg)
-          .then(() => {
-            console.log('Email sent')
-          })
-          .catch((error) => {
-            console.error('Error al enviar el email',error)
-          })
+      //Enviar email de rechazo
+      NotificationService.sendCreditRejectedEmail(user);
     }
     return res.status(200).json({
       data: {
