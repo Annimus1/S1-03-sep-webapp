@@ -6,6 +6,7 @@ import { ModuloAmortizacion } from '../organismos/TablaAmortizacion';
 import { UserContext } from '../../../../stores/UserContext.jsx'
 import { ErrorPopup } from '../../../../globals/components/moleculas/ErrorPopUp.jsx';
 import axios from 'axios';
+import BotonTablaAmortizacion from '../organismos/BotonTablaAmortizacion.jsx';
 
 export const Cero = ({ setPasoActual }) => {
   // Estados para controlar los valores del simulador
@@ -15,7 +16,7 @@ export const Cero = ({ setPasoActual }) => {
   const [fechaActual, _] = useState(new Date());
   const [fechaInicio, setFechaInico] = useState(new Date());
   const { user, logout } = useContext(UserContext)
-  const [error, setError] = useState({ isVisible: true, status: 404, message: "Not Found." });
+  const [error, setError] = useState({ isVisible: false, status: null, message: "" });
   const navigate = useNavigate();
 
   const configuracionMoradoSuave = {
@@ -104,8 +105,7 @@ export const Cero = ({ setPasoActual }) => {
 
       // recibir respuesta
       if (response.status == 201) {
-        console.log(response);
-        window.localStorage.setItem('creditInfo', JSON.stringify({credit: response.data.data.credit, PasoActual:1}));
+        window.localStorage.setItem('creditInfo', JSON.stringify({ credit: response.data.data.credit, PasoActual: 1 }));
         setPasoActual(1);
       }
     }
@@ -127,6 +127,29 @@ export const Cero = ({ setPasoActual }) => {
   function handleCloseError() {
     setError({ isVisible: false, status: null, message: "" })
   }
+
+  async function fetchData() {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL;
+      const url = `${API_URL}/credit/status-check`;
+      const token = window.localStorage.getItem('token');
+      const response = await axios.get(url, { headers: { 'Authorization': `Bearer ${token}` } })
+
+      if (response.status == 200){
+        window.localStorage.setItem('creditInfo', JSON.stringify({ credit: response.data.credit, PasoActual: 1 }));
+        setPasoActual(1);
+      }
+    }
+    catch (error) {
+      if (error.status == 401) {
+        logout();
+        setTimeout(navigate('/login'), 1000);
+      }
+    }
+  }
+  useEffect(() => {
+    fetchData();
+  }, [])
   return (
     <section style={{ padding: '50px 0' }}>
       {error.isVisible && (
@@ -309,8 +332,8 @@ export const Cero = ({ setPasoActual }) => {
                   *El monto seleccionado es una referencia inicial y puede ajustarse según la evaluación crediticia de tu empresa y la documentación presentada. Nuestro objetivo es ofrecerte una opción segura y acorde a tu capacidad de pago.
                 </p>
 
-                <ModuloAmortizacion monto={monto} meses={meses} fechaInicioPrestamo={fechaInicio} />
-
+                {/* <ModuloAmortizacion  /> */}
+                <BotonTablaAmortizacion monto={monto} meses={meses} fechaInicioPrestamo={fechaInicio} />
               </div>
             </div>
           </div>
