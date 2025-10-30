@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { BotonAnimado } from '../../../../globals/components/atomos/BotonAnimado';
+import styles from '../../../visualizarDocumentos/styles/DocumentosAdjuntados.module.css';
 
 
-export const ModuloAmortizacion = ({ monto, meses, fechaInicioPrestamo }) => {
+export const ModuloAmortizacionDashboard = ({ monto, meses, fechaInicioPrestamo }) => {
 
   const [mostrarTabla, setMostrarTabla] = useState(false);
   const tna = 0.75; // 75%
@@ -119,9 +120,16 @@ export const ModuloAmortizacion = ({ monto, meses, fechaInicioPrestamo }) => {
   return (
     <div>
       {/* Botón que activa la tabla */}
-      <BotonAnimado variante="moradoSuave" className={'fs-5'} ancho="completo" onClick={handleMostrarTabla}>
-        Ver Detalle
-      </BotonAnimado>
+      <button
+          className={styles.botonIcono}
+          onClick={handleMostrarTabla}
+          title="Visualizar Tabla"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="2"/>
+            <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="2"/>
+          </svg>
+        </button>
 
       {/* Pop-up / Modal de la Tabla */}
       {mostrarTabla && (

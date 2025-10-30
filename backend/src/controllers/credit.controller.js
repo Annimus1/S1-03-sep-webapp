@@ -9,7 +9,7 @@ export const createCredit = async (req, res) => {
     const userCredits = await CreditRepository.findByUserId(userId);
 
     if (userCredits.length > 0) {
-      const allFinished = userCredits.every(c => 
+      const allFinished = userCredits.every(c =>
         c.estatus === 'aprobado' || c.estatus === 'rechazado'
       );
       if (!allFinished) {
@@ -48,6 +48,19 @@ export const createCredit = async (req, res) => {
   }
 };
 
+export const statusCheck = async (req, res) => {
+  const credits = await CreditRepository.findAll({ userId: req.user.id })
+  if (!credits) {
+    res.status(404).json({ credit: null });
+  }
+
+  const response = credits.filter(credit => credit.estatus === "recaudacion_documentos")
+  if (response.length < 1) {
+    res.status(404).json({ credit: null });
+  }
+
+  res.status(200).json({ credit: response[0] })
+}
 
 export const uploadCreditFiles = async (req, res) => {
   try {
@@ -62,7 +75,8 @@ export const uploadCreditFiles = async (req, res) => {
       return res.status(404).json({
         data: {
           status: 'error',
-          message: 'No se encontró ningún crédito para este usuario.' }
+          message: 'No se encontró ningún crédito para este usuario.'
+        }
       });
     }
 
@@ -71,9 +85,9 @@ export const uploadCreditFiles = async (req, res) => {
 
     if (fileKeys.length === 0) {
       return res.status(400).json({
-        data: { 
+        data: {
           status: 'error',
-          message: 'No se recibieron archivos.' 
+          message: 'No se recibieron archivos.'
         }
       });
     }
@@ -97,7 +111,7 @@ export const uploadCreditFiles = async (req, res) => {
 
     // Respuesta con errores parciales
     if (errors.length > 0) {
-      return res.status(422).json({status: 'partial_error', errors});
+      return res.status(422).json({ status: 'partial_error', errors });
     }
 
 
@@ -128,15 +142,15 @@ export const uploadCreditFiles = async (req, res) => {
     ];
     if (credit.creditType === 'capital_trabajo') {
       archivosRequeridos.push('proyeccionFlujoOperativo',
-      'gastosOperativos',)
-      await CreditRepository.updateCredit(credit._id,{creditType : creditType});
+        'gastosOperativos',)
+      await CreditRepository.updateCredit(credit._id, { creditType: creditType });
 
     };
     const archivosNuevos = req.files || {};
     const todosCargados = archivosRequeridos.every(campo => archivosNuevos[campo] || credit[campo]);
 
     if (todosCargados && credit.descripcionNegocio) {
-      await CreditRepository.updateCredit(credit._id,{datosVerificados: true});
+      await CreditRepository.updateCredit(credit._id, { datosVerificados: true });
     }
 
     const updatedCredit = await CreditRepository.findById(credit._id);
@@ -165,14 +179,15 @@ export const getCreditById = async (req, res) => {
       return res.status(404).json({
         data: {
           status: 'error',
-          message: 'No se encontró ningún crédito para este usuario.' }
+          message: 'No se encontró ningún crédito para este usuario.'
+        }
       });
     } else {
       return res.status(200).json({
         data: {
           status: 'success',
           message: 'Crédito encontrado.',
-          credit : credit
+          credit: credit
         }
       });
     }
@@ -221,7 +236,7 @@ export const getCredits = async (req, res) => {
 export const desicionCredit = async (req, res) => {
   try {
     const creditId = req.params.id;
-    const  {estatus}  = req.body;
+    const { estatus } = req.body;
     const credit = await CreditRepository.findById(creditId);
     if (!credit) {
       return res.status(404).json({
@@ -250,7 +265,7 @@ export const desicionCredit = async (req, res) => {
     });
   } catch (error) {
     console.error('Error en updateCreditStatus:', error);
-    return res.status(500).json({ 
+    return res.status(500).json({
       data: {
         status: 'error',
         message: 'Error interno del servidor.',
