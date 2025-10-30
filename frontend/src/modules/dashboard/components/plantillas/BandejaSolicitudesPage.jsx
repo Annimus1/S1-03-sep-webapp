@@ -70,20 +70,33 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
   };
 
   const handleSelectSolicitud = (id) => {
-    // cambiar id selecionado
+    // cambiar id seleccionado
     setSelectedId(id);
+
     // obtener info
-    const solicitud = solicitudes.filter(s => s.id === id);
+    const solicitud = solicitudes.find(s => s.id === id);
+    
+    if (!solicitud) return;
+
+    // Guardar en estado global
     setAsesorData({
       ...asesorData,
       detallesSolicitud: {
-        nombre: solicitud[0].solicitante,
-        id: solicitud[0].id,
-        cantidad: solicitud[0].monto,
-        estado: solicitud[0].estado
+        nombre: solicitud.solicitante,
+        id: solicitud.id,
+        cantidad: solicitud.monto,
+        estado: solicitud.estado
       }
-    })
-  }
+    });
+
+    // 🔹 Guardar en localStorage para persistencia
+    localStorage.setItem("creditoSeleccionado", JSON.stringify({
+      id: solicitud.id,
+      solicitante: solicitud.solicitante,
+      monto: solicitud.monto,
+      estado: solicitud.estado
+    }));
+  };
 
   const fetchData = async () => {
     const responseData = []

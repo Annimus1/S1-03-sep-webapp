@@ -33,11 +33,11 @@ export const InformacionCrediticiaTRES = ({ formData, setFormData, errors, setEr
         required
       >
         <FileUploadInput
-          name="declaracionOrigenFondos"
+          name="ddjjOrigenLicito"
           placeholder=""
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.declaracionOrigenFondos}
+          error={errors.ddjjOrigenLicito}
         />
       </FormFieldWithInfo>
 
@@ -59,11 +59,11 @@ export const InformacionCrediticiaTRES = ({ formData, setFormData, errors, setEr
         required
       >
         <FileUploadInput
-          name="declaracionBeneficiarios"
+          name="ddjjBeneficiarioFinal"
           placeholder=""
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.declaracionBeneficiarios}
+          error={errors.ddjjBeneficiarioFinal}
         />
       </FormFieldWithInfo>
 
@@ -72,11 +72,11 @@ export const InformacionCrediticiaTRES = ({ formData, setFormData, errors, setEr
         required
       >
         <FileUploadInput
-          name="politicasCumplimiento"
+          name="constanciaPoliticasInternas"
           placeholder="Solo para sociedades grandes"
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.politicasCumplimiento}
+          error={errors.constanciaPoliticasInternas}
         />
       </FormFieldWithInfo>
     </FormSection>

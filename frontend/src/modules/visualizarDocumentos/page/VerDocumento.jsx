@@ -106,7 +106,7 @@ const requiredFieldsStep3Inversion = [
   "presupuestoInversion",
   "cotizacionProveedores",
   "planImplementacion",
-  "estudionFactibilidad",
+  "estudioFactibilidad",
   "permisosObra",
   "planMantenimiento",
   "facturaProforma",
@@ -117,7 +117,7 @@ const requiredFieldsStep3CapitalTrabajo = [
   "detalleFondos",
   "proyeccionFlujoOperativo",
   "gastosOperativos",
-  "facturasProforma",
+  "facturaProforma",
   "evidenciaExpancion",
 ];
 
@@ -125,7 +125,7 @@ const friendlyNamesStep3 = {
   presupuestoInversion: "Presupuesto de Inversión",
   cotizacionProveedores: "Cotización de Proveedores",
   planImplementacion: "Plan de Implementación",
-  estudionFactibilidad: "Estudio de Factibilidad",
+  estudioFactibilidad: "Estudio de Factibilidad",
   permisosObra: "Permisos de Obra",
   planMantenimiento: "Plan de Mantenimiento",
   facturaProforma: "Factura Proforma",
@@ -133,63 +133,64 @@ const friendlyNamesStep3 = {
   detalleFondos: "Detalle de Fondos",
   proyeccionFlujoOperativo: "Proyección de Flujo Operativo",
   gastosOperativos: "Gastos Operativos",
-  facturasProforma: "Facturas Proforma",
   evidenciaExpancion: "Evidencia de Expansión",
 };
 
 // Documentos del paso 4 (Validación Crediticia) - Credit
+
 const requiredFieldsStep4Parte1 = [
   "constanciaCBU",
-  "informeCrediticio",
   "certificadoLibreDeuda",
-  "detalleCreditos",
   "historialPrestamos",
-  "referenciasBancarias",
   "referenciasComerciales",
-  "declaracionConcurso",
+  "informeCrediticio",
+  "detalleCreditos",
+  "referenciasBancarias",
+  "ddjjQuiebra",
 ];
 
 const requiredFieldsStep4Parte2 = [
   "tituloPropiedad",
-  "informeRegistral",
-  "tasacionBien",
-  "seguroBien",
+  "tasaOficial",
   "avalSolidario",
-  "declaracionPatrimonial",
-  "comprobantesGarante",
-  "pagareDeuda",
-  "cesionDerechos",
+  "comprobanteGarantes",
+  "cesionSGR",
+  "informeRegistral",
+  "seguro",
+  "declaracionPatrimonialGarante",
+  "documentoDeuda",
 ];
 
 const requiredFieldsStep4Parte3 = [
-  "declaracionOrigenFondos",
+  "ddjjOrigenLicito",
+  "ddjjBeneficiarioFinal",
   "consentimientoAnalisis",
-  "declaracionBeneficiarios",
-  "politicasCumplimiento",
+  "constanciaPoliticasInternas",
 ];
 
+// Nombres amigables para mostrar al usuario
 const friendlyNamesStep4 = {
   constanciaCBU: "Constancia de CBU",
-  informeCrediticio: "Informe Crediticio",
   certificadoLibreDeuda: "Certificado de Libre Deuda",
-  detalleCreditos: "Detalle de Créditos",
   historialPrestamos: "Historial de Préstamos",
-  referenciasBancarias: "Referencias Bancarias",
   referenciasComerciales: "Referencias Comerciales",
-  declaracionConcurso: "Declaración de Concurso",
+  informeCrediticio: "Informe Crediticio",
+  detalleCreditos: "Detalle de Créditos",
+  referenciasBancarias: "Referencias Bancarias",
+  ddjjQuiebra: "Declaración Jurada de Quiebra",
   tituloPropiedad: "Título de Propiedad",
-  informeRegistral: "Informe Registral",
-  tasacionBien: "Tasación del Bien",
-  seguroBien: "Seguro del Bien",
+  tasaOficial: "Tasa Oficial",
   avalSolidario: "Aval Solidario",
-  declaracionPatrimonial: "Declaración Patrimonial",
-  comprobantesGarante: "Comprobantes del Garante",
-  pagareDeuda: "Pagaré de Deuda",
-  cesionDerechos: "Cesión de Derechos",
-  declaracionOrigenFondos: "Declaración de Origen de Fondos",
-  consentimientoAnalisis: "Consentimiento de Análisis",
-  declaracionBeneficiarios: "Declaración de Beneficiarios",
-  politicasCumplimiento: "Políticas de Cumplimiento",
+  comprobanteGarantes: "Comprobante de Garantes",
+  cesionSGR: "Cesión SGR",
+  informeRegistral: "Informe Registral",
+  seguro: "Seguro",
+  declaracionPatrimonialGarante: "Declaración Patrimonial del Garante",
+  documentoDeuda: "Documento de Deuda",
+  ddjjOrigenLicito: "Declaración Jurada de Origen Lícito de Fondos",
+  ddjjBeneficiarioFinal: "Declaración Jurada de Beneficiario Final",
+  consentimientoAnalisis: "Consentimiento para Análisis Crediticio",
+  constanciaPoliticasInternas: "Constancia de Políticas Internas",
 };
 
 const VerDocumento = () => {
@@ -202,21 +203,35 @@ const VerDocumento = () => {
   const [key, setKey] = useState(0); // 👈 Key para forzar re-render del componente DocumentosAdjuntados
   const API_URL = import.meta.env.VITE_API_URL;
   const storedCredit = JSON.parse(localStorage.getItem("creditInfo"));
+  const creditoSeleccionado = JSON.parse(localStorage.getItem("creditoSeleccionado")).id;
 
   useEffect(() => {
-    if (!user?.token || !storedCredit?.credit?._id) return;
+
+    let creditoID = null;
+
+    if ( user.role === 'asesor') {
+      creditoID = creditoSeleccionado;
+    } else {
+      creditoID = storedCredit.credit._id;
+    }
+
+    
 
     const fetchData = async () => {
       try {
         const userId = user.id || user._id;
-        const [profileResp, creditResp] = await Promise.all([
-          axios.get(`${API_URL}/profile/${userId}`, {
+
+        console.table({ creditoID, userId });
+
+        const creditResp = await axios.get(`${API_URL}/credit/${creditoID}`, {
             headers: { Authorization: `Bearer ${user.token}` },
-          }),
-          axios.get(`${API_URL}/credit/${storedCredit.credit._id}`, {
+        });
+
+        console.log("✅ Datos obtenidos:", creditResp.data);
+
+        const profileResp = await axios.get(`${API_URL}/profile/${creditResp.data.data.credit.userId._id}`, {
             headers: { Authorization: `Bearer ${user.token}` },
-          }),
-        ]);
+        });
 
         setProfile(profileResp.data);
         setCredit(creditResp.data.data.credit);
@@ -371,9 +386,11 @@ const VerDocumento = () => {
         },
       ];
     } else if (pasoActual === 3 && credit) {
-      const tieneDocumentosInversion = requiredFieldsStep3Inversion.some(
-        field => credit[field] !== null && credit[field] !== undefined
-      );
+      const tieneDocumentosInversion = 
+        requiredFieldsStep3Inversion.filter(
+          field => credit[field] !== null && credit[field] !== undefined
+        ).length > 1;
+
 
       if (tieneDocumentosInversion) {
         return [
