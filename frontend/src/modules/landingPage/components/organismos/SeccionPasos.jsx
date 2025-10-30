@@ -50,7 +50,7 @@ export const SeccionPasos = () => {
         {/* Columna derecha: Imagen ilustrativa */}
         <div className="col-12 col-lg-5">
           <div style={{ backgroundColor: 'white', borderRadius: 20, padding: 30 }}>
-            <MarcadorPosicionIcono size={150} />
+            <MarcadorPosicionIcono />
           </div>
         </div>
       </div>
