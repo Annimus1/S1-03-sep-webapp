@@ -78,7 +78,7 @@ export default function Formulario() {
     >
       {/* HEADER */}
       <Header
-        ruta="/dashboard"
+        ruta="/login"
         textoWindows="Guardar y Continuar después"
         textoMovil="Guardar y Continuar"
       />

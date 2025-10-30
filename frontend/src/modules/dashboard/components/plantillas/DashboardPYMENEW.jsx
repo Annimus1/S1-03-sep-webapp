@@ -13,6 +13,7 @@ import { SolicitudDetallesModal } from "../moleculas/SolicitudDetallesModal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../../../../stores/UserContext.jsx";
+import { ProximosPagosCard } from "../organismos/ProximosPagosCard.jsx";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -212,7 +213,9 @@ export const DashboardPYMENEW = () => {
           <CreditStatusCard height="170px" />
 
           <GridContainer columns={innerColumns} gap="20px">
-            <NewFeatureCard />
+            <div style={{ border: '0px black solid' }}>
+              <ProximosPagosCard />
+            </div>
             <SupportCard heightBotom={heightBotom} />
           </GridContainer>
         </div>

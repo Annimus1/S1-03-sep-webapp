@@ -1,11 +1,8 @@
-import { Placeholder } from "../../../../globals/components/atomos/Placeholder";
 import { useMediaQuery } from "../../../../globals/hooks/useMediaQuery";
 import { GridContainer } from "../../../../globals/components/atomos/GridContainer";
 import { NotificationCard } from "../moleculas/NotificationCard";
 import { QuickAccessButtons } from "../moleculas/QuickAccessButtons";
-import { ProcessCard } from "../organismos/ProcessCard";
 import { SupportCard } from "../organismos/SupportCard";
-import { StartApplicationCardActivo } from "../organismos/StartApplicationCardActivo";
 import { NewFeatureCard } from "../organismos/NewFeatureCard";
 import { DetalleSolicitud } from "../organismos/DetalleSolicitud";
 import { BandejaSolicitudesPage } from "./BandejaSolicitudesPage";

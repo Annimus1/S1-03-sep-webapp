@@ -1,10 +1,13 @@
 import 'dotenv/config'; // 1. Cargar variables de entorno desde .env
-import app from './server.js';
-import DatabaseSingleton from './database/DatabaseSingleton.js';
+import http from 'http';
+import { Server as SocketServer } from 'socket.io';
 import CacheSingleton from './database/CacheSingleton.js';
+import DatabaseSingleton from './database/DatabaseSingleton.js';
+import app from './server.js';
+
 
 // Define el puerto, usando la variable de entorno o el 3001 por defecto
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 3001;
 
 /**
  * Función principal para iniciar la aplicación.
@@ -17,8 +20,33 @@ async function startServer() {
         await DatabaseSingleton.connect();
         await CacheSingleton.connect(); 
 
+        // Crear el servidor HTTP a partir de Express
+        const server = http.createServer(app);
+
+        // Crear instancia de Socket.io y configurar CORS
+        const io = new SocketServer(server, {
+            cors: {
+                origin: process.env.FRONTEND_URL || "http://localhost:5173",
+                methods: ["GET", "POST"],
+                credentials: true
+            }
+        });
+
+        // Escuchar eventos de conexión
+        io.on('connection', (socket) => {
+            console.log(`🔌 Cliente conectado: ${socket.id}`);
+
+            socket.on('disconnect', () => {
+                console.log(`❌ Cliente desconectado: ${socket.id}`);
+            });
+        });
+
+        // Guardar la instancia en app para usarla en rutas
+        app.set('io', io);
+
+
         // 3. INICIAR EL SERVIDOR EXPRESS
-        app.listen(PORT, () => {
+        server.listen(PORT, () => {
             console.log('----------------------------------------------------');
             console.log(`✨ Servidor Express escuchando en el puerto ${PORT}`);
             console.log(`🌐 Accede a la API en: http://localhost:${PORT}/`);

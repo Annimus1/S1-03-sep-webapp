@@ -2,7 +2,6 @@ import { GridContainer } from "../../../../globals/components/atomos/GridContain
 import { LabelDetalle } from "../atomos/LabelDetalle";
 import { StatusIcon } from "../atomos/StatusIcon";
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
-import { useEffect } from "react";
 
 export function DetalleSolicitud ( { height = '100%', columns = '1fr 1fr', buttonText, onButtonClick, asesorData} )
 {

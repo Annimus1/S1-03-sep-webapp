@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { BotonAnimado } from '../../../../globals/components/atomos/BotonAnimado';
-// import { jsPDF } from 'jspdf';
-// import 'jspdf-autotable';
+
 
 export const ModuloAmortizacion = ({ monto, meses, fechaInicioPrestamo }) => {
 
@@ -81,91 +80,6 @@ export const ModuloAmortizacion = ({ monto, meses, fechaInicioPrestamo }) => {
   };
 
   // ... Funciones para descargar CSV/PDF 
-  /**
- * Convierte el array de la tabla de amortización en un archivo PDF.
- * @param {Array<object>} tabla - El array de pagos generado por generarTablaAmortizacion.
- * @param {string} principal - Monto inicial del crédito (para el título).
- * @param {string} meses - Plazo del crédito (para el título).
- */
-  const exportarTablaPDF = async (tabla, principal, meses) => {
-
-    // Inicializar jsPDF
-    const doc = new jsPDF();
-
-    // Asegúrate de que 'doc' tiene el método autoTable ANTES de usarlo
-    if (typeof doc.autoTable !== 'function') {
-      console.error("ERROR: jspdf-autotable no se ha cargado correctamente.");
-      // Opcional: Podrías recargar el plugin aquí si fuera necesario
-      return;
-    }
-
-    // Función de formateo de moneda (la misma que usas en el renderizado)
-    const formatoMoneda = (valor) => {
-      return new Intl.NumberFormat('es-AR', {
-        style: 'currency',
-        currency: 'ARS',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }).format(valor);
-    };
-
-    // 1. Encabezados de la Tabla (Headers)
-    const headers = [
-      "Fecha de Pago",
-      "Saldo Inicial",
-      "Interés",
-      "Amortización",
-      "Cuota",
-      "Saldo Final"
-    ];
-
-    // 2. Datos de las Filas (Formato de strings)
-    const data = tabla.map(fila => [
-      // Convertir la fecha a formato legible
-      fila.fechaPago,
-      // Formatear todos los valores monetarios
-      formatoMoneda(fila.saldoInicial),
-      formatoMoneda(fila.interes),
-      formatoMoneda(fila.amortizacion),
-      formatoMoneda(fila.cuota),
-      formatoMoneda(fila.saldoFinal),
-    ]);
-
-    // 3. Título del Documento
-    doc.setFontSize(14);
-    doc.text("Plan de Amortización (Sistema Francés)", 14, 20);
-
-    doc.setFontSize(10);
-    doc.text(`Monto: ${formatoMoneda(principal)} | Plazo: ${meses} Meses | TNA: 75%`, 14, 27);
-
-    // 4. Generar la Tabla con jspdf-autotable
-    doc.autoTable({
-      startY: 35, // Inicia la tabla debajo del título
-      head: [headers],
-      body: data,
-      styles: {
-        fontSize: 8,
-        cellPadding: 2,
-        halign: 'right' // Alinea los números a la derecha
-      },
-      headStyles: {
-        fillColor: [86, 44, 164], // Usando un color similar a tu variante 'morado'
-        textColor: 255,
-        fontStyle: 'bold',
-        halign: 'center'
-      },
-      alternateRowStyles: {
-        fillColor: [240, 240, 240] // Fondo gris claro para filas alternas
-      },
-      columnStyles: {
-        0: { halign: 'center' } // Centrar la columna de fechas/mes
-      }
-    });
-
-    // 5. Descargar el archivo
-    doc.save(`plan-pagos-${meses}-meses.pdf`);
-  };
-
   const exportarTablaCSV = (tabla) => {
 
     // Nombres de las columnas (según tu requisito de UI/UX)
