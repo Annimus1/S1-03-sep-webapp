@@ -8,32 +8,32 @@ import styles from "./FormSections.module.css";
 
 export const Cinco = ({ setPasoActual }) => {
   const [formData, setFormData] = useState({
-    // Parte 1: Información Crediticia y Bancaria
+    // Parte 1
     constanciaCBU: null,
-    informeCrediticio: null,
     certificadoLibreDeuda: null,
-    detalleCreditos: null,
     historialPrestamos: null,
-    referenciasBancarias: null,
     referenciasComerciales: null,
-    declaracionConcurso: null,
+    informeCrediticio: null,
+    detalleCreditos: null,
+    referenciasBancarias: null,
+    ddjjQuiebra: null,
 
-    // Parte 2: Garantías
+    // Parte 2
     tituloPropiedad: null,
-    informeRegistral: null,
-    tasacionBien: null,
-    seguroBien: null,
+    tasaOficial: null,
     avalSolidario: null,
-    declaracionPatrimonial: null,
-    comprobantesGarante: null,
-    pagareDeuda: null,
-    cesionDerechos: null,
+    comprobanteGarantes: null,
+    cesionSGR: null,
+    informeRegistral: null,
+    seguro: null,
+    declaracionPatrimonialGarante: null,
+    documentoDeuda: null,
 
-    // Parte 3: Documentación Regulatoria
-    declaracionOrigenFondos: null,
+    // Parte 3
+    ddjjOrigenLicito: null,
+    ddjjBeneficiarioFinal: null,
     consentimientoAnalisis: null,
-    declaracionBeneficiarios: null,
-    politicasCumplimiento: null,
+    constanciaPoliticasInternas: null,
   });
 
   const [errors, setErrors] = useState({});
@@ -49,7 +49,7 @@ export const Cinco = ({ setPasoActual }) => {
   // ⬅️ Botón Atrás
   const handleBack = () => {
     if (parteActual === 1) {
-      setPasoActual(4);
+      setPasoActual(5);
     } else {
       setParteActual(parteActual - 1);
     }
@@ -67,29 +67,33 @@ export const Cinco = ({ setPasoActual }) => {
     const requiredFields = [
       // Parte 1
       "constanciaCBU",
-      "informeCrediticio",
       "certificadoLibreDeuda",
-      "detalleCreditos",
       "historialPrestamos",
-      "referenciasBancarias",
       "referenciasComerciales",
-      "declaracionConcurso",
+      "informeCrediticio",
+      "detalleCreditos",
+      "referenciasBancarias",
+      "ddjjQuiebra",
+
       // Parte 2
       "tituloPropiedad",
-      "informeRegistral",
-      "tasacionBien",
-      "seguroBien",
+      "tasaOficial",
       "avalSolidario",
-      "declaracionPatrimonial",
-      "comprobantesGarante",
-      "pagareDeuda",
-      "cesionDerechos",
+      "comprobanteGarantes",
+      "cesionSGR",
+      "informeRegistral",
+      "seguro",
+      "declaracionPatrimonialGarante",
+      "documentoDeuda",
+
       // Parte 3
-      "declaracionOrigenFondos",
+      "ddjjOrigenLicito",
+      "ddjjBeneficiarioFinal",
       "consentimientoAnalisis",
-      "declaracionBeneficiarios",
-      "politicasCumplimiento",
+      "constanciaPoliticasInternas",
     ];
+
+    console.log("1");
 
     const newErrors = {};
     requiredFields.forEach((field) => {
@@ -98,16 +102,23 @@ export const Cinco = ({ setPasoActual }) => {
       }
     });
 
+
+    console.log("2");
+
+    console.log("Campos vacíos:", Object.keys(newErrors));
+    console.log("formData:", formData);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      alert("Por favor completa todos los campos obligatorios");
       return;
     }
 
+    console.log("3");
+
     if (!creditId) {
-      alert("No se encontró el ID del crédito en localStorage");
       return;
     }
+
+    console.log("4");
 
     // 🧱 Construir el FormData
     const data = new FormData();
@@ -116,34 +127,36 @@ export const Cinco = ({ setPasoActual }) => {
     data.append("estatus", "evaluacion_crediticia");
     data.append("datosVerificados", false);
 
+    console.log("5");
+
     // 🔹 Mapear campos de frontend → backend
     const fileMap = {
       // Parte 1
       constanciaCBU: "constanciaCBU",
-      informeCrediticio: "informeCrediticio",
       certificadoLibreDeuda: "certificadoLibreDeuda",
-      detalleCreditos: "detalleCreditos",
       historialPrestamos: "historialPrestamos",
-      referenciasBancarias: "referenciasBancarias",
       referenciasComerciales: "referenciasComerciales",
-      declaracionConcurso: "ddjjQuiebra",
+      informeCrediticio: "informeCrediticio",
+      detalleCreditos: "detalleCreditos",
+      referenciasBancarias: "referenciasBancarias",
+      ddjjQuiebra: "ddjjQuiebra",
 
       // Parte 2
       tituloPropiedad: "tituloPropiedad",
-      informeRegistral: "informeRegistral",
-      tasacionBien: "tasaOficial",
-      seguroBien: "seguro",
+      tasaOficial: "tasaOficial",
       avalSolidario: "avalSolidario",
-      declaracionPatrimonial: "declaracionPatrimonialGarante",
-      comprobantesGarante: "comprobanteGarantes",
-      pagareDeuda: "documentoDeuda",
-      cesionDerechos: "cesionSGR",
+      comprobanteGarantes: "comprobanteGarantes",
+      cesionSGR: "cesionSGR",
+      informeRegistral: "informeRegistral",
+      seguro: "seguro",
+      declaracionPatrimonialGarante: "declaracionPatrimonialGarante",
+      documentoDeuda: "documentoDeuda",
 
       // Parte 3
-      declaracionOrigenFondos: "ddjjOrigenLicito",
+      ddjjOrigenLicito: "ddjjOrigenLicito",
+      ddjjBeneficiarioFinal: "ddjjBeneficiarioFinal",
       consentimientoAnalisis: "consentimientoAnalisis",
-      declaracionBeneficiarios: "ddjjBeneficiarioFinal",
-      politicasCumplimiento: "constanciaPoliticasInternas",
+      constanciaPoliticasInternas: "constanciaPoliticasInternas",
     };
 
     // Agregar archivos al FormData
@@ -182,11 +195,9 @@ export const Cinco = ({ setPasoActual }) => {
         })
       );
 
-      alert("Información crediticia subida correctamente ✅");
       setPasoActual(6);
     } catch (error) {
       console.error("❌ Error al subir información crediticia:", error);
-      alert("Error al subir la información. Verifica tu conexión o los archivos.");
     } finally {
       setIsSaving(false);
     }

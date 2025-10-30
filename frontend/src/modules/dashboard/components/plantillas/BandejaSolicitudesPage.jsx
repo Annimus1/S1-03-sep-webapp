@@ -10,6 +10,7 @@ import axios from 'axios';
 export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [allSolicitudes, setAllSolicitudes] = useState([]);
   const [filters, setFilters] = useState({
     solicitante: '',
     estado: '',
@@ -70,20 +71,30 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
   };
 
   const handleSelectSolicitud = (id) => {
-    // cambiar id selecionado
+    // cambiar id seleccionado
     setSelectedId(id);
+
     // obtener info
-    const solicitud = solicitudes.filter(s => s.id === id);
-    setAsesorData(prev => ({
-      ...prev,
-      detallesSolicitud: {
-        nombre: solicitud[0].solicitante,
-        id: solicitud[0].id,
-        cantidad: solicitud[0].monto,
-        estado: solicitud[0].estado
-      }
-    })); 
-  }
+    const solicitud = solicitudes.filter(s => s.id === id)[0];
+
+      setAsesorData(prev => ({
+        ...prev,
+        detallesSolicitud: {
+          nombre: solicitud.solicitante,
+          id: solicitud.id,
+          cantidad: solicitud.monto,
+          estado: solicitud.estado
+        }
+      }));
+
+    // 🔹 Guardar en localStorage para persistencia
+    localStorage.setItem("creditoSeleccionado", JSON.stringify({
+      id: solicitud.id,
+      solicitante: solicitud.solicitante,
+      monto: solicitud.monto,
+      estado: solicitud.estado
+    }));
+  };
 
   const fetchData = async () => {
     const responseData = []

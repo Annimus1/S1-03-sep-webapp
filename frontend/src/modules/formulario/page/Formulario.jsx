@@ -107,7 +107,7 @@ export default function Formulario() {
           <Dos setPasoActual={setPasoActual} />
         ) : pasoActual === 3 ? (
           <Tres setPasoActual={setPasoActual} />
-        ) : pasoActual === 4 ? (
+        ) : pasoActual === 4   ? (
           <Cuatro setPasoActual={setPasoActual} />
         ) : pasoActual === 5 ? (
           <Cinco setPasoActual={setPasoActual} />

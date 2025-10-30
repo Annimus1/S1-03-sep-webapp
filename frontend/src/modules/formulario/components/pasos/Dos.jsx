@@ -76,12 +76,10 @@ export const Dos = ({ setPasoActual }) => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      alert("Por favor completa todos los campos obligatorios");
       return;
     }
 
     if (!creditId) {
-      alert("No se encontró el ID del crédito en localStorage");
       return;
     }
 
@@ -138,11 +136,9 @@ export const Dos = ({ setPasoActual }) => {
       const updatedCredit = response.data?.data?.credit;
       localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: updatedCredit, PasoActual: 3 }));
 
-      alert("Archivos financieros subidos correctamente.");
       setPasoActual(3); // avanzar al paso siguiente
     } catch (error) {
       console.error("❌ Error al subir archivos:", error);
-      alert("Error al subir documentos. Verifica tu conexión o formato de archivos.");
     } finally {
       setIsSaving(false);
     }

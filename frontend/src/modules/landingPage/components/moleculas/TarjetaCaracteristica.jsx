@@ -1,5 +1,4 @@
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
-import { MarcadorPosicionIcono } from "../atomos/MarcadorPosicionIcono";
 import { useNavigate } from "react-router";
 import "bootstrap/dist/css/bootstrap.min.css";
 
@@ -10,63 +9,77 @@ export const TarjetaCaracteristica = ({
   botonFlotante = true,
   espacioInferior = false,
   altura = "250px",
-  src = '#',
-  alt = '',
-  paddinY = 0
+  imagenSrc,
+  imagenAlt = "Imagen de la característica",
 }) => {
   const navigate = useNavigate();
   
   return (
-  <div
-    style={{
-      backgroundColor: colorFondo,
-      borderRadius: 20,
-      padding: "30px 20px",
-      minHeight: altura, 
-      display: "flex",
-      flexDirection: "column",
-      justifyContent: "space-between",
-      alignContent: "center",
-      position: "relative",
-      overflow: "visible",
-      marginBottom: espacioInferior ? "20px" : "0",
-    }}
-  >
-
-    {/* Ícono */}
-    <div className="mb-3">
-      <img style={{
-        width:'100%', 
-        borderRadius:15,
-        paddingTop: paddinY,
-        paddingBottom: paddinY, 
-        height: 'auto'}} src={src} alt={alt}/>
-    </div>
-
-    {/* Contenido (texto, HTML, etc.) */}
     <div
       style={{
-        fontSize: "16px",
-        fontWeight: 600,
-        color: "#1a3a3a",
-        marginBottom: "15px",
+        backgroundColor: colorFondo,
+        borderRadius: 20,
+        padding: "30px 20px",
+        minHeight: altura, 
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center", // evita que la imagen se vaya arriba y el texto abajo
+        alignItems: "center",         // centra horizontalmente todo
+        position: "relative",
+        overflow: "visible",
+        marginBottom: espacioInferior ? "20px" : "0",
+        textAlign: "center",          // opcional: centra el texto
       }}
     >
-      {children}
-    </div>
+      {/* Imagen centrada */}
+      {imagenSrc && (
+        <div 
+          style={{ 
+            width: "100%", 
+            display: "flex", 
+            justifyContent: "center",
+            alignItems: "center",
+            marginBottom: "15px",
+          }}
+        >
+          <img 
+            src={imagenSrc} 
+            alt={imagenAlt}
+            loading="lazy" 
+            style={{ 
+              maxWidth: "100%", 
+              height: "auto", 
+              borderRadius: "15px", 
+              objectFit: "cover",
+            }} 
+          />
+        </div>
+      )}
 
-    {/* Botón flotante o normal */}
-    {textoBoton && (
+      {/* Contenido (texto, HTML, etc.) */}
       <div
         style={{
-          position: botonFlotante ? "absolute" : "static",
-          right: botonFlotante ? "20px" : "0",
-          bottom: botonFlotante ? "-15px" : "0",
+          fontSize: "16px",
+          fontWeight: 600,
+          color: "#1a3a3a",
+          marginBottom: "15px",
         }}
       >
-        <BotonAnimado variante="naranja" onClick={()=>{navigate('/registro')}}>{textoBoton}</BotonAnimado>
+        {children}
       </div>
-    )}
-  </div>
-)
+
+      {/* Botón flotante o normal */}
+      {textoBoton && (
+        <div
+          style={{
+            position: botonFlotante ? "absolute" : "static",
+            right: botonFlotante ? "20px" : "0",
+            bottom: botonFlotante ? "-15px" : "0",
+          }}
+        >
+          <BotonAnimado variante="naranja" onClick={()=>{navigate('/registro')}}>{textoBoton}</BotonAnimado>
+        </div>
+      )}
+    </div>
+  )
 };

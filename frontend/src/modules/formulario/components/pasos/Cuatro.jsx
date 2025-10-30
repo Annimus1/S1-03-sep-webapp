@@ -1,31 +1,30 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { MiniFormsTemplate } from "../plantilla/MiniFormsTemplate";
-import { TipoCredito } from "../organismos/TipoCredito";
 import styles from "./FormSections.module.css";
+import { CreditoInversion } from "../organismos/CreditoInversion";
+import { CreditoCapitalTrabajo } from "../organismos/CreditoCapitalTrabajo";
+import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 
 export const Cuatro = ({ setPasoActual }) => {
-  const [tipoCredito, setTipoCredito] = useState("inversion");
   const [formData, setFormData] = useState({
-    // Crédito de Inversión
     presupuestoInversion: null,
     cotizacionProveedores: null,
-    planImplementacion: null,
-    estudionFactibilidad: null,
-    permisosObra: null,
+    estudioFactibilidad: null,
     planMantenimiento: null,
-    facturaProforma: null,
     informeTecnico: null,
-
-    // Capital de Trabajo
+    planImplementacion: null,
+    permisosObra: null,
+    facturaProforma: null,
     detalleFondos: null,
     proyeccionFlujoOperativo: null,
     gastosOperativos: null,
-    facturasProforma: null,
     evidenciaExpancion: null,
   });
 
+  const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
+  const [isPrimeraParte, setIsPrimeraParte] = useState(true);
 
   const API_URL = import.meta.env.VITE_API_URL;
   const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
@@ -33,50 +32,97 @@ export const Cuatro = ({ setPasoActual }) => {
   const userId = creditInfo?.credit?.userId;
   const creditType = creditInfo?.credit?.creditType;
 
+  // 🔁 Cambiar entre Parte 1 y Parte 2
+  const handleParteToggle = () => setIsPrimeraParte(!isPrimeraParte);
+
   // ⬅️ Botón Atrás
   const handleBack = () => {
-    setPasoActual(3);
+    if (isPrimeraParte) {
+      setPasoActual(4);
+    } else {
+      handleParteToggle();
+    }
   };
 
-  // ✅ Subir archivos al backend (sin validaciones)
+  // ✅ Validar y subir archivos
   const handleContinue = async () => {
-    if (!creditId) {
-      alert("No se encontró el ID del crédito en localStorage");
+
+    // Definimos los requisitos según la parte activa
+    let fieldRequirements = {};
+
+    if (isPrimeraParte) {
+      // Campos requeridos en la primera parte
+      fieldRequirements = {
+        presupuestoInversion: true,
+        cotizacionProveedores: true,
+        estudioFactibilidad: true,
+        planMantenimiento: true,
+        informeTecnico: true,
+        planImplementacion: true,
+        permisosObra: true,
+        facturaProforma: true,
+        detalleFondos: false,
+        proyeccionFlujoOperativo: false,
+        gastosOperativos: false,
+        evidenciaExpancion: false,
+      };
+    } else {
+      // Campos requeridos en la segunda parte
+      fieldRequirements = {
+        presupuestoInversion: false,
+        cotizacionProveedores: false,
+        estudioFactibilidad: false,
+        planMantenimiento: false,
+        informeTecnico: false,
+        planImplementacion: false,
+        permisosObra: false,
+        facturaProforma: true,
+        detalleFondos: true,
+        proyeccionFlujoOperativo: true,
+        gastosOperativos: true,
+        evidenciaExpancion: true,
+      };
+    }
+
+    const newErrors = {};
+    Object.entries(fieldRequirements).forEach(([field, isRequired]) => {
+      if (isRequired && !formData[field]) {
+        newErrors[field] = "Este campo es obligatorio";
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    // 🧱 Construir el FormData
+    if (!creditId) return;
+
     const data = new FormData();
     data.append("userId", userId);
     data.append("creditType", creditType);
-    data.append("estatus", "documentacion_credito");
+    data.append("estatus", "documentacion_financiera");
     data.append("datosVerificados", false);
 
-    // 🔹 Mapear campos de frontend → backend
+    // Mapeo frontend → backend
     const fileMap = {
-      // Crédito de Inversión
       presupuestoInversion: "presupuestoInversion",
       cotizacionProveedores: "cotizacionProveedores",
-      planImplementacion: "planImplementacion",
-      estudionFactibilidad: "estudionFactibilidad",
-      permisosObra: "permisosObra",
+      estudioFactibilidad: "estudioFactibilidad",
       planMantenimiento: "planMantenimiento",
-      facturaProforma: "facturaProforma",
       informeTecnico: "informeTecnico",
-
-      // Capital de Trabajo
+      planImplementacion: "planImplementacion",
+      permisosObra: "permisosObra",
+      facturaProforma: "facturaProforma",
       detalleFondos: "detalleFondos",
       proyeccionFlujoOperativo: "proyeccionFlujoOperativo",
       gastosOperativos: "gastosOperativos",
-      facturasProforma: "facturasProforma",
       evidenciaExpancion: "evidenciaExpancion",
     };
 
-    // Agregar solo los archivos que tengan valor
-    Object.keys(fileMap).forEach((field) => {
-      const backendKey = fileMap[field];
-      if (formData[field]) {
-        data.append(backendKey, formData[field]);
+    Object.entries(fileMap).forEach(([frontendKey, backendKey]) => {
+      if (formData[frontendKey]) {
+        data.append(backendKey, formData[frontendKey]);
       }
     });
 
@@ -97,46 +143,54 @@ export const Cuatro = ({ setPasoActual }) => {
 
       console.log("✅ Respuesta subida:", response.data);
 
-      // Actualizar creditInfo en localStorage
       const updatedCredit = response.data?.data?.credit;
       localStorage.setItem(
         "creditInfo",
-        JSON.stringify({
-          ...creditInfo,
-          credit: updatedCredit,
-          PasoActual: 5,
-        })
+        JSON.stringify({ ...creditInfo, credit: updatedCredit, PasoActual: 5 })
       );
 
-      alert("Documentación del crédito subida correctamente.");
-      setPasoActual(5); // avanzar al paso siguiente
+      setPasoActual(5);
     } catch (error) {
-      console.error("❌ Error al subir documentos:", error);
-      alert(
-        "Error al subir la documentación. Verifica tu conexión o formato de archivos."
-      );
+      console.error("❌ Error al subir archivos:", error);
     } finally {
       setIsSaving(false);
     }
   };
 
   return (
-    <MiniFormsTemplate
-      onBack={handleBack}
-      onContinue={handleContinue}
-      isSaving={isSaving}
-      text="Selecciona el tipo de crédito y adjunta la documentación que desees incluir."
-    >
-      <div className={styles.unifiedContent}>
-        <TipoCredito
-          formData={formData}
-          setFormData={setFormData}
-          errors={{}} // sin errores
-          setErrors={() => {}} // función vacía
-          tipoCredito={tipoCredito}
-          setTipoCredito={setTipoCredito}
-        />
-      </div>
-    </MiniFormsTemplate>
+    <div className={styles.contenedorPrincipal}>
+      <BotonAnimado
+        variant="moradoSuave"
+        onClick={handleParteToggle}
+        className={styles.botonPosicionado}
+      >
+        {isPrimeraParte ? "Ir a la Inversión" : "Ir a la Capital de Trabajo"}
+      </BotonAnimado>
+
+      <MiniFormsTemplate
+        onBack={handleBack}
+        onContinue={handleContinue}
+        isSaving={isSaving}
+        text="Sube la documentación técnica y financiera requerida para completar la evaluación de tu crédito"
+      >
+        <div className={styles.unifiedContent}>
+          {isPrimeraParte ? (
+            <CreditoCapitalTrabajo
+              formData={formData}
+              setFormData={setFormData}
+              errors={errors}
+              setErrors={setErrors}
+            />
+          ) : (
+            <CreditoInversion
+              formData={formData}
+              setFormData={setFormData}
+              errors={errors}
+              setErrors={setErrors}
+            />
+          )}
+        </div>
+      </MiniFormsTemplate>
+    </div>
   );
 };

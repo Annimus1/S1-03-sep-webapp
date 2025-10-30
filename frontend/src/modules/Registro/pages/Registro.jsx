@@ -97,7 +97,6 @@ export default function Registro() {
       }
     } catch (err) {
       console.error("❌ Error en Registro:", err.response?.data || err.message);
-      alert(err.response?.data?.data?.message || "Error al registrar usuario");
     } finally {
       setLoading(false);
     }

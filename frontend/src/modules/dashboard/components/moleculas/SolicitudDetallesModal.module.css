@@ -179,3 +179,101 @@
     width: 100%;
   }
 }
+
+.uploadButton:disabled,
+.uploadButton.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #9ca3af;
+  pointer-events: none;
+}
+
+.uploadButton:disabled:hover,
+.uploadButton.disabled:hover {
+  background-color: #9ca3af;
+  transform: none;
+}
+
+.uploadButton:disabled,
+.uploadButton.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #9ca3af;
+  pointer-events: none;
+}
+
+.uploadButton:disabled:hover,
+.uploadButton.disabled:hover {
+  background-color: #9ca3af;
+  transform: none;
+}
+
+.contractButton:disabled,
+.contractButton.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #9ca3af;
+  pointer-events: none;
+}
+
+.contractButton:disabled:hover,
+.contractButton.disabled:hover {
+  background-color: #9ca3af;
+  transform: none;
+}
+
+
+.aprobadoButon {
+  flex: 1;
+  background: rgba(13, 101, 70, 1);
+  color: white;
+  border: 2px solid rgba(13, 101, 70, 1);
+  padding: 14px 24px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.aprobadoButon:hover {
+  background: white;
+  color: rgba(13, 101, 70, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.rechazadoButon {
+  flex: 1;
+  background: rgba(149, 32, 20, 1);
+  color: white;
+  border: 2px solid rgba(149, 32, 20, 1);
+  padding: 14px 24px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.rechazadoButon:hover {
+  background: white;
+  color: rgba(149, 32, 20, 1);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+}
+
+.disabled {
+  flex: 1;
+  background: rgb(179, 174, 174);
+  color: rgb(0, 0, 0);
+  border: 2px solid rgb(190, 186, 185);
+  padding: 14px 24px;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  transition: all 0.2s;
+  white-space: nowrap;
+}

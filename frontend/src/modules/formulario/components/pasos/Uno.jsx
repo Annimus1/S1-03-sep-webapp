@@ -3,6 +3,7 @@ import { MiniFormsTemplate } from "../plantilla/MiniFormsTemplate";
 import { DocumentacionLegal } from "../organismos/DocumentacionLegal";
 import { DocumentosRepresentanteLegal } from "../organismos/DocumentosRepresentanteLegal";
 import styles from "./FormSections.module.css";
+import { useNavigate } from "react-router-dom";
 
 export const Uno = ({ setPasoActual }) => {
   const [formData, setFormData] = useState({
@@ -18,6 +19,8 @@ export const Uno = ({ setPasoActual }) => {
     domicilioRepresentante: null,    // comprobanteDomicilioPersonal
     declaracionBeneficiario: null,   // DeclaracionJurada
   });
+
+  const navigate = useNavigate();
 
   const [errors, setErrors] = useState({});
   const [isSaving, setIsSaving] = useState(false);
@@ -77,16 +80,13 @@ export const Uno = ({ setPasoActual }) => {
 
       if (!response.ok) {
         console.error("❌ Error al subir archivos:", data);
-        alert(data.data?.message || "Error al subir los documentos");
         return false;
       } else {
-        console.log("✅ Documentos subidos correctamente:", data);
-        alert("Documentos enviados correctamente");
+        navigate("/dashboard");
         return true;
       }
     } catch (error) {
       console.error("❌ Error en la subida:", error);
-      alert("Error de conexión con el servidor");
       return false;
     }
   };
@@ -118,7 +118,6 @@ export const Uno = ({ setPasoActual }) => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      alert("Por favor completa todos los campos obligatorios");
       return;
     }
 

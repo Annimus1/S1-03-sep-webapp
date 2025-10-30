@@ -31,9 +31,6 @@ export const Seis = ({ setPasoActual }) => {
   };
 
   const handleVerContrato = () => {
-    // Aquí puedes abrir un modal o redirigir a ver el contrato
-    alert("Abriendo vista previa del contrato...");
-    // window.open('/contrato-preview', '_blank');
   };
 
   const handleFirmar = () => {

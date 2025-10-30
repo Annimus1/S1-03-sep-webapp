@@ -22,7 +22,7 @@ export const DashboardPYMENEW = () => {
   const [creditInfo, setCreditInfo] = useState(null);
   const [datosVerificados, setDatosVerificados] = useState(null);
   const { user, isLoading } = useContext(UserContext);
-
+  const [procesoSolicitud, setProcesoSolicitud] = useState(0);
   const navigate = useNavigate();
 
   // 🖥️ Detectar tamaños de pantalla
@@ -96,6 +96,20 @@ export const DashboardPYMENEW = () => {
       }
     }
   }, [creditInfo, datosVerificados]);
+
+  useEffect(() => {
+    if (!creditInfo?.PasoActual) return;
+
+    if (creditInfo.PasoActual <= 2) {
+      setProcesoSolicitud(1);
+    } else if (creditInfo.PasoActual <= 5) {
+      setProcesoSolicitud(2);
+    } else if (creditInfo.PasoActual <= 6) {
+      setProcesoSolicitud(4);
+    } else if (creditInfo.PasoActual <= 7) {
+      setProcesoSolicitud(5);
+    }
+  }, [creditInfo]);
 
   // --------------------------
   // Datos de ejemplo de la solicitud (puedes reemplazarlos)
@@ -172,7 +186,6 @@ export const DashboardPYMENEW = () => {
               onViewButtonClick={handleVerSolicitud}
               statusMessage={`Estado: ${String(creditInfo?.credit?.estatus ?? "").replaceAll("_", " ")}`}
               statusMessageColor="#FFD88C"
-              backgroundColor="#B0E0FF"
             >
               <div style={{ marginTop: "15px" }}>
                 <p>
@@ -190,7 +203,7 @@ export const DashboardPYMENEW = () => {
           )}
 
           {/* Proceso de la solicitud */}
-          <ProcessCard />
+          <ProcessCard currentStep={procesoSolicitud} />
         </div>
 
         {/* ========== COLUMNA DERECHA ========== */}
