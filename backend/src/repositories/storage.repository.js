@@ -1,5 +1,5 @@
-//import SupabaseStorage from '../services/supabase.service.js'; // Adaptador por defecto
-import LocalStorage from '../services/localStorage.service.js'; // Adaptador por defecto
+import SupabaseStorage from '../services/supabase.service.js'; // Adaptador por defecto
+//import LocalStorage from '../services/localStorage.service.js'; // Adaptador por defecto
 class StorageRepository {
     static instance = null;
     adapter = null;
@@ -9,7 +9,7 @@ class StorageRepository {
             // Este caso NUNCA debería ejecutarse si se usa getInstance() correctamente
             throw new Error("Usa StorageRepository.getInstance() para obtener la instancia única.");
         }
-        this.adapter = LocalStorage;
+        this.adapter = SupabaseStorage;
     }
 
     static getInstance() {
