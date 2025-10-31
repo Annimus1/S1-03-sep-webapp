@@ -60,8 +60,10 @@ export const CreditStatusCard = ({ height = "100%" }) => {
     );
   }
 
-  // 🟣 Si no tiene crédito aún o no fue encontrado
-  if (!creditInfoBackend || creditInfoBackend.data?.status !== "success") {
+  {
+    console.log("creditInfoBackend:", creditInfoBackend);  
+  }
+  if (!creditInfoBackend || creditInfoBackend.data.credit.estatus !== "aprobado") {
     return (
       <div
         style={{
