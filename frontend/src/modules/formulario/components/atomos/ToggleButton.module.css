@@ -1,0 +1,22 @@
+.toggleButton {
+  padding: 8px 18px;
+  border: none;
+  border-radius: 50px;
+  background-color: #0A443C;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.toggleButton:hover {
+  background-color: #d0d0d0;
+}
+
+.toggleButton.active {
+  background-color: #5BE2C5;
+  color: #223941CC;
+  font-weight: 600;
+}

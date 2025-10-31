@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, use } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BotonAnimado } from '../../../globals/components/atomos/BotonAnimado';
 import { PantallaExito } from '../components/organismos/PantallaExito';
 import { LoginCard } from '../components/organismos/LoginCard';
 import { Logo } from '../../../globals/components/atomos/Logo';
 import style from './LoginPage.module.css';
-import { Footer } from '../components/organismos/Footer';
 import { AnimacionCarga } from '../../../globals/components/atomos/AnimacionCarga';
 import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
 import { UserContext } from "../../../stores/UserContext";
+import { Footer } from '../components/organismos/Footer';
 import { Header } from '../../landingPage/components/organismos/Header';
 
 const LoginPage = () => {
@@ -43,32 +43,40 @@ const LoginPage = () => {
     setLoading(true);
 
     try {
-      const response = await axios.post(`${API_URL}/auth/login`, {
-        email,
-        password,
-      });
+      const response = await axios.post(`${API_URL}/auth/login`, { email, password });
 
       if (response.status === 200) {
+        const userData = response.data.user;
         setSuccess(true);
-        setUser(response.data);
-        console.log('✅ Usuario autenticado:', response.data);
-        localStorage.setItem('data', JSON.stringify(response.data));
-        window.location.href = '/dashboard';
+        setUser(userData);
+        localStorage.setItem('data', JSON.stringify(userData));
+        localStorage.setItem('token', userData.token);
+
+        navigate('/dashboard');
+      } else {
+        setError('Respuesta inesperada del servidor.');
       }
+
     } catch (err) {
       console.error('❌ Error en login:', err.response?.data || err.message);
-      setError('Correo o contraseña incorrectos.');
+
+      if (err.response?.status === 401) {
+        setError('Credenciales inválidas. Verifica tu correo y contraseña.');
+      } else if (err.response?.status === 400 || err.response?.status === 422) {
+        setError('Faltan datos o son inválidos.');
+      } else {
+        setError('Ocurrió un error interno. Intenta nuevamente.');
+      }
     } finally {
       setLoading(false);
     }
   };
+
   const handleForgotPassword = () => {
-    alert('Funcionalidad de recuperación de contraseña');
   };
 
   useEffect( () => {
     const data = JSON.parse(localStorage.getItem('data'));
-    console.log(data);
     if (data) {
       navigate('/dashboard');
     }
@@ -79,17 +87,14 @@ const LoginPage = () => {
       <div
         style={{
           minHeight: '100vh',
-          backgroundImage: 'url("/src/assets/Trama.svg")',
-          backgroundSize: 'auto',
-          backgroundPosition: 'top left',
-          backgroundColor: '#F5F6F8',
+          backgroundColor: '#f5f5f5',
 
           display: 'flex',
           flexDirection: 'column',
         }}
       >
       {/* HEADER */}
-      <Header texto="¿Aún no tienes tu cuenta? Regístrate" textoMovil='Regístrate' direccionar='/registro'/>
+      <Header ruta="/registro" textoWindows="¿Aún no tienes tu cuenta? Regístrate" textoMovil="Regístrate"/>
 
       {/* CONTENIDO CENTRAL CENTRADO */}
       <div

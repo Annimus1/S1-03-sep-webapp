@@ -8,8 +8,6 @@ const PrivateRoute = ({ children }) => {
   // Si no hay usuario, redirige a login
   if (!user) {
 
-    console.log('No hay usuario');
-
     return <Navigate to="/login" replace />;
   }
 

@@ -1,0 +1,40 @@
+.gridContainer {
+  display: grid;
+  grid-auto-flow: column;      
+  grid-template-rows: repeat(5, 50px);
+  gap: 12px;
+  align-items: start;
+}
+
+.infoBox {
+  background-color: #044574;
+  border-radius: 30px;
+  padding: 18px 20px;
+  text-align: center;
+  color: white;
+  grid-row: span 2;
+  align-self: stretch;
+  overflow: hidden;
+  max-width: 300px;
+
+  display: flex;    
+  align-items: center;
+  justify-content: center; 
+}
+
+.infoBox p {
+  font-size: 16px;
+  font-weight: 500;
+  text-align: center;
+  word-wrap: break-word;   
+  overflow-wrap: break-word; 
+  margin: 0;
+}
+
+
+@media (max-width: 600px) {
+  .gridContainer {
+    grid-auto-flow: row;    
+    grid-template-rows: repeat(auto-fill, 50px);
+  }
+}

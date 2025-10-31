@@ -9,16 +9,8 @@ services:
     ports:
       - "3001:3001"
     environment:
-      - NODE_ENV=development
-      - PORT=3001
-      - MONGO_URI=mongodb://mongodb:27017/myapp
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_URI=redis://redis:6379/0
-      - MONGO_TEST_URI=mongodb://mongodb:27017/myapp_test
-      - REDIS_TEST_URI=redis://redis:6379/1
-      - FRONTEND_URL=http://localhost:5173
-
+      - .env
+      
     volumes:
       - .:/usr/src/app
       

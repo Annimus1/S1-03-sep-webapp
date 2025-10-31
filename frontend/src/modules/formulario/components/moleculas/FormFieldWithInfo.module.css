@@ -1,0 +1,32 @@
+.formFieldWithInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a3a3a;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.requiredAsterisk {
+  color: #f59e0b;
+  font-size: 16px;
+}
+
+.infoIconWrapper {
+  display: flex;
+  align-items: center;
+  color: #1e5a5a;
+  cursor: help;
+}

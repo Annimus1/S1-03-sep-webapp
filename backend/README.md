@@ -34,20 +34,25 @@ Copia el archivo de ejemplo .env.example y renómbralo a .env. Rellena las varia
 # ===============================================
 
 # Puerto en el que correrá la aplicación Express (Ej: 3001)
-PORT=3001
+PORT=3000
 # URL base de tu API (usada por Swagger y en logs)
 API_URL=http://localhost:3001/api/v1
 # URL de tu frontend (usada por el middleware CORS)
-FRONTEND_URL=http://localhost:3000
+FRONTEND_URL=http://localhost:3001
 
 # ===============================================
 # 2. BASE DE DATOS Y PERSISTENCIA
 # ===============================================
 
 # Cadena de conexión a MongoDB (Mongoose)
-MONGO_URI=mongodb://localhost:27017/nombre_db_dev
+
+MONGO_URI=mongodb://mongodb:27017/nombre_db_dev
 # Cadena de conexión a Redis (CacheSingleton)
-REDIS_URI=redis://localhost:6379
+REDIS_URI=redis://redis:6379
+
+MONGO_TEST_URI=mongodb://mongodb:27017/nombre_db_dev_test
+REDIS_TEST_URI=redis://redis:6379
+
 
 # ===============================================
 # 3. SEGURIDAD Y AUTENTICACIÓN (JWT)
@@ -59,6 +64,16 @@ JWT_SECRET=TU_CLAVE_SECRETA_DE_32_CARACTERES_O_MAS
 
 # Tiempo de vida del token de acceso (Ej: 1h, 1d, 30m)
 JWT_ACCESS_EXPIRATION_TIME=1h
+
+# ===============================================
+# 4. SERVICIOS DE TERCEROS (BUCKET)
+# ===============================================
+
+# SUPABASE
+SUPABASE_PROJECT_URL=url_del_proyecto
+SUPABASE_API_KEY=api_key
+SUPABASE_S3_ACCESS_KEY_ID=S3_key_id
+SUPABASE_S3_SECRET_KEY=Secret_Key_s3
 ```
 
 ### 4. Inicio del Entorno de Desarrollo (dev) 🚀

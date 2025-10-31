@@ -40,18 +40,21 @@ const UserSchema = new mongoose.Schema({
     actividadEconomicaPrincipal: { type: String, required: true }, // CNAE / Código de actividad.
     fechaConstitucion: { type: Date, required: true },
     numeroRegistro: { type: String, required: true, unique: true }, // IGJ / SUNARP / Registro Mercantil.
-    certificadoPyME: { type: String, required: false }, // Opcional si aplica.
+
     pep: { type: Boolean, required: true }, // Persona Expuesta Políticamente (Sí/No).
     // ----------------------------------------------------------------------
     // III. CAMPOS POST-REGISTRO (Referencias de Documentación)
     // Se almacenan las URLs o IDs de los archivos subidos al servicio de almacenamiento (S3, etc.).
     // ----------------------------------------------------------------------
-    Documentacion: [{ type: String, default: [] }], // Array de URLs/IDs de archivos generales.
     estatutoSocial: { type: String, default: null }, // URL/ID del archivo.
     actaDesignacionAutoridades: { type: String, default: null }, // URL/ID del archivo.
     poderRepresentante: { type: String, default: null }, // URL/ID del archivo.
     inscripcionFiscal: { type: String, default: null }, // URL/ID del archivo.
     comprobanteDomicilioFiscal: { type: String, default: null }, // URL/ID del archivo.
+    certificadoPyMes: {type: String, default: null},
+    DeclaracionJurada: {type: String, default: null},
+    DNI: {type: String, default: null},
+    comprobanteDomicilioPersonal: {type: String, default: null},
 
     // ----------------------------------------------------------------------
     // IV. ESTADO DE VERIFICACIÓN

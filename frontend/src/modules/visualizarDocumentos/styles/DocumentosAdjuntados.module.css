@@ -1,0 +1,205 @@
+.containerPrincipal {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  height: 650px;
+  margin: -20px auto;
+
+  display: flex;              /* 👈 nuevo */
+  flex-direction: column;     /* 👈 nuevo */
+}
+
+.tituloPrincipal {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a3a3a;
+  margin: 0 0 40px 0;
+  text-align: center;
+}
+
+/* El contenido ocupará el espacio disponible */
+.contenidoPagina {
+  flex: 1;                    /* 👈 nuevo */
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+/* ========== SECCIÓN DE DOCUMENTOS ========== */
+.seccionDocumentos {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tituloSeccion {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a3a3a;
+  margin: 0;
+}
+
+.gridDocumentos {
+  display: grid;
+  gap: 16px;
+}
+
+/* ========== ITEM DE DOCUMENTO ========== */
+.documentoItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.documentoItem:hover {
+  background: #f3f4f6;
+}
+
+.iconoEstado {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nombreDocumento {
+  flex: 1;
+  font-size: 15px;
+  color: #1a3a3a;
+  font-weight: 500;
+}
+
+.nombreDocumento.noDisponible {
+  color: #9ca3af;
+}
+
+.acciones {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.botonIcono {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  color: #1a3a3a;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.botonIcono:hover:not(:disabled) {
+  background: #e5e7eb;
+  transform: scale(1.1);
+}
+
+.botonIcono:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ========== PAGINACIÓN (pegada abajo) ========== */
+.paginacion {
+  margin-top: auto;           /* 👈 nuevo: empuja la paginación hacia abajo */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.botonPaginacion {
+  background: white;
+  border: 2px solid #1a3a3a;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #1a3a3a;
+  transition: all 0.2s;
+}
+
+.botonPaginacion:hover:not(:disabled) {
+  background: #1a3a3a;
+  color: white;
+  transform: scale(1.1);
+}
+
+.botonPaginacion:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #d1d5db;
+  color: #d1d5db;
+}
+
+.numeroPagina {
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #6b7280;
+  transition: all 0.2s;
+}
+
+.numeroPagina:hover {
+  background: #f3f4f6;
+}
+
+.numeroPagina.activo {
+  background: #1a3a3a;
+  color: white;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .containerPrincipal {
+    padding: 24px;
+  }
+
+  .tituloPrincipal {
+    font-size: 18px;
+  }
+
+  .tituloSeccion {
+    font-size: 16px;
+  }
+
+  .gridDocumentos {
+    grid-template-columns: 1fr !important;
+  }
+
+  .documentoItem {
+    flex-wrap: wrap;
+  }
+
+  .nombreDocumento {
+    font-size: 14px;
+  }
+
+  .acciones {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

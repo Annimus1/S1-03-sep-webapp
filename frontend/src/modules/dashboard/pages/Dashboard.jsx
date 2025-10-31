@@ -1,21 +1,54 @@
-import React, { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { UserContext } from '../../../stores/UserContext';
-import { UserProfileCard } from '../components/moleculas/UserProfileCard';
+import { WelcomeLoadingScreen } from '../../../globals/components/moleculas/WelcomeLoadingScreen';
+import { DashboardPYMENEW } from '../components/plantillas/DashboardPYMENEW';
+import { DashboardASESOR } from '../components/plantillas/DashboardASESOR';
 
 const Dashboard = () => {
-  const { user, logout } = useContext(UserContext);
+  const { user } = useContext(UserContext);
+  const [isLoading, setIsLoading] = useState(false);
 
-  return (  
-    <main style={{
-      flex: 1,      
-      padding: '20px', 
-      backgroundColor: '#f5f5f5',
-      height: '100%',
-    }}>
+  useEffect(() => {
+    // Verificar si ya se mostró el mensaje de bienvenida
+    const welcomeShown = localStorage.getItem('welcomeMessageShown');
+    
+    if (!welcomeShown) {
+      // Si no se ha mostrado, activar el loading
+      setIsLoading(true);
       
-      <UserProfileCard user={user?.user} />
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        // Guardar en localStorage que ya se mostró
+        localStorage.setItem('welcomeMessageShown', 'true');
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
+  return (
+    <main
+      style={{
+        flex: 1,
+        padding: '20px',
+        backgroundColor: '#f5f5f5',
+        height: '100%',
+      }}
+    >
+      {
+        isLoading &&
+        <WelcomeLoadingScreen userName={user?.nombres || 'Usuario'} />
+      }
+
+      {
+        !isLoading && user?.role !== 'asesor' && <DashboardPYMENEW/>
+      }
+
+      {
+        !isLoading && user?.role === 'asesor' && <DashboardASESOR/>
+      }
+      
     </main>
   );
 };

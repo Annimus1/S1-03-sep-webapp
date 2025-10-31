@@ -1,0 +1,21 @@
+.contenedorPrincipal {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centra horizontalmente */
+  justify-content: center; /* centra verticalmente si hay espacio */
+  gap: 32px; /* separación entre el botón y el formulario */
+  width: 100%;
+  position: relative;
+}
+
+.unifiedContent {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.botonPosicionado {
+  position: relative;
+  bottom: -20px;
+  align-self: center;
+}

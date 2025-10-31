@@ -10,7 +10,10 @@ import { UserProvider } from './stores/UserContext';
 import { Navigate } from 'react-router-dom';
 import './styles/index.css';
 import DashboardLayout  from './globals/layouts/DashboardLayout';
-
+import Formulario from './modules/formulario/page/Formulario';
+import VerDocumento from './modules/visualizarDocumentos/page/VerDocumento';
+import PrivateFormulario from './routes/PrivateFormulario';
+import VerificarCuenta from './modules/verificarCuenta/pages/VerificarCuenta';
 
 const App = () => {
   return (
@@ -29,6 +32,27 @@ const App = () => {
             </Route>
 
             <Route path="/registro" element={<KrediaRegistro />} />
+            <Route path="/registro/*" element={<Navigate to="/registro" replace />} />
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+
+            <Route path="/formulario" element={
+                  <PrivateFormulario>
+                    <Formulario />
+                  </PrivateFormulario>
+                }/>
+
+            <Route path="/verificarCuenta" element={
+                  <PrivateFormulario>
+                    <VerificarCuenta />
+                  </PrivateFormulario>
+                }/>
+
+            <Route path="/documentos" element={
+                  <PrivateFormulario>
+                    <VerDocumento />
+                  </PrivateFormulario>
+                }/>    
 
             {/* 🔒 Ruta privada con MainLayout */}
             <Route element={< DashboardLayout />}>
