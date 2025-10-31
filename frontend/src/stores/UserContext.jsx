@@ -61,6 +61,7 @@ export const UserProvider = ({ children }) => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       localStorage.removeItem("welcomeMessageShown");
+      localStorage.removeItem("creditoSeleccionado");
       //localStorage.removeItem("creditInfo");
     }
   };
