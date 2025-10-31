@@ -7,17 +7,24 @@ import { NewFeatureCard } from "../organismos/NewFeatureCard";
 import { DetalleSolicitud } from "../organismos/DetalleSolicitud";
 import { BandejaSolicitudesPage } from "./BandejaSolicitudesPage";
 import { SolicitudesTemplate } from "../plantilla/SolicitudesTemplate";
-import { useState } from "react";
+import { useState, useContext, useRef } from "react";
 import { SolicitudDetallesModalASESOR } from "../moleculas/SolicitudDetallesModalASESOR.jsx";
+import axios from "axios";
+import { UserContext } from "../../../../stores/UserContext.jsx";
 
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const DashboardASESOR = () => {
   const [showDetallesModal, setShowDetallesModal] = useState(false);
+  const { user } = useContext(UserContext);
+  const fetchAsesorDataRef = useRef(null); // 🔹 Referencia para fetchData
+  
   // estado globar para compartir entre componentes hijo
   const [ asesorData, setAsesorData ] = useState({
     detallesSolicitud: {nombre:'', id:'', cantidad:0, estado:''},
     stats: {pendientes: 0 , evaluacion: 0, total: 0, aprobados: 0, rechazados: 0}
   });
+  
   // Detectar tamaños de pantalla
   const isDesktop = useMediaQuery('(min-width: 992px)');   // >= 992px
   const isTablet = useMediaQuery('(min-width: 768px)');    // >= 768px
@@ -32,16 +39,31 @@ export const DashboardASESOR = () => {
     setShowDetallesModal(true);
   };
 
-  
+  const actualizarCredito = async (estatus) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/credit/decision/${asesorData.detallesSolicitud.id}`,
+        { estatus }, // se pasa dinámicamente "aprobado" o "rechazado"
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    const solicitudData = {
-    nombreEmpresa: "Mobile Tech",
-    cuit: "9873 2345",
-    proposito: "Capital de Trabajo",
-    contacto: "pabloc.admin@mobilet.com",
-    fecha: "23/10/2025",
-    notificacion: "El asesor necesita un nuevo documento",
+      // 🔹 Llamar a fetchData si está disponible
+      if (fetchAsesorDataRef.current) {
+        await fetchAsesorDataRef.current();
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error(`❌ Error al actualizar crédito a ${estatus}:`, error.response?.data || error.message);
+      throw error;
+    }
   };
+
 
   // Calculando porcentajes basados en 32 solicitudes totales
   const statusData = [
@@ -103,7 +125,11 @@ export const DashboardASESOR = () => {
           </GridContainer>
           
           {/* Proceso de la solicitud */}
-          <BandejaSolicitudesPage setAsesorData={setAsesorData} asesorData={asesorData}/>
+          <BandejaSolicitudesPage 
+            setAsesorData={setAsesorData} 
+            asesorData={asesorData}
+            fetchAsesorDataRef={fetchAsesorDataRef} // 🔹 Pasar la referencia
+          />
           
         </div>
         
@@ -133,8 +159,8 @@ export const DashboardASESOR = () => {
         <SolicitudDetallesModalASESOR
           solicitud={asesorData.detallesSolicitud}
           onClose={() => setShowDetallesModal(false)}
-          onSubirDocumentos={() => {alert('APROBADO')}}
-          onVerContrato={() => {alert('RECHAZADO')}}
+          onSubirDocumentos={() => { actualizarCredito("aprobado").then(() => setShowDetallesModal(false)); }}
+          onVerContrato={() => { actualizarCredito("rechazado").then(() => setShowDetallesModal(false)); }}
         />
       )}
     </main>

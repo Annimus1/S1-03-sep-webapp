@@ -49,8 +49,6 @@ export const SolicitudDetallesModal = ({
       link.download = fileName;
       link.click();
       window.URL.revokeObjectURL(url);
-
-      console.log("✅ Archivo descargado correctamente");
     } catch (error) {
       console.error("❌ Error al descargar el archivo:", error);
     }

@@ -5,7 +5,8 @@ import axios from "axios";
 export const SolicitudDetallesModalASESOR = ({ 
   solicitud, 
   onClose, 
-  onSubirDocumentos 
+  onSubirDocumentos,
+  onVerContrato
 }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const API_URL = import.meta.env.VITE_API_URL;
@@ -30,8 +31,6 @@ export const SolicitudDetallesModalASESOR = ({
       link.download = fileName;
       link.click();
       window.URL.revokeObjectURL(url);
-
-      console.log("✅ Archivo descargado correctamente");
     } catch (error) {
       console.error("❌ Error al descargar el archivo:", error);
     }
@@ -122,7 +121,7 @@ export const SolicitudDetallesModalASESOR = ({
               handleDisponible() ? styles.rechazadoButon : styles.disabled
             }
             disabled={!handleDisponible()}
-            onClick={handleDescargarContrato}
+            onClick={onVerContrato}
           >
             Rechazado
           </button>

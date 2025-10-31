@@ -203,37 +203,47 @@ const VerDocumento = () => {
   const [credit, setCredit] = useState(null);
   const [loading, setLoading] = useState(true);
   const [pdfURL, setPdfURL] = useState(null);
-  const [key, setKey] = useState(0); // 👈 Key para forzar re-render del componente DocumentosAdjuntados
+  const [key, setKey] = useState(0); 
   const API_URL = import.meta.env.VITE_API_URL;
-  const storedCredit = JSON.parse(localStorage.getItem("creditInfo"));
-  const creditoSeleccionado = JSON.parse(localStorage.getItem("creditoSeleccionado")).id;
+  const storedCreditRaw = JSON.parse(localStorage.getItem("creditInfo"));
+  const creditoSeleccionadoRaw = localStorage.getItem("creditoSeleccionado");
+  const creditoSeleccionado = creditoSeleccionadoRaw ? JSON.parse(creditoSeleccionadoRaw).id : null;
+
+
 
   useEffect(() => {
-
-    let creditoID = null;
-
-    if ( user.role === 'asesor') {
-      creditoID = creditoSeleccionado;
-    } else {
-      creditoID = storedCredit.credit._id;
-    }
-
-    
-
-    const fetchData = async () => {
+    const fetchDataPYME = async () => {
       try {
         const userId = user.id || user._id;
+        const responseProfile = await axios.get(`${API_URL}/profile/${userId}`, {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        setProfile(responseProfile.data);
 
-        console.table({ creditoID, userId });
+
+        const creditResp = await axios.get(`${API_URL}/credit/${storedCreditRaw?.credit?._id}`, { // 🔹 .data necesario
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
+        setCredit(creditResp.data.data.credit);
+
+      } catch (error) {
+        console.error("Error al obtener perfil:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchDataAsesor = async () => {
+      try {
+        const userId = user.id || user._id;
+        const creditoID = creditoSeleccionado;
 
         const creditResp = await axios.get(`${API_URL}/credit/${creditoID}`, {
-            headers: { Authorization: `Bearer ${user.token}` },
+          headers: { Authorization: `Bearer ${user.token}` },
         });
 
-        console.log("✅ Datos obtenidos:", creditResp.data);
-
         const profileResp = await axios.get(`${API_URL}/profile/${creditResp.data.data.credit.userId._id}`, {
-            headers: { Authorization: `Bearer ${user.token}` },
+          headers: { Authorization: `Bearer ${user.token}` },
         });
 
         setProfile(profileResp.data);
@@ -245,8 +255,15 @@ const VerDocumento = () => {
       }
     };
 
-    fetchData();
+
+    // 🔹 Llamada a la función correcta según el rol
+    if (user.role === 'asesor') {
+      fetchDataAsesor();
+    } else {
+      fetchDataPYME();
+    }
   }, [user]);
+
 
   const pasos = [
     "Verificación de Identidad",

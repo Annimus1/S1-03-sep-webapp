@@ -45,14 +45,16 @@ export const Cuatro = ({ setPasoActual }) => {
     }
   };
 
-  // ✅ Validar y subir archivos
+    // ✅ Validar y subir archivos
   const handleContinue = async () => {
+    console.log("🚀 Iniciando handleContinue");
+    console.log("👉 Parte actual:", isPrimeraParte ? "Capital de trabajo" : "Inversión");
 
     // Definimos los requisitos según la parte activa
     let fieldRequirements = {};
 
     if (isPrimeraParte) {
-      // Campos requeridos en la primera parte
+      console.log("📋 Configurando campos requeridos para Capital de Trabajo...");
       fieldRequirements = {
         presupuestoInversion: true,
         cotizacionProveedores: true,
@@ -68,7 +70,7 @@ export const Cuatro = ({ setPasoActual }) => {
         evidenciaExpancion: false,
       };
     } else {
-      // Campos requeridos en la segunda parte
+      console.log("📋 Configurando campos requeridos para Inversión...");
       fieldRequirements = {
         presupuestoInversion: false,
         cotizacionProveedores: false,
@@ -85,21 +87,30 @@ export const Cuatro = ({ setPasoActual }) => {
       };
     }
 
-
-
+    // Validación
+    console.log("✅ Iniciando validación de campos...");
     const newErrors = {};
     Object.entries(fieldRequirements).forEach(([field, isRequired]) => {
       if (isRequired && !formData[field]) {
         newErrors[field] = "Este campo es obligatorio";
+        console.warn(`⚠️ Falta el campo requerido: ${field}`);
       }
     });
 
     if (Object.keys(newErrors).length > 0) {
+      console.error("❌ Validación fallida. Errores detectados:", newErrors);
       setErrors(newErrors);
       return;
     }
 
-    if (!creditId) return;
+    if (!creditId) {
+      console.error("❌ No se encontró creditId. Abortando envío.");
+      return;
+    }
+
+    console.log("🧩 creditId:", creditId);
+    console.log("👤 userId:", userId);
+    console.log("💳 creditType:", creditType);
 
     const data = new FormData();
     data.append("userId", userId);
@@ -126,12 +137,15 @@ export const Cuatro = ({ setPasoActual }) => {
     Object.entries(fileMap).forEach(([frontendKey, backendKey]) => {
       if (formData[frontendKey]) {
         data.append(backendKey, formData[frontendKey]);
+        console.log(`📎 Archivo agregado: ${frontendKey} → ${backendKey}`);
       }
     });
 
     try {
       setIsSaving(true);
       const token = localStorage.getItem("token");
+      console.log("🔐 Token obtenido:", token ? "✅ OK" : "❌ No encontrado");
+      console.log("📤 Enviando archivos a:", `${API_URL}/credit/upload/${creditId}`);
 
       const response = await axios.post(
         `${API_URL}/credit/upload/${creditId}`,
@@ -144,28 +158,32 @@ export const Cuatro = ({ setPasoActual }) => {
         }
       );
 
-      console.log("✅ Respuesta subida:", response.data);
+      console.log("📬 Respuesta del servidor:", response.data);
 
       const updatedCredit = response.data?.data?.credit;
+      console.log("💾 Crédito actualizado:", updatedCredit);
+
       localStorage.setItem(
         "creditInfo",
         JSON.stringify({ ...creditInfo, credit: updatedCredit, PasoActual: 5 })
       );
+      console.log("📦 creditInfo actualizado en localStorage con PasoActual = 5");
 
       setPasoActual(5);
+      console.log("✅ Redirigiendo al paso 5...");
     } catch (error) {
-      console.error("❌ Error al subir archivos:", error);
+      console.error("❌ Error al subir archivos:", error.response?.data || error.message);
     } finally {
+      console.log("🏁 Finalizando handleContinue");
       setIsSaving(false);
     }
   };
 
+
   const isSiguientePaso = async () => {
     let siguientePaso = false;
-    console.log(token)
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/credit/status-check`, { headers: { 'Authorization': `Bearer ${token}` } })
     const credit = response.data.credit;
-    console.log(credit)
     // for (let index = 0; index < requiredFields.length; index++) {
     //   siguientePaso = credit[requiredFields[index]] !== null && credit[requiredFields[index]] !== undefined;
     //   if (!siguientePaso) break;
@@ -176,10 +194,6 @@ export const Cuatro = ({ setPasoActual }) => {
     // }
   }
 
-  useEffect(() => {
-    console.log('paso 4')
-    isSiguientePaso();
-  }, []);
 
   return (
     <div className={styles.contenedorPrincipal}>

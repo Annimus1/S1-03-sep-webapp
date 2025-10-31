@@ -7,7 +7,7 @@ import { UserContext } from '../../../../stores/UserContext';
 import { useNavigate } from "react-router";
 import axios from 'axios';
 
-export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
+export const BandejaSolicitudesPage = ({ setAsesorData, asesorData, fetchAsesorDataRef }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [allSolicitudes, setAllSolicitudes] = useState([]);
@@ -17,10 +17,9 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
     montoMin: '',
     montoMax: ''
   });
-  const { user, isLoading } = useContext(UserContext);
+  const { user, isLoading, logout } = useContext(UserContext);
   const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
-  const { logout } = useContext(UserContext);
   const [solicitudes, setSolicitudes] = useState([]);
 
   const handleFilterClick = () => {
@@ -31,8 +30,9 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
     setFilters(prev => ({ ...prev, [field]: value }));
   };
 
-  const applyFilters = () => {
-    let filtered = [...allSolicitudes];
+  // 🔹 Función para aplicar filtros sobre los datos actuales
+  const aplicarFiltrosActuales = (datos) => {
+    let filtered = [...datos];
 
     // Filtrar por solicitante
     if (filters.solicitante) {
@@ -56,6 +56,11 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
       filtered = filtered.filter(s => s.montoNumerico <= Number(filters.montoMax));
     }
 
+    return filtered;
+  };
+
+  const applyFilters = () => {
+    const filtered = aplicarFiltrosActuales(allSolicitudes);
     setSolicitudes(filtered);
     setIsFilterOpen(false);
   };
@@ -77,15 +82,15 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
     // obtener info
     const solicitud = solicitudes.filter(s => s.id === id)[0];
 
-      setAsesorData(prev => ({
-        ...prev,
-        detallesSolicitud: {
-          nombre: solicitud.solicitante,
-          id: solicitud.id,
-          cantidad: solicitud.monto,
-          estado: solicitud.estado
-        }
-      }));
+    setAsesorData(prev => ({
+      ...prev,
+      detallesSolicitud: {
+        nombre: solicitud.solicitante,
+        id: solicitud.id,
+        cantidad: solicitud.monto,
+        estado: solicitud.estado
+      }
+    }));
 
     // 🔹 Guardar en localStorage para persistencia
     localStorage.setItem("creditoSeleccionado", JSON.stringify({
@@ -144,7 +149,22 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
             break
         }
       });
-      setSolicitudes(responseData);
+      
+      // 🔹 Actualizar allSolicitudes
+      setAllSolicitudes(responseData);
+      
+      // 🔹 Verificar si hay filtros activos
+      const hayFiltrosActivos = filters.solicitante || filters.estado || filters.montoMin || filters.montoMax;
+      
+      // 🔹 Si hay filtros activos, aplicarlos a los nuevos datos
+      if (hayFiltrosActivos) {
+        const filtered = aplicarFiltrosActuales(responseData);
+        setSolicitudes(filtered);
+      } else {
+        // 🔹 Si no hay filtros, mostrar todos
+        setSolicitudes(responseData);
+      }
+      
       setAsesorData(prev => ({
         ...prev,
         stats: {
@@ -162,6 +182,13 @@ export const BandejaSolicitudesPage = ({ setAsesorData, asesorData }) => {
       navigate('/login');
     }
   }
+
+  // 🔹 Exponer fetchData mediante la referencia
+  useEffect(() => {
+    if (fetchAsesorDataRef) {
+      fetchAsesorDataRef.current = fetchData;
+    }
+  }, [fetchAsesorDataRef, user, API_URL, filters]); // 🔹 Añadir filters a dependencias
 
   useEffect(() => {
     if (!isLoading) {

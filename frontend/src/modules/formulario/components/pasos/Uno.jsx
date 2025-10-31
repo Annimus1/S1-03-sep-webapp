@@ -134,7 +134,6 @@ export const Uno = ({ setPasoActual }) => {
           const parsed = JSON.parse(stored);
           const updated = { ...parsed, PasoActual: 2 };
           localStorage.setItem("creditInfo", JSON.stringify(updated));
-          console.log("📦 Paso actualizado en localStorage:", updated);
         } catch (e) {
           console.error("❌ Error actualizando creditInfo:", e);
         }

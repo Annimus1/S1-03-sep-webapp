@@ -138,8 +138,6 @@ export const Dos = ({ setPasoActual }) => {
         }
       );
 
-      console.log("✅ Respuesta subida:", response.data);
-
       // Actualizar creditInfo en localStorage
       const updatedCredit = response.data?.data?.credit;
       localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: updatedCredit, PasoActual: 3 }));
@@ -162,14 +160,10 @@ export const Dos = ({ setPasoActual }) => {
     }
     if (siguientePaso) {
       localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: credit, PasoActual: 3 }));
-      setPasoActual(4);
+      setPasoActual(3);
     }
   }
 
-  useEffect(() => {
-    console.log('paso 2')
-    isSiguientePaso();
-  }, []);
 
   return (
     <MiniFormsTemplate
