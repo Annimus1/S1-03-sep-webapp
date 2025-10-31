@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styles from "./SolicitudDetallesModal.module.css";
 import axios from "axios";
 
@@ -122,16 +122,6 @@ export const SolicitudDetallesModal = ({
           </div>
 
           <div className={styles.detailRow}>
-            <span className={styles.label}>CUIT</span>
-            <span className={styles.value}>{solicitud.cuit}</span>
-          </div>
-
-          <div className={styles.detailRow}>
-            <span className={styles.label}>Propósito de la solicitud</span>
-            <span className={styles.value}>{solicitud.proposito}</span>
-          </div>
-
-          <div className={styles.detailRow}>
             <span className={styles.label}>Contacto</span>
             <span className={styles.value}>{solicitud.contacto}</span>
           </div>
@@ -142,14 +132,14 @@ export const SolicitudDetallesModal = ({
           </div>
 
           {/* Notificación */}
-          {solicitud.notificacion && (
+          {/* {solicitud.notificacion && (
             <div className={styles.detailRow}>
               <span className={styles.label}>Notificación</span>
               <span className={styles.notification}>
                 {solicitud.notificacion}
               </span>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Botones de acción */}

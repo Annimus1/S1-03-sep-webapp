@@ -6,7 +6,6 @@ import { QuickAccessButtons } from "../moleculas/QuickAccessButtons";
 import { ProcessCard } from "../organismos/ProcessCard";
 import { UserInfoCard } from "../organismos/UserInfoCard";
 import { CreditStatusCard } from "../organismos/CreditStatusCard";
-import { NewFeatureCard } from "../organismos/NewFeatureCard";
 import { SupportCard } from "../organismos/SupportCard";
 import { StartApplicationCardActivo } from "../organismos/StartApplicationCardActivo";
 import { SolicitudDetallesModal } from "../moleculas/SolicitudDetallesModal";
@@ -114,13 +113,11 @@ export const DashboardPYMENEW = () => {
   // --------------------------
   // Datos de ejemplo de la solicitud (puedes reemplazarlos)
   // --------------------------
+  const fecha = new Date();
   const solicitudData = {
-    nombreEmpresa: "Mobile Tech",
-    cuit: "9873 2345",
-    proposito: "Capital de Trabajo",
-    contacto: "pabloc.admin@mobilet.com",
-    fecha: "23/10/2025",
-    notificacion: "El asesor necesita un nuevo documento",
+    nombreEmpresa: user.companyName,
+    contacto: user.email,
+    fecha: `${fecha.getDate()}/${fecha.getMonth()+1}/${fecha.getFullYear()}`
   };
 
   // --------------------------
