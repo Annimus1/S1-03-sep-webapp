@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { MiniFormsTemplate } from "../plantilla/MiniFormsTemplate";
 import { InformacionOperativaNegocioUNO } from "../organismos/InformacionOperativaNegocioUNO";
 import { InformacionOperativaNegocioDOS } from "../organismos/InformacionOperativaNegocioDOS";
@@ -29,9 +29,22 @@ export const Tres = ({ setPasoActual }) => {
 
   const API_URL = import.meta.env.VITE_API_URL;
   const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
+  const token = localStorage.getItem("token");  
   const creditId = creditInfo?.credit?._id;
   const userId = creditInfo?.credit?.userId;
   const creditType = creditInfo?.credit?.creditType;
+  // Validar campos obligatorios
+  const requiredFields = [
+    "descripcionNegocio",
+    "principalesClientes",
+    "principalesProveedores",
+    "facturacionReciente",
+    "certificadosPermisos",
+    "comprobantePropiedad",
+    "fotosEstablecimiento",
+    "evidenciaOnline",
+    "descripcionMercado",
+  ];
 
   // 🔁 Cambiar entre Parte 1 y Parte 2
   const handleParteToggle = () => {
@@ -53,19 +66,6 @@ export const Tres = ({ setPasoActual }) => {
       handleParteToggle();
       return;
     }
-
-    // Validar campos obligatorios
-    const requiredFields = [
-      "descripcionNegocio",
-      "principalesClientes",
-      "principalesProveedores",
-      "facturacionReciente",
-      "certificadosPermisos",
-      "comprobantePropiedad",
-      "fotosEstablecimiento",
-      "evidenciaOnline",
-      "descripcionMercado",
-    ];
 
     const newErrors = {};
     requiredFields.forEach((field) => {
@@ -151,6 +151,26 @@ export const Tres = ({ setPasoActual }) => {
       setIsSaving(false);
     }
   };
+
+  const isSiguientePaso = async () => {
+    let siguientePaso = false;
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/credit/status-check`, { headers: { 'Authorization': `Bearer ${token}` } })
+    const credit = response.data.credit;
+    console.log(credit)
+    for (let index = 0; index < requiredFields.length; index++) {
+      siguientePaso = credit[requiredFields[index]] !== null && credit[requiredFields[index]] !== undefined;
+      console.table(requiredFields[index], credit[requiredFields[index]])
+      if (!siguientePaso) break;
+    }
+    if (siguientePaso) {
+      localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: credit, PasoActual: 3 }));
+      setPasoActual(4);
+    }
+  }
+
+  useEffect(() => {
+    isSiguientePaso();
+  }, []);
 
   return (
     <MiniFormsTemplate

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { MiniFormsTemplate } from "../plantilla/MiniFormsTemplate";
 import styles from "./FormSections.module.css";
@@ -28,6 +28,7 @@ export const Cuatro = ({ setPasoActual }) => {
 
   const API_URL = import.meta.env.VITE_API_URL;
   const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
+  const token = localStorage.getItem("creditInfo");
   const creditId = creditInfo?.credit?._id;
   const userId = creditInfo?.credit?.userId;
   const creditType = creditInfo?.credit?.creditType;
@@ -83,6 +84,8 @@ export const Cuatro = ({ setPasoActual }) => {
         evidenciaExpancion: true,
       };
     }
+
+
 
     const newErrors = {};
     Object.entries(fieldRequirements).forEach(([field, isRequired]) => {
@@ -156,6 +159,27 @@ export const Cuatro = ({ setPasoActual }) => {
       setIsSaving(false);
     }
   };
+
+  const isSiguientePaso = async () => {
+    let siguientePaso = false;
+    console.log(token)
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/credit/status-check`, { headers: { 'Authorization': `Bearer ${token}` } })
+    const credit = response.data.credit;
+    console.log(credit)
+    // for (let index = 0; index < requiredFields.length; index++) {
+    //   siguientePaso = credit[requiredFields[index]] !== null && credit[requiredFields[index]] !== undefined;
+    //   if (!siguientePaso) break;
+    // }
+    // if (siguientePaso) {
+    //   localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: credit, PasoActual: 3 }));
+    //   setPasoActual(4);
+    // }
+  }
+
+  useEffect(() => {
+    console.log('paso 4')
+    isSiguientePaso();
+  }, []);
 
   return (
     <div className={styles.contenedorPrincipal}>

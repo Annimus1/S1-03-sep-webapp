@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { MiniFormsTemplate } from "../plantilla/MiniFormsTemplate";
 import { InformacionFinancieraUNO } from "../organismos/InformacionFinancieraUNO";
@@ -31,10 +31,29 @@ export const Dos = ({ setPasoActual }) => {
 
   const API_URL = import.meta.env.VITE_API_URL; // Asegúrate que esté definido en tu .env
   const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
+  const token = localStorage.getItem("token");
   const creditId = creditInfo?.credit?._id;
   const userId = creditInfo?.credit?.userId;
   const creditType = creditInfo?.credit?.creditType;
-
+  // Validar campos obligatorios
+  const requiredFields = [
+    "declaracionesImpositivas",
+    "comprobantesImpuestos",
+    "detalleIngresosEgresos",
+    "cuentasPorCobrarPagar",
+    "registroVentasCompras",
+    "proyeccionFlujoFondos",
+    "planFinancieroCredito",
+  ];
+  const requiredFields2 = [
+    "ddjjImpositivas",
+    "comprobanteImpuestos",
+    "ingresosEgresosMensuales",
+    "detalleCuentas",
+    "registroVentasCompras",
+    "proyeccionFlujoFondos",
+    "planFinancieroCredito",
+  ];
   // 🔁 Cambiar entre Parte 1 y Parte 2
   const handleParteToggle = () => {
     setIsPrimeraParte(!isPrimeraParte);
@@ -55,17 +74,6 @@ export const Dos = ({ setPasoActual }) => {
       handleParteToggle();
       return;
     }
-
-    // Validar campos obligatorios
-    const requiredFields = [
-      "declaracionesImpositivas",
-      "comprobantesImpuestos",
-      "detalleIngresosEgresos",
-      "cuentasPorCobrarPagar",
-      "registroVentasCompras",
-      "proyeccionFlujoFondos",
-      "planFinancieroCredito",
-    ];
 
     const newErrors = {};
     requiredFields.forEach((field) => {
@@ -143,6 +151,25 @@ export const Dos = ({ setPasoActual }) => {
       setIsSaving(false);
     }
   };
+
+  const isSiguientePaso = async () => {
+    let siguientePaso = false;
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/credit/status-check`, { headers: { 'Authorization': `Bearer ${token}` } })
+        const credit = response.data.credit;
+    for (let index = 0; index < requiredFields2.length; index++) {
+      siguientePaso = credit[requiredFields2[index]] !== null && credit[requiredFields2[index]] !== undefined;
+      if (!siguientePaso) break;
+    }
+    if (siguientePaso) {
+      localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: credit, PasoActual: 3 }));
+      setPasoActual(4);
+    }
+  }
+
+  useEffect(() => {
+    console.log('paso 2')
+    isSiguientePaso();
+  }, []);
 
   return (
     <MiniFormsTemplate

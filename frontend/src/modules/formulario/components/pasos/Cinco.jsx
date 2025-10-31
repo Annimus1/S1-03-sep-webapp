@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { MiniFormsTemplate } from "../plantilla/MiniFormsTemplate";
 import { InformacionCrediticiaUNO } from "../organismos/InformacionCrediticiaUNO";
@@ -42,9 +42,39 @@ export const Cinco = ({ setPasoActual }) => {
 
   const API_URL = import.meta.env.VITE_API_URL;
   const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
+  const token = localStorage.getItem("token");
   const creditId = creditInfo?.credit?._id;
   const userId = creditInfo?.credit?.userId;
   const creditType = creditInfo?.credit?.creditType;
+  // Validar campos obligatorios
+  const requiredFields = [
+    // Parte 1
+    "constanciaCBU",
+    "certificadoLibreDeuda",
+    "historialPrestamos",
+    "referenciasComerciales",
+    "informeCrediticio",
+    "detalleCreditos",
+    "referenciasBancarias",
+    "ddjjQuiebra",
+
+    // Parte 2
+    "tituloPropiedad",
+    "tasaOficial",
+    "avalSolidario",
+    "comprobanteGarantes",
+    "cesionSGR",
+    "informeRegistral",
+    "seguro",
+    "declaracionPatrimonialGarante",
+    "documentoDeuda",
+
+    // Parte 3
+    "ddjjOrigenLicito",
+    "ddjjBeneficiarioFinal",
+    "consentimientoAnalisis",
+    "constanciaPoliticasInternas",
+  ];
 
   // ⬅️ Botón Atrás
   const handleBack = () => {
@@ -62,36 +92,6 @@ export const Cinco = ({ setPasoActual }) => {
       setParteActual(parteActual + 1);
       return;
     }
-
-    // Validar campos obligatorios
-    const requiredFields = [
-      // Parte 1
-      "constanciaCBU",
-      "certificadoLibreDeuda",
-      "historialPrestamos",
-      "referenciasComerciales",
-      "informeCrediticio",
-      "detalleCreditos",
-      "referenciasBancarias",
-      "ddjjQuiebra",
-
-      // Parte 2
-      "tituloPropiedad",
-      "tasaOficial",
-      "avalSolidario",
-      "comprobanteGarantes",
-      "cesionSGR",
-      "informeRegistral",
-      "seguro",
-      "declaracionPatrimonialGarante",
-      "documentoDeuda",
-
-      // Parte 3
-      "ddjjOrigenLicito",
-      "ddjjBeneficiarioFinal",
-      "consentimientoAnalisis",
-      "constanciaPoliticasInternas",
-    ];
 
     console.log("1");
 
@@ -126,9 +126,6 @@ export const Cinco = ({ setPasoActual }) => {
     data.append("creditType", creditType);
     data.append("estatus", "evaluacion_crediticia");
     data.append("datosVerificados", false);
-
-    console.log("5");
-
     // 🔹 Mapear campos de frontend → backend
     const fileMap = {
       // Parte 1
@@ -202,6 +199,24 @@ export const Cinco = ({ setPasoActual }) => {
       setIsSaving(false);
     }
   };
+
+  const isSiguientePaso = async () => {
+    let siguientePaso = false;
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/credit/status-check`, { headers: { 'Authorization': `Bearer ${token}` } })
+    const credit = response.data.credit;
+    for (let index = 0; index < requiredFields.length; index++) {
+      siguientePaso = credit[requiredFields[index]] !== null && credit[requiredFields[index]] !== undefined;
+      if (!siguientePaso) break;
+    }
+    if (siguientePaso) {
+      localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: credit, PasoActual: 3 }));
+      setPasoActual(6);
+    }
+  }
+
+  useEffect(() => {
+    isSiguientePaso();
+  }, []);
 
   return (
     <MiniFormsTemplate
