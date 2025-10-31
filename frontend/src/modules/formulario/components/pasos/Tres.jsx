@@ -131,8 +131,6 @@ export const Tres = ({ setPasoActual }) => {
         }
       );
 
-      console.log("✅ Respuesta subida:", response.data);
-
       // Actualizar creditInfo en localStorage
       const updatedCredit = response.data?.data?.credit;
       localStorage.setItem(
@@ -156,7 +154,6 @@ export const Tres = ({ setPasoActual }) => {
     let siguientePaso = false;
     const response = await axios.get(`${import.meta.env.VITE_API_URL}/credit/status-check`, { headers: { 'Authorization': `Bearer ${token}` } })
     const credit = response.data.credit;
-    console.log(credit)
     for (let index = 0; index < requiredFields.length; index++) {
       siguientePaso = credit[requiredFields[index]] !== null && credit[requiredFields[index]] !== undefined;
       console.table(requiredFields[index], credit[requiredFields[index]])

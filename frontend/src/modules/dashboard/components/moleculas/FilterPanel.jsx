@@ -103,11 +103,10 @@ export const FilterPanel = ({ isOpen, filters, onFilterChange, onApply, onClear 
             onBlur={(e) => e.target.style.borderColor = '#dee2e6'}
           >
             <option value="">Todos</option>
-            <option value="Pendiente">Pendiente</option>
-            <option value="Aprobado">Aprobado</option>
-            <option value="Rechazado">Rechazado</option>
-            <option value="En revisión">En revisión</option>
-            <option value="En pausa">En pausa</option>
+            <option value="recaudacion">Recaudación</option>
+            <option value="aprobado">Aprobado</option>
+            <option value="rechazado">Rechazado</option>
+            <option value="revision">En Revisión</option>
           </select>
         </div>
 
@@ -139,10 +138,10 @@ export const FilterPanel = ({ isOpen, filters, onFilterChange, onApply, onClear 
       </div>
 
       <div style={styles.buttonGroup}>
-        <BotonAnimado onClick={onClear} >
+        <BotonAnimado onClick={onClear}>
           Limpiar
         </BotonAnimado>
-        <BotonAnimado onClick={onApply} >
+        <BotonAnimado onClick={onApply}>
           Aplicar filtros
         </BotonAnimado>
       </div>

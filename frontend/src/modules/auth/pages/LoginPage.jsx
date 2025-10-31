@@ -49,12 +49,8 @@ const LoginPage = () => {
         const userData = response.data.user;
         setSuccess(true);
         setUser(userData);
-        console.log('✅ Usuario autenticado:', userData);
         localStorage.setItem('data', JSON.stringify(userData));
         localStorage.setItem('token', userData.token);
-
-        console.log('✅ Token guardado en localStorage');
-        console.log(userData)
 
         navigate('/dashboard');
       } else {
@@ -81,7 +77,6 @@ const LoginPage = () => {
 
   useEffect( () => {
     const data = JSON.parse(localStorage.getItem('data'));
-    console.log(data);
     if (data) {
       navigate('/dashboard');
     }

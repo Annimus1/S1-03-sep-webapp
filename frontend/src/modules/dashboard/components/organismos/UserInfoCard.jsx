@@ -22,7 +22,6 @@ export const UserInfoCard = () => {
         },
       });
 
-      console.log("✅ Perfil obtenido:", response.data);
 
       // ✅ actualizar el estado, no una variable local
       setDatosVerificados(response.data.datosVerificados);

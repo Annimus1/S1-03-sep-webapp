@@ -92,9 +92,6 @@ export const Cinco = ({ setPasoActual }) => {
       setParteActual(parteActual + 1);
       return;
     }
-
-    console.log("1");
-
     const newErrors = {};
     requiredFields.forEach((field) => {
       if (!formData[field]) {
@@ -102,24 +99,15 @@ export const Cinco = ({ setPasoActual }) => {
       }
     });
 
-
-    console.log("2");
-
-    console.log("Campos vacíos:", Object.keys(newErrors));
-    console.log("formData:", formData);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
-    console.log("3");
 
     if (!creditId) {
       return;
     }
-
-    console.log("4");
-
     // 🧱 Construir el FormData
     const data = new FormData();
     data.append("userId", userId);
@@ -179,8 +167,6 @@ export const Cinco = ({ setPasoActual }) => {
         }
       );
 
-      console.log("✅ Respuesta subida:", response.data);
-
       // Actualizar localStorage
       const updatedCredit = response.data?.data?.credit;
       localStorage.setItem(
@@ -214,9 +200,6 @@ export const Cinco = ({ setPasoActual }) => {
     }
   }
 
-  useEffect(() => {
-    isSiguientePaso();
-  }, []);
 
   return (
     <MiniFormsTemplate

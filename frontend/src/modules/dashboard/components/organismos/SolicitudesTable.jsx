@@ -9,37 +9,62 @@ export const SolicitudesTable = ({ solicitudes, selectedId, onSelect }) => {
       overflow: 'hidden',
       display: 'flex',
       flexDirection: 'column',
+      border: '1px solid #ddd',
     },
     scrollContainer: {
       overflowY: 'auto',
       overflowX: 'auto',
-      maxHeight: '220px',
+      maxHeight: '225px',
       maxWidth: '100%',
+      padding: '6px 10px',
+      scrollbarWidth: 'thin', // Firefox
+      scrollbarColor: '#888 #f1f1f1', // Firefox
     },
     content: {
-      width: '100%',        // que use solo el ancho del padre
-      maxWidth: '100%',     // evita que crezca más que el padre
-      overflowX: 'auto',    // si el contenido interno se pasa, muestra scroll
-      boxSizing: 'border-box', // asegura que padding/border no lo agrande
-    }
+      width: 'max-content', // permite el scroll horizontal si las columnas son anchas
+      minWidth: '100%',     // asegura que no se encoja
+      boxSizing: 'border-box',
+    },
+    rowSpacing: {
+      marginBottom: '6px',  // separación entre filas
+    },
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.scrollContainer}>
+      <div style={styles.scrollContainer} className="custom-scrollbar">
         <div style={styles.content}>
           <TableHeaderComponent />
           {solicitudes.map((solicitud) => (
-            <SolicitudRow
-              key={solicitud.id}
-              solicitud={solicitud}
-              selected={selectedId === solicitud.id}
-              onSelect={() => onSelect(solicitud.id)}
-            />
+            <div key={solicitud.id} style={styles.rowSpacing}>
+              <SolicitudRow
+                solicitud={solicitud}
+                selected={selectedId === solicitud.id}
+                onSelect={() => onSelect(solicitud.id)}
+              />
+            </div>
           ))}
         </div>
       </div>
+
+      <style>{`
+        /* Scrollbar personalizada para Chrome, Edge y Safari */
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 10px;
+          height: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: #f1f1f1;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: #999;
+          border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background-color: #666;
+        }
+      `}</style>
     </div>
   );
 };
-

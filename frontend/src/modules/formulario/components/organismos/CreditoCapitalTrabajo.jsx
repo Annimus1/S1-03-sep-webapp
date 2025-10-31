@@ -23,13 +23,13 @@ export const CreditoCapitalTrabajo = ({ formData, setFormData, errors, setErrors
       subtitle="Adjunta los documentos que respalden la ejecución técnica y legal de tu proyecto."
     >
       <FileUploadInput
-        label="Descripción del mercado y competencia"
-        name="descripcionMercado"
+        label="Factura proforma o contrato de compra"
+        name="facturaProforma"
         placeholder="Subir archivo PDF"
         required={false}
         maxSize={10}
         onChange={handleFileChange}
-        error={errors.descripcionMercado}
+        error={errors.facturaProforma}
       />
 
       <FileUploadInput

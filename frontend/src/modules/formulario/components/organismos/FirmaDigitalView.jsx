@@ -59,7 +59,6 @@ const downloadFile = async (fileName) => {
     link.click();
     window.URL.revokeObjectURL(url);
 
-    console.log("✅ Archivo descargado correctamente");
   } catch (error) {
     console.error("❌ Error al descargar el archivo:", error);
   }
@@ -195,7 +194,6 @@ export const FirmaDigitalView = ({ onComplete, setPasoActual }) => {
         }
       );
       
-      console.log("✅ Respuesta del POST:", res.data);
 
       // Obtener datos actualizados del crédito
       const datacredit = await axios.get(`${API_URL}/credit/${creditId}`, {
@@ -212,11 +210,7 @@ export const FirmaDigitalView = ({ onComplete, setPasoActual }) => {
         throw new Error("No se encontró la URL del archivo firmado.");
       }
 
-      console.log("✅ URL del archivo firmado:", firmaDigitalUrl);
-
       const fileName = firmaDigitalUrl.split("/").pop();
-
-      console.log("✅ Nombre del archivo a descargar:", fileName);
 
       downloadFile(fileName);
 

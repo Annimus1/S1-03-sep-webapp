@@ -150,7 +150,7 @@ export const CreditForm = ({
       </div>
 
       {/* Botón */}
-      <BotonAnimado ancho="completo" variante="naranja" onClick={() => { console.log("Crear crédito"); onCrearCredito(); }}>
+      <BotonAnimado ancho="completo" variante="naranja" onClick={() => { onCrearCredito(); }}>
         Iniciar mi solicitud crédito PyME
       </BotonAnimado>
     </div>

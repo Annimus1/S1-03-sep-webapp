@@ -49,7 +49,6 @@ export default function Formulario() {
             Authorization: `Bearer ${user.token}`,
           },
         });
-        console.log("✅ Perfil obtenido:", response.data);
         setDatosVerificados(response.data.datosVerificados);
       } catch (error) {
         console.error("❌ Error al obtener el perfil:", error.response?.data || error.message);
@@ -62,7 +61,6 @@ export default function Formulario() {
   // 🧠 3️⃣ Lógica especial: si el paso guardado es 1 y ya está verificado → saltar al 2
   useEffect(() => {
     if (pasoActual === 1 && datosVerificados === true) {
-      console.log("🔁 Usuario con datos verificados — saltando paso 1");
       setPasoActual(2);
     }
   }, [pasoActual, datosVerificados]);

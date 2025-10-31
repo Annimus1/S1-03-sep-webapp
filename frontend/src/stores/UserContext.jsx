@@ -49,7 +49,7 @@ export const UserProvider = ({ children }) => {
           const errorData = await response.json();
           console.warn("⚠️ Error al cerrar sesión:", errorData.message);
         } else {
-          console.log("✅ Sesión cerrada correctamente en el servidor.");
+          console.log("Sesión cerrada correctamente en el servidor.");
         }
       }
     } catch (error) {
