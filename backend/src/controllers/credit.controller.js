@@ -2,6 +2,7 @@ import CreditRepository from '../repositories/credit.repository.js';
 import StorageRepository from '../repositories/storage.repository.js';
 import UserRepository from '../repositories/user.repository.js';
 import NotificationService from '../services/notification.service.js';
+import Credit from '../models/credit.model.js';
 
 export const createCredit = async (req, res) => {
   try {
@@ -51,17 +52,20 @@ export const createCredit = async (req, res) => {
 };
 
 export const statusCheck = async (req, res) => {
-  const credits = await CreditRepository.findAll({ userId: req.user.id })
-  if (!credits) {
-    res.status(404).json({ credit: null });
-  }
+  const credits = await Credit.find({})
+  
+  const response = credits.filter(credit => {
+    if(credit.userId.toString()==req.user.id && credit.estatus == "recaudacion_documentos"){
+      return true;
+    }
+  });
 
-  const response = credits.filter(credit => credit.estatus === "recaudacion_documentos")
-  if (response.length < 1) {
-    res.status(404).json({ credit: null });
+  if(response.length < 1){
+    res.status(404).json({ status:"error", message: "Credito no encontrado" });
+    return;
   }
-
-  res.status(200).json({ credit: response[0] })
+  
+  res.status(200).json({ credit: response[0] });
 }
 
 export const uploadCreditFiles = async (req, res) => {

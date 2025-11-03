@@ -92,12 +92,10 @@ export default function Registro() {
         setUser(userData);
         localStorage.setItem("data", JSON.stringify(userData));
         localStorage.setItem('token', userData.token);
-        console.log("✅ Usuario registrado:", userData);
         window.location.href = "/dashboard";
       }
     } catch (err) {
       console.error("❌ Error en Registro:", err.response?.data || err.message);
-      alert(err.response?.data?.data?.message || "Error al registrar usuario");
     } finally {
       setLoading(false);
     }

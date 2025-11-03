@@ -10,7 +10,6 @@ export const Siete = ({ setPasoActual }) => {
   };
 
   const handleFirmaComplete = () => {
-    alert("¡Proceso completado exitosamente! 🎉");
   };
 
   if (showLoading) {

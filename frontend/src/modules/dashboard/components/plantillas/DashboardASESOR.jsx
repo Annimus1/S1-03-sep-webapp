@@ -7,14 +7,24 @@ import { NewFeatureCard } from "../organismos/NewFeatureCard";
 import { DetalleSolicitud } from "../organismos/DetalleSolicitud";
 import { BandejaSolicitudesPage } from "./BandejaSolicitudesPage";
 import { SolicitudesTemplate } from "../plantilla/SolicitudesTemplate";
-import { useState } from "react";
+import { useState, useContext, useRef } from "react";
+import { SolicitudDetallesModalASESOR } from "../moleculas/SolicitudDetallesModalASESOR.jsx";
+import axios from "axios";
+import { UserContext } from "../../../../stores/UserContext.jsx";
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export const DashboardASESOR = () => {
+  const [showDetallesModal, setShowDetallesModal] = useState(false);
+  const { user } = useContext(UserContext);
+  const fetchAsesorDataRef = useRef(null); // 🔹 Referencia para fetchData
+  
   // estado globar para compartir entre componentes hijo
   const [ asesorData, setAsesorData ] = useState({
     detallesSolicitud: {nombre:'', id:'', cantidad:0, estado:''},
     stats: {pendientes: 0 , evaluacion: 0, total: 0, aprobados: 0, rechazados: 0}
   });
+  
   // Detectar tamaños de pantalla
   const isDesktop = useMediaQuery('(min-width: 992px)');   // >= 992px
   const isTablet = useMediaQuery('(min-width: 768px)');    // >= 768px
@@ -24,6 +34,35 @@ export const DashboardASESOR = () => {
   const mainColumns = isDesktop ? '60% 40%' : '1fr';  // Desktop: 2 cols, Mobile: 1 col
   const innerColumns = isTablet ? '1fr 1fr' : '1fr';  // Tablet+: 2 cols, Mobile: 1 col
   const detailColumns = isTablet ? '57.5% 40%' : '1fr';  // Tablet+: 2 cols, Mobile: 1 col
+
+  const handleVerSolicitud = () => {
+    setShowDetallesModal(true);
+  };
+
+  const actualizarCredito = async (estatus) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/credit/decision/${asesorData.detallesSolicitud.id}`,
+        { estatus }, // se pasa dinámicamente "aprobado" o "rechazado"
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      // 🔹 Llamar a fetchData si está disponible
+      if (fetchAsesorDataRef.current) {
+        await fetchAsesorDataRef.current();
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error(`❌ Error al actualizar crédito a ${estatus}:`, error.response?.data || error.message);
+      throw error;
+    }
+  };
 
 
   // Calculando porcentajes basados en 32 solicitudes totales
@@ -81,12 +120,16 @@ export const DashboardASESOR = () => {
           
           {/* Avance de la solicitud */}
           <GridContainer columns='77% 20%' gap="20px" >
-            <DetalleSolicitud columns={innerColumns} asesorData={asesorData}/>
+            <DetalleSolicitud columns={innerColumns} asesorData={asesorData} onButtonClick={handleVerSolicitud}/>
             <QuickAccessButtons/>
           </GridContainer>
           
           {/* Proceso de la solicitud */}
-          <BandejaSolicitudesPage setAsesorData={setAsesorData} asesorData={asesorData}/>
+          <BandejaSolicitudesPage 
+            setAsesorData={setAsesorData} 
+            asesorData={asesorData}
+            fetchAsesorDataRef={fetchAsesorDataRef} // 🔹 Pasar la referencia
+          />
           
         </div>
         
@@ -111,6 +154,15 @@ export const DashboardASESOR = () => {
         </div>
         
       </GridContainer>
+      {/* 🪟 Modal de detalles */}
+      {showDetallesModal && (
+        <SolicitudDetallesModalASESOR
+          solicitud={asesorData.detallesSolicitud}
+          onClose={() => setShowDetallesModal(false)}
+          onSubirDocumentos={() => { actualizarCredito("aprobado").then(() => setShowDetallesModal(false)); }}
+          onVerContrato={() => { actualizarCredito("rechazado").then(() => setShowDetallesModal(false)); }}
+        />
+      )}
     </main>
   );
 };

@@ -19,7 +19,6 @@ const PrivateFormulario = ({ children }) => {
       // 2️⃣ Si no hay usuario, buscar token en localStorage
       const token = localStorage.getItem('token');
       if (token) {
-        console.log("🔑 Token encontrado en localStorage:", token);
         setIsAuthenticated(true);
       } else {
         console.warn("🚫 No hay token en localStorage ni usuario activo");

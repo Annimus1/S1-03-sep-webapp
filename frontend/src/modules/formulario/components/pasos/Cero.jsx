@@ -134,11 +134,12 @@ export const Cero = ({ setPasoActual }) => {
       const url = `${API_URL}/credit/status-check`;
       const token = window.localStorage.getItem('token');
       const response = await axios.get(url, { headers: { 'Authorization': `Bearer ${token}` } })
-
+      /*
       if (response.status == 200){
         window.localStorage.setItem('creditInfo', JSON.stringify({ credit: response.data.credit, PasoActual: 1 }));
         setPasoActual(1);
       }
+      */
     }
     catch (error) {
       if (error.status == 401) {

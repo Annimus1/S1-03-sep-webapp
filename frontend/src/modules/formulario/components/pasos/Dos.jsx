@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { MiniFormsTemplate } from "../plantilla/MiniFormsTemplate";
 import { InformacionFinancieraUNO } from "../organismos/InformacionFinancieraUNO";
@@ -31,10 +31,29 @@ export const Dos = ({ setPasoActual }) => {
 
   const API_URL = import.meta.env.VITE_API_URL; // Asegúrate que esté definido en tu .env
   const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
+  const token = localStorage.getItem("token");
   const creditId = creditInfo?.credit?._id;
   const userId = creditInfo?.credit?.userId;
   const creditType = creditInfo?.credit?.creditType;
-
+  // Validar campos obligatorios
+  const requiredFields = [
+    "declaracionesImpositivas",
+    "comprobantesImpuestos",
+    "detalleIngresosEgresos",
+    "cuentasPorCobrarPagar",
+    "registroVentasCompras",
+    "proyeccionFlujoFondos",
+    "planFinancieroCredito",
+  ];
+  const requiredFields2 = [
+    "ddjjImpositivas",
+    "comprobanteImpuestos",
+    "ingresosEgresosMensuales",
+    "detalleCuentas",
+    "registroVentasCompras",
+    "proyeccionFlujoFondos",
+    "planFinancieroCredito",
+  ];
   // 🔁 Cambiar entre Parte 1 y Parte 2
   const handleParteToggle = () => {
     setIsPrimeraParte(!isPrimeraParte);
@@ -56,17 +75,6 @@ export const Dos = ({ setPasoActual }) => {
       return;
     }
 
-    // Validar campos obligatorios
-    const requiredFields = [
-      "declaracionesImpositivas",
-      "comprobantesImpuestos",
-      "detalleIngresosEgresos",
-      "cuentasPorCobrarPagar",
-      "registroVentasCompras",
-      "proyeccionFlujoFondos",
-      "planFinancieroCredito",
-    ];
-
     const newErrors = {};
     requiredFields.forEach((field) => {
       if (!formData[field]) {
@@ -76,12 +84,10 @@ export const Dos = ({ setPasoActual }) => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      alert("Por favor completa todos los campos obligatorios");
       return;
     }
 
     if (!creditId) {
-      alert("No se encontró el ID del crédito en localStorage");
       return;
     }
 
@@ -132,21 +138,32 @@ export const Dos = ({ setPasoActual }) => {
         }
       );
 
-      console.log("✅ Respuesta subida:", response.data);
-
       // Actualizar creditInfo en localStorage
       const updatedCredit = response.data?.data?.credit;
       localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: updatedCredit, PasoActual: 3 }));
 
-      alert("Archivos financieros subidos correctamente.");
       setPasoActual(3); // avanzar al paso siguiente
     } catch (error) {
       console.error("❌ Error al subir archivos:", error);
-      alert("Error al subir documentos. Verifica tu conexión o formato de archivos.");
     } finally {
       setIsSaving(false);
     }
   };
+
+  const isSiguientePaso = async () => {
+    let siguientePaso = false;
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/credit/status-check`, { headers: { 'Authorization': `Bearer ${token}` } })
+        const credit = response.data.credit;
+    for (let index = 0; index < requiredFields2.length; index++) {
+      siguientePaso = credit[requiredFields2[index]] !== null && credit[requiredFields2[index]] !== undefined;
+      if (!siguientePaso) break;
+    }
+    if (siguientePaso) {
+      localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: credit, PasoActual: 3 }));
+      setPasoActual(3);
+    }
+  }
+
 
   return (
     <MiniFormsTemplate

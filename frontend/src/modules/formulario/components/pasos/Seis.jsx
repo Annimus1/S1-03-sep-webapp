@@ -31,9 +31,6 @@ export const Seis = ({ setPasoActual }) => {
   };
 
   const handleVerContrato = () => {
-    // Aquí puedes abrir un modal o redirigir a ver el contrato
-    alert("Abriendo vista previa del contrato...");
-    // window.open('/contrato-preview', '_blank');
   };
 
   const handleFirmar = () => {
@@ -116,14 +113,6 @@ export const Seis = ({ setPasoActual }) => {
         <p className={styles.securityNote}>
           Usaremos esta información solo para verificar tu identidad en el sistema de firma digital.
         </p>
-
-        <BotonAnimado
-          variante="moradoSuave"
-          className={styles.previewButton}
-          onClick={handleVerContrato}
-        >
-          Ver contrato antes de firmar
-        </BotonAnimado>
       </div>
     </MiniFormsTemplate>
   );

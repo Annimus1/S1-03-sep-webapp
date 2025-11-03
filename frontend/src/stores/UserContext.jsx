@@ -49,7 +49,7 @@ export const UserProvider = ({ children }) => {
           const errorData = await response.json();
           console.warn("⚠️ Error al cerrar sesión:", errorData.message);
         } else {
-          console.log("✅ Sesión cerrada correctamente en el servidor.");
+          console.log("Sesión cerrada correctamente en el servidor.");
         }
       }
     } catch (error) {
@@ -60,6 +60,9 @@ export const UserProvider = ({ children }) => {
       localStorage.removeItem("data");
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("welcomeMessageShown");
+      localStorage.removeItem("creditoSeleccionado");
+      //localStorage.removeItem("creditInfo");
     }
   };
 

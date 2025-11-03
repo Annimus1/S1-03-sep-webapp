@@ -7,13 +7,24 @@ import { DashboardASESOR } from '../components/plantillas/DashboardASESOR';
 
 const Dashboard = () => {
   const { user } = useContext(UserContext);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
+    // Verificar si ya se mostró el mensaje de bienvenida
+    const welcomeShown = localStorage.getItem('welcomeMessageShown');
+    
+    if (!welcomeShown) {
+      // Si no se ha mostrado, activar el loading
+      setIsLoading(true);
+      
+      const timer = setTimeout(() => {
+        setIsLoading(false);
+        // Guardar en localStorage que ya se mostró
+        localStorage.setItem('welcomeMessageShown', 'true');
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   return (
@@ -26,16 +37,16 @@ const Dashboard = () => {
       }}
     >
       {
-      isLoading &&
+        isLoading &&
         <WelcomeLoadingScreen userName={user?.nombres || 'Usuario'} />
       }
 
       {
-        !isLoading && user?.role != 'asesor' &&  <DashboardPYMENEW/>
+        !isLoading && user?.role !== 'asesor' && <DashboardPYMENEW/>
       }
 
       {
-        !isLoading && user?.role == 'asesor' &&  <DashboardASESOR/>
+        !isLoading && user?.role === 'asesor' && <DashboardASESOR/>
       }
       
     </main>

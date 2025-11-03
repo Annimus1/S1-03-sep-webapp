@@ -1,5 +1,4 @@
 import SupabaseStorage from '../services/supabase.service.js'; // Adaptador por defecto
-//import LocalStorage from '../services/localStorage.service.js'; // Adaptador por defecto
 class StorageRepository {
     static instance = null;
     adapter = null;

@@ -1,7 +1,8 @@
 import { ProcessStepItem } from "../moleculas/ProcessStepItem";
 import styles from './processCard.module.css';
 
-export const ProcessCard = () => (
+export const ProcessCard = ({ currentStep = 1 }) => (
+  
   <div
     style={{
       backgroundColor: '#DAD6FE',
@@ -24,13 +25,26 @@ export const ProcessCard = () => (
     </h5>
 
     <div className={styles.gridContainer}>
-      <ProcessStepItem number="1" text="Iniciar solicitud" completed={false} />
-      <ProcessStepItem number="2" text="Subir documentos solicitados" completed={false} />
-      <ProcessStepItem number="3" text="Firma digital de contrato" completed={false} />
-      <ProcessStepItem number="4" text="Enviar solicitud" completed={false} />
-      <ProcessStepItem number="5" text="Revisión de solicitud y documentos" completed={false} />
-      <ProcessStepItem number="6" text="Resolución del asesor" completed={false} />
-      <ProcessStepItem number="7" text="Crédito rembolsado" completed={false} />
+      {[
+        "Iniciar solicitud",
+        "Subir documentos solicitados",
+        "Firma digital de contrato",
+        "Enviar solicitud",
+        "Revisión de solicitud y documentos",
+        "Resolución del asesor",
+        "Crédito rembolsado"
+      ].map((text, index) => {
+        const stepNumber = index + 1;
+        return (
+          <ProcessStepItem
+            key={stepNumber}
+            number={stepNumber.toString()}
+            text={text}
+            completed={stepNumber < currentStep}       // pasos anteriores completados
+            active={stepNumber === currentStep}        // paso actual activo
+          />
+        );
+      })}
 
       <div className={styles.infoBox}>
         <p>Aquí encontrarás el "paso a paso" para crear tu solicitud</p>

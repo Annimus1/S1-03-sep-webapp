@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { MiniFormsTemplate } from "../plantilla/MiniFormsTemplate";
 import { InformacionCrediticiaUNO } from "../organismos/InformacionCrediticiaUNO";
@@ -8,32 +8,32 @@ import styles from "./FormSections.module.css";
 
 export const Cinco = ({ setPasoActual }) => {
   const [formData, setFormData] = useState({
-    // Parte 1: Información Crediticia y Bancaria
+    // Parte 1
     constanciaCBU: null,
-    informeCrediticio: null,
     certificadoLibreDeuda: null,
-    detalleCreditos: null,
     historialPrestamos: null,
-    referenciasBancarias: null,
     referenciasComerciales: null,
-    declaracionConcurso: null,
+    informeCrediticio: null,
+    detalleCreditos: null,
+    referenciasBancarias: null,
+    ddjjQuiebra: null,
 
-    // Parte 2: Garantías
+    // Parte 2
     tituloPropiedad: null,
-    informeRegistral: null,
-    tasacionBien: null,
-    seguroBien: null,
+    tasaOficial: null,
     avalSolidario: null,
-    declaracionPatrimonial: null,
-    comprobantesGarante: null,
-    pagareDeuda: null,
-    cesionDerechos: null,
+    comprobanteGarantes: null,
+    cesionSGR: null,
+    informeRegistral: null,
+    seguro: null,
+    declaracionPatrimonialGarante: null,
+    documentoDeuda: null,
 
-    // Parte 3: Documentación Regulatoria
-    declaracionOrigenFondos: null,
+    // Parte 3
+    ddjjOrigenLicito: null,
+    ddjjBeneficiarioFinal: null,
     consentimientoAnalisis: null,
-    declaracionBeneficiarios: null,
-    politicasCumplimiento: null,
+    constanciaPoliticasInternas: null,
   });
 
   const [errors, setErrors] = useState({});
@@ -42,14 +42,44 @@ export const Cinco = ({ setPasoActual }) => {
 
   const API_URL = import.meta.env.VITE_API_URL;
   const creditInfo = JSON.parse(localStorage.getItem("creditInfo"));
+  const token = localStorage.getItem("token");
   const creditId = creditInfo?.credit?._id;
   const userId = creditInfo?.credit?.userId;
   const creditType = creditInfo?.credit?.creditType;
+  // Validar campos obligatorios
+  const requiredFields = [
+    // Parte 1
+    "constanciaCBU",
+    "certificadoLibreDeuda",
+    "historialPrestamos",
+    "referenciasComerciales",
+    "informeCrediticio",
+    "detalleCreditos",
+    "referenciasBancarias",
+    "ddjjQuiebra",
+
+    // Parte 2
+    "tituloPropiedad",
+    "tasaOficial",
+    "avalSolidario",
+    "comprobanteGarantes",
+    "cesionSGR",
+    "informeRegistral",
+    "seguro",
+    "declaracionPatrimonialGarante",
+    "documentoDeuda",
+
+    // Parte 3
+    "ddjjOrigenLicito",
+    "ddjjBeneficiarioFinal",
+    "consentimientoAnalisis",
+    "constanciaPoliticasInternas",
+  ];
 
   // ⬅️ Botón Atrás
   const handleBack = () => {
     if (parteActual === 1) {
-      setPasoActual(4);
+      setPasoActual(5);
     } else {
       setParteActual(parteActual - 1);
     }
@@ -62,35 +92,6 @@ export const Cinco = ({ setPasoActual }) => {
       setParteActual(parteActual + 1);
       return;
     }
-
-    // Validar campos obligatorios
-    const requiredFields = [
-      // Parte 1
-      "constanciaCBU",
-      "informeCrediticio",
-      "certificadoLibreDeuda",
-      "detalleCreditos",
-      "historialPrestamos",
-      "referenciasBancarias",
-      "referenciasComerciales",
-      "declaracionConcurso",
-      // Parte 2
-      "tituloPropiedad",
-      "informeRegistral",
-      "tasacionBien",
-      "seguroBien",
-      "avalSolidario",
-      "declaracionPatrimonial",
-      "comprobantesGarante",
-      "pagareDeuda",
-      "cesionDerechos",
-      // Parte 3
-      "declaracionOrigenFondos",
-      "consentimientoAnalisis",
-      "declaracionBeneficiarios",
-      "politicasCumplimiento",
-    ];
-
     const newErrors = {};
     requiredFields.forEach((field) => {
       if (!formData[field]) {
@@ -100,50 +101,47 @@ export const Cinco = ({ setPasoActual }) => {
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      alert("Por favor completa todos los campos obligatorios");
       return;
     }
+
 
     if (!creditId) {
-      alert("No se encontró el ID del crédito en localStorage");
       return;
     }
-
     // 🧱 Construir el FormData
     const data = new FormData();
     data.append("userId", userId);
     data.append("creditType", creditType);
     data.append("estatus", "evaluacion_crediticia");
     data.append("datosVerificados", false);
-
     // 🔹 Mapear campos de frontend → backend
     const fileMap = {
       // Parte 1
       constanciaCBU: "constanciaCBU",
-      informeCrediticio: "informeCrediticio",
       certificadoLibreDeuda: "certificadoLibreDeuda",
-      detalleCreditos: "detalleCreditos",
       historialPrestamos: "historialPrestamos",
-      referenciasBancarias: "referenciasBancarias",
       referenciasComerciales: "referenciasComerciales",
-      declaracionConcurso: "ddjjQuiebra",
+      informeCrediticio: "informeCrediticio",
+      detalleCreditos: "detalleCreditos",
+      referenciasBancarias: "referenciasBancarias",
+      ddjjQuiebra: "ddjjQuiebra",
 
       // Parte 2
       tituloPropiedad: "tituloPropiedad",
-      informeRegistral: "informeRegistral",
-      tasacionBien: "tasaOficial",
-      seguroBien: "seguro",
+      tasaOficial: "tasaOficial",
       avalSolidario: "avalSolidario",
-      declaracionPatrimonial: "declaracionPatrimonialGarante",
-      comprobantesGarante: "comprobanteGarantes",
-      pagareDeuda: "documentoDeuda",
-      cesionDerechos: "cesionSGR",
+      comprobanteGarantes: "comprobanteGarantes",
+      cesionSGR: "cesionSGR",
+      informeRegistral: "informeRegistral",
+      seguro: "seguro",
+      declaracionPatrimonialGarante: "declaracionPatrimonialGarante",
+      documentoDeuda: "documentoDeuda",
 
       // Parte 3
-      declaracionOrigenFondos: "ddjjOrigenLicito",
+      ddjjOrigenLicito: "ddjjOrigenLicito",
+      ddjjBeneficiarioFinal: "ddjjBeneficiarioFinal",
       consentimientoAnalisis: "consentimientoAnalisis",
-      declaracionBeneficiarios: "ddjjBeneficiarioFinal",
-      politicasCumplimiento: "constanciaPoliticasInternas",
+      constanciaPoliticasInternas: "constanciaPoliticasInternas",
     };
 
     // Agregar archivos al FormData
@@ -169,8 +167,6 @@ export const Cinco = ({ setPasoActual }) => {
         }
       );
 
-      console.log("✅ Respuesta subida:", response.data);
-
       // Actualizar localStorage
       const updatedCredit = response.data?.data?.credit;
       localStorage.setItem(
@@ -182,15 +178,28 @@ export const Cinco = ({ setPasoActual }) => {
         })
       );
 
-      alert("Información crediticia subida correctamente ✅");
       setPasoActual(6);
     } catch (error) {
       console.error("❌ Error al subir información crediticia:", error);
-      alert("Error al subir la información. Verifica tu conexión o los archivos.");
     } finally {
       setIsSaving(false);
     }
   };
+
+  const isSiguientePaso = async () => {
+    let siguientePaso = false;
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/credit/status-check`, { headers: { 'Authorization': `Bearer ${token}` } })
+    const credit = response.data.credit;
+    for (let index = 0; index < requiredFields.length; index++) {
+      siguientePaso = credit[requiredFields[index]] !== null && credit[requiredFields[index]] !== undefined;
+      if (!siguientePaso) break;
+    }
+    if (siguientePaso) {
+      localStorage.setItem("creditInfo", JSON.stringify({ ...creditInfo, credit: credit, PasoActual: 3 }));
+      setPasoActual(6);
+    }
+  }
+
 
   return (
     <MiniFormsTemplate

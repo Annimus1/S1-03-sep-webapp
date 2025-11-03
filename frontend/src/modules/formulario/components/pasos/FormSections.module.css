@@ -1,18 +1,21 @@
+.contenedorPrincipal {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centra horizontalmente */
+  justify-content: center; /* centra verticalmente si hay espacio */
+  gap: 32px; /* separación entre el botón y el formulario */
+  width: 100%;
+  position: relative;
+}
+
 .unifiedContent {
   display: flex;
   flex-direction: column;
   gap: 48px;
 }
 
-.sectionDivider {
-  height: 1px;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(30, 90, 90, 0.2) 20%,
-    rgba(30, 90, 90, 0.2) 80%,
-    transparent
-  );
-  margin: 0 auto;
-  width: 100%;
+.botonPosicionado {
+  position: relative;
+  bottom: -20px;
+  align-self: center;
 }

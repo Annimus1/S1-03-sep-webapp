@@ -59,11 +59,11 @@ export const InformacionCrediticiaDOS = ({ formData, setFormData, errors, setErr
         required
       >
         <FileUploadInput
-          name="tasacionBien"
+          name="tasaOficial"
           placeholder=""
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.tasacionBien}
+          error={errors.tasaOficial}
         />
       </FormFieldWithInfo>
 
@@ -72,11 +72,11 @@ export const InformacionCrediticiaDOS = ({ formData, setFormData, errors, setErr
         required
       >
         <FileUploadInput
-          name="seguroBien"
+          name="seguro"
           placeholder="Formato PDF"
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.seguroBien}
+          error={errors.seguro}
         />
       </FormFieldWithInfo>
 
@@ -98,11 +98,11 @@ export const InformacionCrediticiaDOS = ({ formData, setFormData, errors, setErr
         required
       >
         <FileUploadInput
-          name="declaracionPatrimonial"
+          name="declaracionPatrimonialGarante"
           placeholder="Si hay garante"
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.declaracionPatrimonial}
+          error={errors.declaracionPatrimonialGarante}
         />
       </FormFieldWithInfo>
 
@@ -111,11 +111,11 @@ export const InformacionCrediticiaDOS = ({ formData, setFormData, errors, setErr
         required
       >
         <FileUploadInput
-          name="comprobantesGarante"
+          name="comprobanteGarantes"
           placeholder="Si hay avalista"
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.comprobantesGarante}
+          error={errors.comprobanteGarantes}
         />
       </FormFieldWithInfo>
 
@@ -124,11 +124,11 @@ export const InformacionCrediticiaDOS = ({ formData, setFormData, errors, setErr
         required
       >
         <FileUploadInput
-          name="pagareDeuda"
+          name="documentoDeuda"
           placeholder=""
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.pagareDeuda}
+          error={errors.documentoDeuda}
         />
       </FormFieldWithInfo>
 
@@ -137,11 +137,11 @@ export const InformacionCrediticiaDOS = ({ formData, setFormData, errors, setErr
         required
       >
         <FileUploadInput
-          name="cesionDerechos"
+          name="cesionSGR"
           placeholder=""
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.cesionDerechos}
+          error={errors.cesionSGR}
         />
       </FormFieldWithInfo>
     </FormSection>

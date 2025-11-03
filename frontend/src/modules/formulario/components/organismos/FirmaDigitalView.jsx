@@ -3,6 +3,7 @@ import { SignatureCanvas } from "../atomos/SignatureCanvas";
 import { BotonAnimado } from "../../../../globals/components/atomos/BotonAnimado";
 import styles from "./FirmaDigitalView.module.css";
 import axios from "axios";
+import { useNavigate } from 'react-router-dom'; 
 
 const resizeImageBlob = (blob, targetWidth, targetHeight) => {
   return new Promise((resolve, reject) => {
@@ -58,7 +59,6 @@ const downloadFile = async (fileName) => {
     link.click();
     window.URL.revokeObjectURL(url);
 
-    console.log("✅ Archivo descargado correctamente");
   } catch (error) {
     console.error("❌ Error al descargar el archivo:", error);
   }
@@ -73,6 +73,8 @@ export const FirmaDigitalView = ({ onComplete, setPasoActual }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [pdfURL, setPdfURL] = useState(null); // Para visualizar PDF
   const [loadingPDF, setLoadingPDF] = useState(true);
+
+  const navigate = useNavigate();
 
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -146,7 +148,6 @@ export const FirmaDigitalView = ({ onComplete, setPasoActual }) => {
       const token = localStorage.getItem("token");
 
       if (!creditId) {
-        alert("No se encontró el ID del crédito en localStorage.");
         setIsSubmitting(false);
         return;
       }
@@ -193,7 +194,6 @@ export const FirmaDigitalView = ({ onComplete, setPasoActual }) => {
         }
       );
       
-      console.log("✅ Respuesta del POST:", res.data);
 
       // Obtener datos actualizados del crédito
       const datacredit = await axios.get(`${API_URL}/credit/${creditId}`, {
@@ -210,11 +210,7 @@ export const FirmaDigitalView = ({ onComplete, setPasoActual }) => {
         throw new Error("No se encontró la URL del archivo firmado.");
       }
 
-      console.log("✅ URL del archivo firmado:", firmaDigitalUrl);
-
       const fileName = firmaDigitalUrl.split("/").pop();
-
-      console.log("✅ Nombre del archivo a descargar:", fileName);
 
       downloadFile(fileName);
 
@@ -250,9 +246,9 @@ export const FirmaDigitalView = ({ onComplete, setPasoActual }) => {
           <div className={styles.statusButtons}>
             <BotonAnimado
               variante="naranja"
-              onClick={handleViewStatus}
+              onClick={ () => {navigate("/dashboard");} }
             >
-              Ver estado de mi solicitud
+              Volver al Dashboard
             </BotonAnimado>
           </div>
         </div>

@@ -21,7 +21,6 @@ export const userController = async (req, res) => {
     const paramId = req.params.id;
 
     const user = await UserRepository.findById(paramId);
-    console.log(paramId, user)
     if (!user){
         res.status(404).json({status:"error", message:"Usuario no encontrado."})
         return;

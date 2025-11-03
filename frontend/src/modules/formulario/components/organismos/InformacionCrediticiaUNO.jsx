@@ -124,11 +124,11 @@ export const InformacionCrediticiaUNO = ({ formData, setFormData, errors, setErr
         required
       >
         <FileUploadInput
-          name="declaracionConcurso"
+          name="ddjjQuiebra"
           placeholder=""
           maxSize={10}
           onChange={handleFileChange}
-          error={errors.declaracionConcurso}
+          error={errors.ddjjQuiebra}
         />
       </FormFieldWithInfo>
     </FormSection>
